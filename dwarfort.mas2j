@@ -1,7 +1,9 @@
 MAS dwarfort {
 
 	infrastructure: Centralised
-
+	
+	environment: env.MineEnv(gui)
+	
 	agents:
 		agent1 sample_agent;
 
