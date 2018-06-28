@@ -31,10 +31,13 @@ public class MineModel extends GridWorldModel{
     	// zona controllo
     	Area area = new Area(new Location(16, 18), new Location(24, 22));
     	this.world.add(area);
-    	this.addWall(area.tl.x, area.tl.y, area.br.x, area.br.y);
+    	this.addWall(area.tl.x, area.tl.y, area.br.x, area.tl.y);    	
+    	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
+    	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);
+    	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);    	
 
-    	this.addWall(2, 2, 10, 2);
-    	this.addWall(2, 10, 20, 20);
+    	/*this.addWall(2, 2, 10, 2);
+    	this.addWall(2, 10, 20, 20);*/
     	/*
     	// zona nord
     	this.world.add(new Area(new Location(14, 0), new Location(26, 6)));
