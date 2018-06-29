@@ -1,4 +1,4 @@
-// Agent sample_agent in project dwarfort
+// Agent carrier in project dwarfort
 
 /* Initial beliefs and rules */
 
