@@ -1,11 +1,3 @@
-// Agent forger in project dwarfort
+/*!impartisciOrdini.
 
-/* Initial beliefs and rules */
-
-/* Initial goals */
-
-!start.
-
-/* Plans */
-
-+!start : true <- .print("hello world.").
++!impartisciOrdini : true <- .send(miner, tell, ciao).*/

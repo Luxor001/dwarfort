@@ -4,29 +4,17 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import jason.asSyntax.Literal;
+import jason.asSyntax.Structure;
 import jason.environment.Environment;
 import jason.environment.grid.Area;
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
 
 public class MineEnv extends Environment{
-	/*
-    // action literals
-    public static final Literal of = Literal.parseLiteral("open(fridge)");
-    public static final Literal clf = Literal.parseLiteral("close(fridge)");
-    public static final Literal gb = Literal.parseLiteral("get(beer)");
-    public static final Literal hb = Literal.parseLiteral("hand_in(beer)");
-    public static final Literal sb = Literal.parseLiteral("sip(beer)");
-
-    // belief literals
-    public static final Literal hob = Literal.parseLiteral("has(owner,beer)");
-    public static final Literal af = Literal.parseLiteral("at(robot,fridge)");
-    public static final Literal ao = Literal.parseLiteral("at(robot,owner)");
-
-    static Logger logger = Logger.getLogger(HouseEnv.class.getName());
-
-*/
+	
     MineModel model; // the model of the grid
+	public static final Literal ordiniArrivati = Literal.parseLiteral("ordiniArrivati");
+	public static final Literal scanArea = Literal.parseLiteral("scanArea");
 
     @Override
     public void init(final String[] args) {
@@ -44,4 +32,14 @@ public class MineEnv extends Environment{
     	
     }
 
+
+    @Override
+    public boolean executeAction(final String ag, final Structure action) {
+    	System.out.println(ag);
+    	if(action.getFunctor().equals("scanArea")) {
+    		this.model.scanArea();
+    		return true;
+    	}
+		return false;
+    }
 }
