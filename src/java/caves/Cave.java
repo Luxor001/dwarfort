@@ -1,14 +1,13 @@
-package env;
+package caves;
 
 import java.util.ArrayList;
 
 import jason.environment.grid.Area;
 
-public class Cave {
+public abstract class Cave {
 	public ArrayList<Area> areas = new ArrayList<Area>();
 	public ArrayList<Area> tunnels = new ArrayList<Area>();
-	public int tl;
-	public int br;
+	public String agentAssigned;	
 	public Cave(Area area) {
 		this.areas.add(area);
 	}
@@ -17,5 +16,12 @@ public class Cave {
 	}
 	public Cave() {
 		
+	}
+	
+	public void assignAgent(String agent) {
+		this.agentAssigned = agent;
+	}
+	public String getAgent() {
+		return this.agentAssigned;
 	}
 }

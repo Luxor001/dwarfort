@@ -2,6 +2,8 @@ package env;
 
 import java.util.ArrayList;
 
+import caves.Cave;
+import caves.MineCave;
 import jason.environment.grid.Area;
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
@@ -13,17 +15,24 @@ public class MineModel extends GridWorldModel{
     public static final int STEEL = 32;
     public static final int BEER = 64;
 	protected final static int GRIDSIZE=40;
-	ArrayList<Cave> caves = new ArrayList<Cave>();
+	ArrayList<Cave> mineCaves = new ArrayList<Cave>();
 
     protected MineModel() {
 		super(GRIDSIZE, GRIDSIZE, 3);
-		
-		//setAgentsPositions();
+				
 		buildEnvironment();
+		setAgentsPositions();
     }
     
     public void setAgentsPositions() {
-		this.setAgPos(0, new Location(1, 1));
+    	this.mineCaves.forEach(mineCave -> {
+    		int index = mineCaves.indexOf(mineCave);
+    		String agentName = "miner" + (index + 1);
+    		mineCave.assignAgent(agentName);
+    		this.setAgPos(index, this.mineCaves.get(index).areas.get(0).center());
+    	});
+		
+		this.setAgPos(1, this.mineCaves.get(1).areas.get(0).center());
     }
     
     private void buildEnvironment() {
@@ -40,7 +49,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
     	
     	// zona nordOvest
-    	Cave cave = new Cave();
+    	MineCave cave = new MineCave();
     	area = new Area(new Location(0, 0), new Location(10, 6));   
     	cave.areas.add(area);
     	this.addWall(area.tl.x, area.tl.y, area.br.x, area.tl.y);
@@ -59,23 +68,24 @@ public class MineModel extends GridWorldModel{
     	Area tunnel = new Area(area.br.x, area.tl.y+3, 19, area.tl.y+3);
     	this.addWall(area.br.x, area.tl.y+4, 19, area.tl.y+4);
     	cave.tunnels.add(tunnel);    	
-    	this.caves.add(cave);
+    	this.mineCaves.add(cave);
     	
     	// zona nord
-    	cave = new Cave();
+    	cave = new MineCave();
     	area = new Area(new Location(14, 0), new Location(26, 6));   
     	this.addWall(area.tl.x, area.tl.y, area.br.x, area.tl.y);    	
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
     	this.addWall(area.tl.x, area.br.y, area.tl.x+5, area.br.y);
     	this.addWall(area.tl.x+7, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
+    	cave.areas.add(area);
     	
     	this.addWall(area.tl.x+5, 6, area.tl.x+5, 8);
     	this.addWall(area.tl.x+5, 10, area.tl.x+5, 18);
     	tunnel = new Area(new Location(area.tl.x+6, 6), new Location(area.tl.x+6, 18));
     	this.addWall(area.tl.x+7, 6, area.tl.x+7, 18);
     	cave.tunnels.add(tunnel);    	
-    	this.caves.add(cave);	
+    	this.mineCaves.add(cave);	
 
     	/*
     	//cunicolo nord-controllo
@@ -137,14 +147,9 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);*/
     }
     private void setItems() {
-    	this.add(GOLD, new Location(2,1));
-    	this.add(GOLD, new Location(2,1));
-    	this.add(GOLD, new Location(3,1));
-    	this.add(GOLD, new Location(4,1));
-    	this.add(GOLD, new Location(5,1));
+    	this.add(GOLD, new Location(8,1));
     	
-    	this.add(STEEL, new Location(1,4));
-    	this.add(STEEL, new Location(1,5));    	
+    	this.add(STEEL, new Location(1,4));    	
     }
     
     boolean moveTowards(final Location dest) {
@@ -173,7 +178,14 @@ public class MineModel extends GridWorldModel{
     	this.setAgPos(0, new Location(5, 5));
     }
     
-    public void scanArea() {
-    	
+    public void scanArea(String agent) {
+    	Location agentLocation = getAgentLocationByName(agent);
+    	Cave caveFound = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
+    	System.out.println("I am " + agent+" at " + agentLocation.toString()+". my cave is at " + caveFound.areas.get(0).center().toString());
+    }
+    
+    private Location getAgentLocationByName(String agent) {
+    	int agentPosition = Integer.parseInt(agent.substring(agent.length() -1 , agent.length()));
+    	return this.getAgPos(agentPosition - 1);
     }
 }

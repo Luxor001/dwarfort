@@ -37,7 +37,7 @@ public class MineEnv extends Environment{
     public boolean executeAction(final String ag, final Structure action) {
     	System.out.println(ag);
     	if(action.getFunctor().equals("scanArea")) {
-    		this.model.scanArea();
+    		this.model.scanArea(ag);
     		return true;
     	}
 		return false;
