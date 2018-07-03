@@ -33,15 +33,16 @@ public class MineEnv extends Environment{
     	
     }
 
-
     @Override
     public boolean executeAction(final String ag, final Structure action) {
-    	if(action.getFunctor().equals("scanArea")) {
-    		this.model.scanArea(ag);
+    	if(action.getFunctor().equals("cycleArea")) {
+    		this.model.cycleArea(ag, Integer.parseInt(action.getTerm(0).toString()));
     		return true;
     	}
     	if(action.getFunctor().equals("gotocorner")) {
     		this.model.gotocorner(ag, Integer.parseInt(action.getTerm(0).toString()));
+    		if(this.model.isAtCorner(ag, Integer.parseInt(action.getTerm(0).toString())))
+        		addPercept(ag,Literal.parseLiteral("atcorner"));
     		return true;
     	}
 		return false;

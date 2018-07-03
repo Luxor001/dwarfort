@@ -54,13 +54,13 @@ public class MineModel extends GridWorldModel{
     	// zona nordOvest
     	MineCave cave = new MineCave();
     	area = new Area(new Location(0, 0), new Location(10, 6));   
-    	cave.areas.add(area);
+    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
     	this.addWall(area.tl.x, area.tl.y, area.br.x, area.tl.y);
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
     	this.addWall(area.tl.x+6, area.br.y, area.br.x, area.br.y);  
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
     	area = new Area(new Location(0, 6), new Location(6, 10));
-    	cave.areas.add(area);
+    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);    	
@@ -81,7 +81,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.br.y, area.tl.x+5, area.br.y);
     	this.addWall(area.tl.x+7, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
-    	cave.areas.add(area);
+    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
     	
     	this.addWall(area.tl.x+5, 6, area.tl.x+5, 8);
     	this.addWall(area.tl.x+5, 10, area.tl.x+5, 18);
@@ -158,28 +158,20 @@ public class MineModel extends GridWorldModel{
     boolean moveTowards(final Location dest) {
         final Location r1 = this.getAgPos(0);
         // compute where to move
-        if (r1.x < dest.x) {
+        if (r1.x < dest.x && this.isFreeOfObstacle(new Location(r1.x + 1, r1.y))) 
             r1.x++;
-        } else if (r1.x > dest.x) {
+        else if (r1.x > dest.x && this.isFreeOfObstacle(new Location(r1.x - 1, r1.y))) 
             r1.x--;
-        }
-        if (r1.y < dest.y) {
+        
+        if (r1.y < dest.y && this.isFreeOfObstacle(new Location(r1.x, r1.y + 1))) 
             r1.y++;
-        } else if (r1.y > dest.y) {
+        else if (r1.y > dest.y && this.isFreeOfObstacle(new Location(r1.x, r1.y - 1))) 
             r1.y--;
-        }
-        this.setAgPos(0, r1); // actually move the robot in the grid
-        // repaint fridge and owner locations (to repaint colors)
-       /* if (this.view != null) {
-            this.view.update(this.lFridge.x, this.lFridge.y);
-            this.view.update(this.lOwner.x, this.lOwner.y);
-        }*/
+        
+        this.setAgPos(0, r1); // actually move the robot in the grid        
         return true;
     }
     
-    public void move() {
-    	//this.setAgPos(0, new Location(5, 5));
-    }
     
     public synchronized void gotocorner(String agent, int area) {
     	Location agentLocation = getAgentLocationByName(agent);
@@ -187,11 +179,23 @@ public class MineModel extends GridWorldModel{
     	Area areaToMoveTo = caveIAmIn.areas.get(area);
     	moveTowards(areaToMoveTo.br);
 }
-    
-    public synchronized void scanArea(String agent) {
+
+    public synchronized boolean isAtCorner(String agent, int area) {
     	Location agentLocation = getAgentLocationByName(agent);
-    	Cave caveFound = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
-    	System.out.println("I am " + agent+" at " + agentLocation.toString()+". my cave is at " + caveFound.areas.get(0).center().toString());    	    	
+    	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
+    	Area areaToMoveTo = caveIAmIn.areas.get(area);
+    	return agentLocation.distance(areaToMoveTo.br) == 0;    	
+    }
+    
+    public synchronized void cycleArea(String agent, int area) {
+    	Location agentLocation = getAgentLocationByName(agent);
+    	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
+    	Area currentarea = caveIAmIn.areas.get(area);
+    	
+    	if(agentLocation.x > currentarea.tl.x)
+    		moveTowards(new Location(agentLocation.x - 1, agentLocation.y));
+    	if(agentLocation.x == currentarea.tl.x)
+    		moveTowards(new Location(agentLocation.x, agentLocation.y-1));
     	
     	this.setAgPos(Integer.parseInt(agent.substring(agent.length() -1 , agent.length())) - 1, new Location(agentLocation.x - 1, agentLocation.y));
     }
