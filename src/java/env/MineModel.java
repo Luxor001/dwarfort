@@ -27,9 +27,12 @@ public class MineModel extends GridWorldModel{
     public void setAgentsPositions() {
     	this.mineCaves.forEach(mineCave -> {
     		int index = mineCaves.indexOf(mineCave);
-    		String agentName = "miner" + (index + 1);
-    		mineCave.assignAgent(agentName);
-    		this.setAgPos(index, this.mineCaves.get(index).areas.get(0).center());
+    		// tralasciamo alcune caves se non ci sono abbastanza minatori..
+    		if(index < this.getNbOfAgs()) {    			
+	    		String agentName = "miner" + (index + 1);
+	    		mineCave.assignAgent(agentName);
+	    		this.setAgPos(index, this.mineCaves.get(index).areas.get(0).center());
+    		}
     	});
 		
 		this.setAgPos(1, this.mineCaves.get(1).areas.get(0).center());
@@ -175,16 +178,20 @@ public class MineModel extends GridWorldModel{
     }
     
     public void move() {
-    	this.setAgPos(0, new Location(5, 5));
+    	//this.setAgPos(0, new Location(5, 5));
     }
     
-    public void scanArea(String agent) {
+    public synchronized void scanArea(String agent) {
     	Location agentLocation = getAgentLocationByName(agent);
     	Cave caveFound = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
-    	System.out.println("I am " + agent+" at " + agentLocation.toString()+". my cave is at " + caveFound.areas.get(0).center().toString());
+    	System.out.println("I am " + agent+" at " + agentLocation.toString()+". my cave is at " + caveFound.areas.get(0).center().toString());    	    	
+    	
+    	this.setAgPos(Integer.parseInt(agent.substring(agent.length() -1 , agent.length())) - 1, new Location(agentLocation.x - 1, agentLocation.y));
     }
     
     private Location getAgentLocationByName(String agent) {
+    	if(agent.equals("miner"))
+    		return this.getAgPos(0);
     	int agentPosition = Integer.parseInt(agent.substring(agent.length() -1 , agent.length()));
     	return this.getAgPos(agentPosition - 1);
     }

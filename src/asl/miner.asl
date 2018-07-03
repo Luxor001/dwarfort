@@ -5,8 +5,10 @@
 
 !scanMine.
 
-+!scanMine: true <- scanArea. 
-
++!scanMine: not scancomplete 
+	<- scanArea;
+	.wait(1000); !scanMine. 
+//Usare scanMine(L) dove L è la location?
 
 /*+!at(robot,P) // if NOT arrived at destination (P = "owner" | "fridge")...
 	: not at(robot,P)
