@@ -15,6 +15,7 @@ public class MineEnv extends Environment{
     MineModel model; // the model of the grid
 	public static final Literal ordiniArrivati = Literal.parseLiteral("ordiniArrivati");
 	public static final Literal scanArea = Literal.parseLiteral("scanArea");
+	public static final Literal gotocorner = Literal.parseLiteral("gotocorner");
 
     @Override
     public void init(final String[] args) {
@@ -35,9 +36,12 @@ public class MineEnv extends Environment{
 
     @Override
     public boolean executeAction(final String ag, final Structure action) {
-    	System.out.println(ag);
     	if(action.getFunctor().equals("scanArea")) {
     		this.model.scanArea(ag);
+    		return true;
+    	}
+    	if(action.getFunctor().equals("gotocorner")) {
+    		this.model.gotocorner(ag, Integer.parseInt(action.getTerm(0).toString()));
     		return true;
     	}
 		return false;

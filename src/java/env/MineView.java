@@ -23,28 +23,12 @@ public class MineView  extends GridWorldView {
     public void draw(final Graphics g, final int x, final int y,final int object) {
         //final Location lRobot = this.model.getAgPos(0);
        switch (object) {
-        case MineModel.GOLD:
-                      	
+        case MineModel.GOLD:                      	
             super.drawAgent(g, x, y, Color.yellow, -1);
-          
-          /*  g.setColor(Color.black);
-            this.drawString(g, x, y, this.defaultFont, "Fridge ("
-                    + this.hmodel.availableBeers + ")");*/
             break;
         case MineModel.STEEL:                      	
             super.drawAgent(g, x, y, Color.darkGray, -1);
             break;
-        /*case HouseModel.OWNER:
-            if (lRobot.equals(this.hmodel.lOwner)) {
-                super.drawAgent(g, x, y, Color.yellow, -1);
-            }
-            String o = "Owner";
-            if (this.hmodel.sipCount > 0) {
-                o += " (" + this.hmodel.sipCount + ")";
-            }
-            g.setColor(Color.black);
-            this.drawString(g, x, y, this.defaultFont, o);
-            break;*/
         default:
             break;
     }

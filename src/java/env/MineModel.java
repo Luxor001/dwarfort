@@ -181,6 +181,13 @@ public class MineModel extends GridWorldModel{
     	//this.setAgPos(0, new Location(5, 5));
     }
     
+    public synchronized void gotocorner(String agent, int area) {
+    	Location agentLocation = getAgentLocationByName(agent);
+    	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
+    	Area areaToMoveTo = caveIAmIn.areas.get(area);
+    	moveTowards(areaToMoveTo.br);
+}
+    
     public synchronized void scanArea(String agent) {
     	Location agentLocation = getAgentLocationByName(agent);
     	Cave caveFound = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
@@ -195,4 +202,5 @@ public class MineModel extends GridWorldModel{
     	int agentPosition = Integer.parseInt(agent.substring(agent.length() -1 , agent.length()));
     	return this.getAgPos(agentPosition - 1);
     }
+    
 }

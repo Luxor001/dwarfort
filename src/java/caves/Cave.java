@@ -7,7 +7,7 @@ import jason.environment.grid.Area;
 public abstract class Cave {
 	public ArrayList<Area> areas = new ArrayList<Area>();
 	public ArrayList<Area> tunnels = new ArrayList<Area>();
-	public String agentAssigned;	
+	public String agentAssigned;
 	public Cave(Area area) {
 		this.areas.add(area);
 	}
