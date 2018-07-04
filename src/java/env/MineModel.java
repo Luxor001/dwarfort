@@ -24,6 +24,13 @@ public class MineModel extends GridWorldModel{
 		setAgentsPositions();
     }
     
+    enum StepDirection{
+    	UP,
+    	DOWN,
+    	LEFT,
+    	RIGHT
+    }
+    
     public void setAgentsPositions() {
     	this.mineCaves.forEach(mineCave -> {
     		int index = mineCaves.indexOf(mineCave);
@@ -155,8 +162,8 @@ public class MineModel extends GridWorldModel{
     	this.add(STEEL, new Location(1,4));    	
     }
     
-    boolean moveTowards(final Location dest) {
-        final Location r1 = this.getAgPos(0);
+    boolean moveTowards(String agent, final Location dest) {
+        final Location r1 = this.getAgPos(getAgentIdByName(agent));
         // compute where to move
         if (r1.x < dest.x && this.isFreeOfObstacle(new Location(r1.x + 1, r1.y))) 
             r1.x++;
@@ -168,7 +175,7 @@ public class MineModel extends GridWorldModel{
         else if (r1.y > dest.y && this.isFreeOfObstacle(new Location(r1.x, r1.y - 1))) 
             r1.y--;
         
-        this.setAgPos(0, r1); // actually move the robot in the grid        
+        this.setAgPos(getAgentIdByName(agent), r1); // actually move the robot in the grid        
         return true;
     }
     
@@ -177,7 +184,7 @@ public class MineModel extends GridWorldModel{
     	Location agentLocation = getAgentLocationByName(agent);
     	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
     	Area areaToMoveTo = caveIAmIn.areas.get(area);
-    	moveTowards(areaToMoveTo.br);
+    	moveTowards(agent, areaToMoveTo.br);
 }
 
     public synchronized boolean isAtCorner(String agent, int area) {
@@ -187,24 +194,49 @@ public class MineModel extends GridWorldModel{
     	return agentLocation.distance(areaToMoveTo.br) == 0;    	
     }
     
-    public synchronized void cycleArea(String agent, int area) {
+    public boolean moveAStep(String agent, StepDirection direction) {
+    	Location newLocation = this.getLocationByStep(agent, direction);
+        this.setAgPos(getAgentIdByName(agent), newLocation); // actually move the robot in the grid            	
+		return true;    	
+    }
+    public synchronized void cycleArea(String agent, int area, boolean direction) {
     	Location agentLocation = getAgentLocationByName(agent);
     	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
     	Area currentarea = caveIAmIn.areas.get(area);
     	
     	if(agentLocation.x > currentarea.tl.x)
-    		moveTowards(new Location(agentLocation.x - 1, agentLocation.y));
+    		moveTowards(agent, new Location(agentLocation.x - 1, agentLocation.y));
     	if(agentLocation.x == currentarea.tl.x)
-    		moveTowards(new Location(agentLocation.x, agentLocation.y-1));
+    		moveTowards(agent, new Location(agentLocation.x, agentLocation.y-1));
     	
     	this.setAgPos(Integer.parseInt(agent.substring(agent.length() -1 , agent.length())) - 1, new Location(agentLocation.x - 1, agentLocation.y));
     }
     
-    private Location getAgentLocationByName(String agent) {
+    public Location getAgentLocationByName(String agent) {
     	if(agent.equals("miner"))
-    		return this.getAgPos(0);
-    	int agentPosition = Integer.parseInt(agent.substring(agent.length() -1 , agent.length()));
-    	return this.getAgPos(agentPosition - 1);
+    		return this.getAgPos(0);    	
+    	return this.getAgPos(getAgentIdByName(agent));
+    }
+    public Location getLocationByStep(String agent, StepDirection step) {
+    	Location agentLocation = getAgentLocationByName(agent);
+    	if(step == StepDirection.UP)
+    		return new Location(agentLocation.x, agentLocation.y - 1);
+    	if(step == StepDirection.RIGHT)
+    		return new Location(agentLocation.x + 1, agentLocation.y);
+    	if(step == StepDirection.LEFT)
+    		return new Location(agentLocation.x - 1, agentLocation.y);
+    	if(step == StepDirection.DOWN)
+    		return new Location(agentLocation.x, agentLocation.y - 1);
+		return null;    	
     }
     
+    private int getAgentIdByName(String agent) {
+    	if(agent.equals("miner"))
+    		return 0;
+    	return Integer.parseInt(agent.substring(agent.length() -1 , agent.length())) - 1;    	
+    }
+    
+    public Cave getCaveOfAgent(String agent) {
+    	return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
+    }
 }
