@@ -36,11 +36,11 @@ public class MineEnv extends Environment{
 
     @Override
     public boolean executeAction(final String ag, final Structure action) {
+    		
     	if(action.getFunctor().equals("cycleArea")) {
     		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
-    		if(!containsPercept(ag, Literal.parseLiteral("goleft")) && !containsPercept(ag, Literal.parseLiteral("goright"))) {
-    			addPercept(ag, Literal.parseLiteral("goleft"));
-    		}
+    		if(!containsPercept(ag, Literal.parseLiteral("goleft")) && !containsPercept(ag, Literal.parseLiteral("goright"))) 
+    			addPercept(ag, Literal.parseLiteral("goleft"));    		
     		
     		if(containsPercept(ag, Literal.parseLiteral("goleft"))) {
         		if(containsPercept(ag, Literal.parseLiteral("wall"))) {
@@ -51,8 +51,11 @@ public class MineEnv extends Environment{
         			return true;
         		}
         		if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.LEFT))) {
-        			addPercept(ag, Literal.parseLiteral("wall"));
-        			this.model.moveAStep(ag,  StepDirection.UP); 
+        			addPercept(ag, Literal.parseLiteral("wall")); 
+        			if(this.model.getAgentLocationByName(ag).y == this.model.getCaveOfAgent(ag).areas.get(areaIndex).tl.y - 1)
+        				addPercept(ag, Literal.parseLiteral("areaComplete"));
+        			else
+        				this.model.moveAStep(ag,  StepDirection.UP); 
         		}
         		else
         			this.model.moveAStep(ag,  StepDirection.LEFT);
@@ -67,23 +70,22 @@ public class MineEnv extends Environment{
         			return true;
         		}
         		if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.RIGHT))) {
-        			addPercept(ag, Literal.parseLiteral("wall"));      
-        			this.model.moveAStep(ag,  StepDirection.UP); 
-    				System.out.println("reached? "+ this.model.getAgentLocationByName(ag).y + " " + (this.model.getCaveOfAgent(ag).areas.get(areaIndex).tl.y - 1));
+        			addPercept(ag, Literal.parseLiteral("wall")); 
         			if(this.model.getAgentLocationByName(ag).y == this.model.getCaveOfAgent(ag).areas.get(areaIndex).tl.y - 1)
-        				System.out.println("reached");
+        				addPercept(ag, Literal.parseLiteral("areaComplete"));
+        			else
+            			this.model.moveAStep(ag,  StepDirection.UP);
         		}
         		else
         			this.model.moveAStep(ag,  StepDirection.RIGHT);
         		return true;
     		}
-    		
-    		//this.model.cycleArea(ag, Integer.parseInt(action.getTerm(0).toString()), true);
     		return true;
     	}
     	if(action.getFunctor().equals("gotocorner")) {
-    		this.model.gotocorner(ag, Integer.parseInt(action.getTerm(0).toString()));
-    		if(this.model.isAtCorner(ag, Integer.parseInt(action.getTerm(0).toString())))
+    		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
+    		this.model.gotocorner(ag, areaIndex);
+    		if(this.model.isAtCorner(ag, areaIndex))
         		addPercept(ag,Literal.parseLiteral("atcorner"));
     		return true;
     	}
