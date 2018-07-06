@@ -1,7 +1,6 @@
 /* Initial beliefs */
 
-area_to_scan(1). // It's supermarket's "knowledge base"	
-
+area_to_scan(0). // It's supermarket's "knowledge base"	
 /*
 +!attendiOrdini : not ordiniArrivati <- .print("attendo"); !attendiOrdini.
 */
@@ -9,18 +8,18 @@ area_to_scan(1). // It's supermarket's "knowledge base"
 !scanCave.
 
 +!scanCave: not caveScanned
-	<- ?area_to_scan(N);
+	<- ?area_to_scan(N);	
 	!scanArea(N);
-	.wait(1000);
 	-+area_to_scan(N+1);
 !scanCave.
 	
 	+!scanArea(N)
 		: true
-		<- !go_to_bottomright(N);
-		-atcorner;
+		<- 
+		!go_to_bottomright(N);
+		deletePersonalPercept(atcorner);
 		!cycleArea(N);
-		-areaComplete.		
+		deletePersonalPercept(areaComplete).
 			
 		+!cycleArea(N):
 		not areaComplete <-
@@ -34,13 +33,14 @@ area_to_scan(1). // It's supermarket's "knowledge base"
 					
 		+!go_to_bottomright(N):
 		 not atcorner <-
+		 .print("aa");
 			gotocorner(N);
 			.wait(100);
 		!go_to_bottomright(N).
 	
-		+!go_to_bottomright(N) // if arrived at destination (P = "owner" | "fridge")...
-			: atcorner
-			<- true. // ...that's all, do nothing, the "original" intention (the "context") can continue
+		+!go_to_bottomright(N).
+			 // ...that's all, do nothing, the "original" intention (the "context") can continue
+				
 
 /* 
 <- ?last_order_id(N); // test-goal

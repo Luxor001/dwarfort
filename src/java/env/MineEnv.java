@@ -86,9 +86,18 @@ public class MineEnv extends Environment{
     		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
     		this.model.gotocorner(ag, areaIndex);
     		if(this.model.isAtCorner(ag, areaIndex))
-        		addPercept(ag,Literal.parseLiteral("atcorner"));
+        		addPercept(ag, Literal.parseLiteral("atcorner"));
     		return true;
     	}
+    	if(action.getFunctor().equals("deletePersonalPercept")) {
+    		removePercept(ag, Literal.parseLiteral(action.getTerm(0).toString()));
+    		return true;
+    	}
+    	/*if(action.getFunctor().equals("atcorners")) {
+    		System.out.println(ag);
+    		System.out.println(this.containsPercept(ag, Literal.parseLiteral("atcorner")));
+    		return true;
+    	}*/
 		return false;
     }
 }
