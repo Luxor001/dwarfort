@@ -239,4 +239,11 @@ public class MineModel extends GridWorldModel{
     public Cave getCaveOfAgent(String agent) {
     	return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
     }
+    
+    public void scanAgentCell(String Agent) {
+    	Location agentLocation = this.getAgentLocationByName(Agent);
+    	int agente = this.getAgAtPos(agentLocation);
+    	System.out.println("prova" + agente);
+    }
+    
 }

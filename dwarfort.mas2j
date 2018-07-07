@@ -5,6 +5,7 @@ MAS dwarfort {
 	environment: env.MineEnv(gui)
 	
 	agents:
+		//miner #2;
 		miner1 miner;
 
 	aslSourcePath:

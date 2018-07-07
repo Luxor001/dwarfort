@@ -3,6 +3,7 @@ package env;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import caves.Cave;
 import env.MineModel.StepDirection;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
@@ -39,6 +40,7 @@ public class MineEnv extends Environment{
     		
     	if(action.getFunctor().equals("cycleArea")) {
     		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
+    		Cave caveIAmIn = this.model.getCaveOfAgent(ag);
     		if(!containsPercept(ag, Literal.parseLiteral("goleft")) && !containsPercept(ag, Literal.parseLiteral("goright"))) 
     			addPercept(ag, Literal.parseLiteral("goleft"));    		
     		
@@ -47,19 +49,20 @@ public class MineEnv extends Environment{
         			this.model.moveAStep(ag,  StepDirection.RIGHT);
         			addPercept(ag, Literal.parseLiteral("goright"));
         			removePercept(ag, Literal.parseLiteral("goleft"));
-        			removePercept(ag, Literal.parseLiteral("wall")); 
-        			return true;
+        			removePercept(ag, Literal.parseLiteral("wall"));
         		}
-        		if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.LEFT))) {
+        		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.LEFT))) {
         			addPercept(ag, Literal.parseLiteral("wall")); 
-        			if(this.model.getAgentLocationByName(ag).y == this.model.getCaveOfAgent(ag).areas.get(areaIndex).tl.y - 1)
+        			if(this.model.getAgentLocationByName(ag).y == caveIAmIn.areas.get(areaIndex).tl.y - 1) {
         				addPercept(ag, Literal.parseLiteral("areaComplete"));
+        				if(areaIndex == caveIAmIn.areas.size() -1 )
+        					addPercept(ag, Literal.parseLiteral("caveScanned"));
+        			}
         			else
         				this.model.moveAStep(ag,  StepDirection.UP); 
         		}
         		else
         			this.model.moveAStep(ag,  StepDirection.LEFT);
-        		return true;
     		}
     		if(containsPercept(ag, Literal.parseLiteral("goright"))) {
         		if(containsPercept(ag, Literal.parseLiteral("wall"))) {
@@ -67,19 +70,22 @@ public class MineEnv extends Environment{
         			addPercept(ag, Literal.parseLiteral("goleft"));    
         			removePercept(ag, Literal.parseLiteral("goright"));
         			removePercept(ag, Literal.parseLiteral("wall"));
-        			return true;
         		}
-        		if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.RIGHT))) {
+        		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.RIGHT))) {
         			addPercept(ag, Literal.parseLiteral("wall")); 
-        			if(this.model.getAgentLocationByName(ag).y == this.model.getCaveOfAgent(ag).areas.get(areaIndex).tl.y - 1)
+        			if(this.model.getAgentLocationByName(ag).y == caveIAmIn.areas.get(areaIndex).tl.y - 1) {
         				addPercept(ag, Literal.parseLiteral("areaComplete"));
+        				if(areaIndex == caveIAmIn.areas.size() -1 )
+        					addPercept(ag, Literal.parseLiteral("caveScanned"));
+        			}
         			else
             			this.model.moveAStep(ag,  StepDirection.UP);
         		}
         		else
         			this.model.moveAStep(ag,  StepDirection.RIGHT);
-        		return true;
     		}
+    		
+    		this.model.scanAgentCell(ag);
     		return true;
     	}
     	if(action.getFunctor().equals("gotocorner")) {
@@ -93,11 +99,6 @@ public class MineEnv extends Environment{
     		removePercept(ag, Literal.parseLiteral(action.getTerm(0).toString()));
     		return true;
     	}
-    	/*if(action.getFunctor().equals("atcorners")) {
-    		System.out.println(ag);
-    		System.out.println(this.containsPercept(ag, Literal.parseLiteral("atcorner")));
-    		return true;
-    	}*/
 		return false;
     }
 }
