@@ -1,12 +1,14 @@
 package env;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import caves.Cave;
 import caves.MineCave;
 import jason.environment.grid.Area;
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
+import jason.util.Pair;
 
 public class MineModel extends GridWorldModel{
     // constants used by the view component (HouseView) to draw environment
@@ -15,7 +17,7 @@ public class MineModel extends GridWorldModel{
     public static final int STEEL = 32;
     public static final int BEER = 64;
 	protected final static int GRIDSIZE=40;
-	ArrayList<Cave> mineCaves = new ArrayList<Cave>();
+	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
 
     protected MineModel() {
 		super(GRIDSIZE, GRIDSIZE, 3);
@@ -47,7 +49,7 @@ public class MineModel extends GridWorldModel{
     
     private void buildEnvironment() {
     	buildWorld();
-    	setItems();
+    	setItemsOnGrid();
     }
     private void buildWorld() {
     	// zona controllo
@@ -67,13 +69,16 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x+6, area.br.y, area.br.x, area.br.y);  
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
     	area = new Area(new Location(0, 6), new Location(6, 10));
-    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y), new Location(area.br.x - 1, area.br.y - 1)));
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);    	
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.tl.y+2);
     	this.addWall(area.br.x, area.tl.y+4, area.br.x, area.br.y);
 
+    	cave.items.add(new Pair<Location, Integer>(new Location(8,1), GOLD));
+    	cave.items.add(new Pair<Location, Integer>(new Location(1,4), STEEL));
+    	
     	this.addWall(area.br.x, area.tl.y+2, 19, area.tl.y+2);
     	Area tunnel = new Area(area.br.x, area.tl.y+3, 19, area.tl.y+3);
     	this.addWall(area.br.x, area.tl.y+4, 19, area.tl.y+4);
@@ -156,9 +161,8 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);*/
     }
-    private void setItems() {
+    private void setItemsOnGrid() {
     	this.add(GOLD, new Location(8,1));
-    	
     	this.add(STEEL, new Location(1,4));    	
     }
     
@@ -226,7 +230,7 @@ public class MineModel extends GridWorldModel{
     	if(step == StepDirection.LEFT)
     		return new Location(agentLocation.x - 1, agentLocation.y);
     	if(step == StepDirection.DOWN)
-    		return new Location(agentLocation.x, agentLocation.y - 1);
+    		return new Location(agentLocation.x, agentLocation.y -  1);
 		return null;    	
     }
     
@@ -236,14 +240,27 @@ public class MineModel extends GridWorldModel{
     	return Integer.parseInt(agent.substring(agent.length() -1 , agent.length())) - 1;    	
     }
     
-    public Cave getCaveOfAgent(String agent) {
+    public MineCave getCaveOfAgent(String agent) {
     	return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
     }
     
     public void scanAgentCell(String Agent) {
     	Location agentLocation = this.getAgentLocationByName(Agent);
-    	int agente = this.getAgAtPos(agentLocation);
+    	int agente = this.getAgAtPos(new Location(8,1));
+    	
     	System.out.println("prova" + agente);
+    }
+    
+    public boolean agentOverObject(String agent, int object) {
+    	MineCave cave = this.getCaveOfAgent(agent);    	
+    	Location agentLocation = this.getAgentLocationByName(agent);
+    	return this.agentOverObject(agentLocation, cave, object); 	
+    }
+    public boolean agentOverObject(Location agentLocation, MineCave agentCave, int object) {
+    	Optional<Pair<Location, Integer>> itemInPlace = agentCave.items.stream().filter(item -> item.getFirst().distance(agentLocation) == 0).findFirst();
+    	if(itemInPlace.isPresent() && itemInPlace.get().getSecond() == object)
+    		return true;
+		return false;    	
     }
     
 }

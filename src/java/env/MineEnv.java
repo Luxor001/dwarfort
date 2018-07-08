@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import caves.Cave;
+import caves.MineCave;
 import env.MineModel.StepDirection;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
@@ -37,12 +38,13 @@ public class MineEnv extends Environment{
 
     @Override
     public boolean executeAction(final String ag, final Structure action) {
-    		
     	if(action.getFunctor().equals("cycleArea")) {
     		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
-    		Cave caveIAmIn = this.model.getCaveOfAgent(ag);
-    		if(!containsPercept(ag, Literal.parseLiteral("goleft")) && !containsPercept(ag, Literal.parseLiteral("goright"))) 
-    			addPercept(ag, Literal.parseLiteral("goleft"));    		
+    		MineCave caveIAmIn = this.model.getCaveOfAgent(ag);
+    		Location agentLocation =this.model.getAgentLocationByName(ag);  
+    		if(!containsPercept(ag, Literal.parseLiteral("goleft")) && !containsPercept(ag, Literal.parseLiteral("goright")))
+    			addPercept(ag, Literal.parseLiteral("goleft"));
+    		   			
     		
     		if(containsPercept(ag, Literal.parseLiteral("goleft"))) {
         		if(containsPercept(ag, Literal.parseLiteral("wall"))) {
@@ -53,7 +55,7 @@ public class MineEnv extends Environment{
         		}
         		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.LEFT))) {
         			addPercept(ag, Literal.parseLiteral("wall")); 
-        			if(this.model.getAgentLocationByName(ag).y == caveIAmIn.areas.get(areaIndex).tl.y - 1) {
+        			if(agentLocation.y == caveIAmIn.areas.get(areaIndex).tl.y) {            			
         				addPercept(ag, Literal.parseLiteral("areaComplete"));
         				if(areaIndex == caveIAmIn.areas.size() -1 )
         					addPercept(ag, Literal.parseLiteral("caveScanned"));
@@ -73,7 +75,7 @@ public class MineEnv extends Environment{
         		}
         		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.RIGHT))) {
         			addPercept(ag, Literal.parseLiteral("wall")); 
-        			if(this.model.getAgentLocationByName(ag).y == caveIAmIn.areas.get(areaIndex).tl.y - 1) {
+        			if(agentLocation.y == caveIAmIn.areas.get(areaIndex).tl.y) {
         				addPercept(ag, Literal.parseLiteral("areaComplete"));
         				if(areaIndex == caveIAmIn.areas.size() -1 )
         					addPercept(ag, Literal.parseLiteral("caveScanned"));
@@ -85,7 +87,21 @@ public class MineEnv extends Environment{
         			this.model.moveAStep(ag,  StepDirection.RIGHT);
     		}
     		
-    		this.model.scanAgentCell(ag);
+    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.GOLD)) {
+    			System.out.println("prova");
+    		//	addPercept(ag, Literal.parseLiteral("GOLD(" + agentLocation.toString() + ")"));
+    		}
+
+    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.STEEL)) {
+    			
+    		//	addPercept(ag, Literal.parseLiteral("GOLD(" + agentLocation.toString() + ")"));
+    			System.out.println("prova ferri");
+    		}
+    		
+    			
+    		/*if(this.model.agentOverObject(ag, MineModel.STEEL))
+    			System.out.println("Sopra FERRO");*/
+    		
     		return true;
     	}
     	if(action.getFunctor().equals("gotocorner")) {

@@ -13,7 +13,7 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 !scanCave.
 
 +!scanCave: caveScanned
-	<- .print("prova");
+	<- .print("scansione finita");
 	.wait(20000);
 !scanCave.
 
@@ -33,7 +33,8 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 		
 		+!cycleArea(N) // if arrived at destination (P = "owner" | "fridge")...
 			: areaComplete
-			<- true. // ...that's all, do nothing, the "original" intention (the "context") can continue
+			<- deletePersonalPercept(goleft); deletePersonalPercept(goright); deletePersonalPercept(wall).
+			
 					
 		+!go_to_bottomright(N):
 		 not atcorner <-
@@ -43,6 +44,7 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 	
 		+!go_to_bottomright(N).
 			 // ...that's all, do nothing, the "original" intention (the "context") can continue
+			 
 				
 
 /* 
