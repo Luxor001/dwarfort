@@ -87,16 +87,11 @@ public class MineEnv extends Environment{
         			this.model.moveAStep(ag,  StepDirection.RIGHT);
     		}
     		
-    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.GOLD)) {
-    			System.out.println("prova");
-    		//	addPercept(ag, Literal.parseLiteral("GOLD(" + agentLocation.toString() + ")"));
-    		}
+    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.GOLD))
+    			addPercept(ag, Literal.parseLiteral("gold(" + agentLocation.toString() + ")"));
 
-    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.STEEL)) {
-    			
-    		//	addPercept(ag, Literal.parseLiteral("GOLD(" + agentLocation.toString() + ")"));
-    			System.out.println("prova ferri");
-    		}
+    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.STEEL))
+    			addPercept(ag, Literal.parseLiteral("steel(" + agentLocation.toString() + ")"));
     		
     			
     		/*if(this.model.agentOverObject(ag, MineModel.STEEL))
