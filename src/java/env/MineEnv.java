@@ -45,6 +45,14 @@ public class MineEnv extends Environment{
     		if(!containsPercept(ag, Literal.parseLiteral("goleft")) && !containsPercept(ag, Literal.parseLiteral("goright")))
     			addPercept(ag, Literal.parseLiteral("goleft"));
     		   			
+    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.GOLD))
+    			addPercept(ag, Literal.parseLiteral("gold(" + agentLocation.toString() + ")"));
+
+    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.STEEL))
+    			addPercept(ag, Literal.parseLiteral("steel(" + agentLocation.toString() + ")"));
+    		
+    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.BLACKBOARD))
+    			addPercept(ag, Literal.parseLiteral("blackboard(" + agentLocation.toString() + ")"));
     		
     		if(containsPercept(ag, Literal.parseLiteral("goleft"))) {
         		if(containsPercept(ag, Literal.parseLiteral("wall"))) {
@@ -66,7 +74,7 @@ public class MineEnv extends Environment{
         		else
         			this.model.moveAStep(ag,  StepDirection.LEFT);
     		}
-    		if(containsPercept(ag, Literal.parseLiteral("goright"))) {
+    		else if(containsPercept(ag, Literal.parseLiteral("goright"))) {
         		if(containsPercept(ag, Literal.parseLiteral("wall"))) {
         			this.model.moveAStep(ag,  StepDirection.LEFT);
         			addPercept(ag, Literal.parseLiteral("goleft"));    
@@ -86,16 +94,8 @@ public class MineEnv extends Environment{
         		else
         			this.model.moveAStep(ag,  StepDirection.RIGHT);
     		}
-    		
-    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.GOLD))
-    			addPercept(ag, Literal.parseLiteral("gold(" + agentLocation.toString() + ")"));
-
-    		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.STEEL))
-    			addPercept(ag, Literal.parseLiteral("steel(" + agentLocation.toString() + ")"));
-    		
-    			
-    		/*if(this.model.agentOverObject(ag, MineModel.STEEL))
-    			System.out.println("Sopra FERRO");*/
+  		
+  			System.out.println("moving from " + agentLocation.toString());
     		
     		return true;
     	}

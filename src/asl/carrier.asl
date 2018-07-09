@@ -8,4 +8,6 @@
 
 /* Plans */
 
+//METTERE RANDOM PER LAVORO SU BLACKBOARD!!!
+
 +!start : true <- .print("hello world.").

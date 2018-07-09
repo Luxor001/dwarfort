@@ -8,6 +8,7 @@ import jason.util.Pair;
 
 public class MineCave extends Cave{
 	public ArrayList<Pair<Location, Integer>> items = new ArrayList<Pair<Location, Integer>>();
+	public Location blackBoard;
 	public MineCave(Area area) {
 		super(area);
 	}

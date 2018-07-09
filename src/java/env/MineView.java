@@ -27,11 +27,14 @@ public class MineView  extends GridWorldView {
             super.drawAgent(g, x, y, Color.yellow, -1);
             break;
         case MineModel.STEEL:                      	
-            super.drawAgent(g, x, y, Color.darkGray, -1);
+            super.drawAgent(g, x, y, Color.LIGHT_GRAY, -1);
+            break;
+        case MineModel.BLACKBOARD:                      	
+            super.drawAgent(g, x, y, Color.BLACK, -1);
             break;
         default:
             break;
-    }
+       }
     }
     
     /*@Override

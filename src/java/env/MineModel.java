@@ -15,7 +15,7 @@ public class MineModel extends GridWorldModel{
     // "objects"
     public static final int GOLD = 16;
     public static final int STEEL = 32;
-    public static final int BEER = 64;
+    public static final int BLACKBOARD = 64;
 	protected final static int GRIDSIZE=40;
 	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
 
@@ -75,7 +75,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);    	
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.tl.y+2);
     	this.addWall(area.br.x, area.tl.y+4, area.br.x, area.br.y);
-
+    	cave.blackBoard = new Location(5, 7);
     	cave.items.add(new Pair<Location, Integer>(new Location(8,1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(1,4), STEEL));
     	
@@ -102,6 +102,9 @@ public class MineModel extends GridWorldModel{
     	cave.tunnels.add(tunnel);    	
     	this.mineCaves.add(cave);	
 
+    	cave.blackBoard = new Location(area.tl.x+4, 5);
+    	cave.items.add(new Pair<Location, Integer>(new Location(15,1), GOLD));
+    	cave.items.add(new Pair<Location, Integer>(new Location(25,4), STEEL));
     	/*
     	//cunicolo nord-controllo
     	this.addWall(area.tl.x+5, area.br.y, area.tl.x+5, 18);    	
@@ -162,8 +165,10 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);*/
     }
     private void setItemsOnGrid() {
-    	this.add(GOLD, new Location(8,1));
-    	this.add(STEEL, new Location(1,4));    	
+    	this.mineCaves.forEach(mineCave -> {
+    		mineCave.items.forEach(item -> this.add(item.getSecond(), item.getFirst()));
+    		this.add(BLACKBOARD, mineCave.blackBoard);
+    	});
     }
     
     boolean moveTowards(String agent, final Location dest) {
