@@ -1,6 +1,8 @@
 package env;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Optional;
 
 import caves.Cave;
@@ -16,6 +18,9 @@ public class MineModel extends GridWorldModel{
     public static final int GOLD = 16;
     public static final int STEEL = 32;
     public static final int BLACKBOARD = 64;
+    
+    
+    public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();    
 	protected final static int GRIDSIZE=40;
 	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
 
@@ -41,10 +46,13 @@ public class MineModel extends GridWorldModel{
 	    		String agentName = "miner" + (index + 1);
 	    		mineCave.assignAgent(agentName);
 	    		this.setAgPos(index, this.mineCaves.get(index).areas.get(0).center());
+	    		MineModel.agentTypebyId.put(index, "miner");
     		}
     	});
 		
-		this.setAgPos(1, this.mineCaves.get(1).areas.get(0).center());
+
+		MineModel.agentTypebyId.put(2, "forger");
+		this.setAgPos(2, new Location(20, 20));
     }
     
     private void buildEnvironment() {
@@ -247,13 +255,6 @@ public class MineModel extends GridWorldModel{
     
     public MineCave getCaveOfAgent(String agent) {
     	return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
-    }
-    
-    public void scanAgentCell(String Agent) {
-    	Location agentLocation = this.getAgentLocationByName(Agent);
-    	int agente = this.getAgAtPos(new Location(8,1));
-    	
-    	System.out.println("prova" + agente);
     }
     
     public boolean agentOverObject(String agent, int object) {

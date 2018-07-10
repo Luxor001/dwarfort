@@ -28,7 +28,7 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 		+!cycleArea(N):
 		not areaComplete <-
 		     cycleArea(N);
-			.wait(50);
+			.wait(40);
 		!cycleArea(N).
 		
 		+!cycleArea(N) // if arrived at destination (P = "owner" | "fridge")...
@@ -38,7 +38,7 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 		+!go_to_bottomright(N):
 		 not atcorner <-
 			gotocorner(N);
-			.wait(50);
+			.wait(40);
 		!go_to_bottomright(N).
 	
 		+!go_to_bottomright(N).

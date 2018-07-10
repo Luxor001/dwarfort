@@ -6,8 +6,4 @@
 
 !start.
 
-/* Plans */
-
-//METTERE RANDOM PER LAVORO SU BLACKBOARD!!!
-
-+!start : true <- .print("hello world.").
++!start: true <- .send(forger, tell, hello).

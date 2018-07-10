@@ -28,13 +28,8 @@ public class MineEnv extends Environment{
             final MineView view = new MineView(this.model);
             this.model.setView(view);
         }
-        // boot the agents' percepts
-        this.initializePercepts();
     }
     
-    public void initializePercepts() {
-    	
-    }
 
     @Override
     public boolean executeAction(final String ag, final Structure action) {
@@ -95,7 +90,7 @@ public class MineEnv extends Environment{
         			this.model.moveAStep(ag,  StepDirection.RIGHT);
     		}
   		
-  			System.out.println("moving from " + agentLocation.toString());
+  			System.out.flush();
     		
     		return true;
     	}

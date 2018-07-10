@@ -37,11 +37,17 @@ public class MineView  extends GridWorldView {
        }
     }
     
-    /*@Override
+    @Override
     public void drawAgent(final Graphics g, final int x, final int y, Color c,
             final int id) {
-        final Location lRobot = this.hmodel.getAgPos(0);
-        if (!lRobot.equals(this.hmodel.lOwner)
+    	
+    	if(MineModel.agentTypebyId.get(id).equals("miner"))
+    		c = Color.BLUE;
+    	if(MineModel.agentTypebyId.get(id).equals("forger"))
+    		c = Color.RED;
+        
+        super.drawAgent(g, x, y, c, -1);
+        /*if (!agent.equals(this.hmodel.lOwner)
                 && !lRobot.equals(this.hmodel.lFridge)) {
             c = Color.yellow;
             if (this.hmodel.carryingBeer) {
@@ -50,6 +56,6 @@ public class MineView  extends GridWorldView {
             super.drawAgent(g, x, y, c, -1);
             g.setColor(Color.black);
             super.drawString(g, x, y, this.defaultFont, "Robot");
-        }
-    }*/
+        }*/
+    }
 }
