@@ -5,9 +5,9 @@ MAS dwarfort {
 	environment: env.MineEnv(gui)
 	
 	agents:
-		miner #2;
-		forger;
-		//carrier #2; 
+		miner #6;
+	//	forger;
+	//	carrier #2; 
 	//	miner1 miner;
 
 	aslSourcePath:
