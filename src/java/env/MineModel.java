@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import caves.Cave;
+import caves.ControlCave;
 import caves.MineCave;
 import jason.environment.grid.Area;
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
+import jason.functions.Random;
 import jason.util.Pair;
 
 public class MineModel extends GridWorldModel{
@@ -23,10 +25,12 @@ public class MineModel extends GridWorldModel{
     public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();    
 	protected final static int GRIDSIZE=40;
 	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
+	ControlCave controlCave;
 
     protected MineModel() {
-		super(GRIDSIZE, GRIDSIZE, 3);
-				
+		super(GRIDSIZE, GRIDSIZE, 13);
+
+		System.out.println("number of agents"+ this.getNbOfAgs());
 		buildEnvironment();
 		setAgentsPositions();
     }
@@ -39,6 +43,7 @@ public class MineModel extends GridWorldModel{
     }
     
     public void setAgentsPositions() {
+    	//impostazione miners
     	this.mineCaves.forEach(mineCave -> {
     		int index = mineCaves.indexOf(mineCave);
     		// tralasciamo alcune caves se non ci sono abbastanza minatori..
@@ -49,10 +54,21 @@ public class MineModel extends GridWorldModel{
 	    		MineModel.agentTypebyId.put(index, "miner");
     		}
     	});
-		
 
-	//	MineModel.agentTypebyId.put(2, "forger");
-	//	this.setAgPos(2, new Location(20, 20));
+		//impostazione forger
+		MineModel.agentTypebyId.put(12, "forger");
+		this.setAgPos(12, new Location(20, 20));
+		
+    	//impostazione carriers
+    	for(int i=mineCaves.size(); i < mineCaves.size() + 6;) {
+    		Location random = this.getRandomLocationInArea(this.controlCave.areas.get(0));
+    		if(this.isFree(random)) {
+    			this.setAgPos(i, random);	
+    			MineModel.agentTypebyId.put(i, "carrier");
+    			i++;
+    		}    		
+    	}
+    	
     }
     
     private void buildEnvironment() {
@@ -74,6 +90,7 @@ public class MineModel extends GridWorldModel{
     	//lato est
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.tl.y + 1);
     	this.addWall(area.br.x, area.tl.y + 3, area.br.x, area.br.y);
+    	this.controlCave = new ControlCave(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
     	
     	// zona nordOvest
     	MineCave cave = new MineCave();
@@ -100,6 +117,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(20, area.tl.y+3, 20, 18);
     	this.addWall(21, area.tl.y+4, 21, 18);
     	cave.tunnels.add(tunnel);
+    	this.controlCave.entrances.add(new Location(20, 18));
 
     	//blackboard/items
     	cave.blackBoard = new Location(5, 7);
@@ -122,6 +140,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(area.tl.x+6, 6, area.tl.x+6, 18);
     	this.addWall(area.tl.x+7, 6, area.tl.x+7, 18);
     	cave.tunnels.add(tunnel);
+    	this.controlCave.entrances.add(new Location(area.tl.x+6, 18));
     	
     	//blackboard/items
     	cave.blackBoard = new Location(area.tl.x+4, 5);
@@ -136,20 +155,21 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.tl.y, area.br.x, area.tl.y);    	
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
-    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y)));
     	area = new Area(new Location(33, 16), new Location(39, 22));
     	this.addWall(area.tl.x, area.tl.y, area.tl.x + 2, area.tl.y);    	
     	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.tl.y + 3);
     	this.addWall(area.tl.x, area.tl.y + 5, area.tl.x, area.br.y);
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
-    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
 
     	//cunicolo
     	this.addWall(25, area.tl.y+3, area.tl.x - 1, area.tl.y+3);
     	tunnel = new Area(24, area.tl.y+4, area.tl.x, area.tl.y+4);
     	this.addWall(25, area.tl.y+5, area.tl.x - 1, area.tl.y+5);
     	cave.tunnels.add(tunnel);
+    	this.controlCave.entrances.add(new Location(area.tl.x, area.tl.y+4));
 
     	//blackboard/items
     	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 3);
@@ -176,6 +196,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(20, 23, 20, area.tl.y);
     	this.addWall(21, 23, 21, area.tl.y);
     	cave.tunnels.add(tunnel);    	
+    	this.controlCave.entrances.add(new Location(20, area.tl.y));
 
     	//blackboard/items
     	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 2);
@@ -198,6 +219,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(20, 22, 20, area.tl.y);
     	this.addWall(21, area.tl.y - 2, 21, area.tl.y);
     	cave.tunnels.add(tunnel);
+    	this.controlCave.entrances.add(new Location(20, area.tl.y));
     	
     	//blackboard/items
     	cave.blackBoard = new Location(19, area.tl.y + 1);
@@ -205,14 +227,6 @@ public class MineModel extends GridWorldModel{
     	cave.items.add(new Pair<Location, Integer>(new Location(38,32), STEEL));
     	this.mineCaves.add(cave);
 
-    	// // zona sudOvest
-    	/*area = new Area(new Location(0, 34), new Location(8, 39));
-    	this.world.add(area);
-    	this.addWall(area.tl.x, area.tl.y, area.br.x, area.tl.y);    	
-    	this.addWall(area.tl.x, area.tl.y, area.tl.x, area.br.y);
-    	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);
-    	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
-    	*/
     	//OVEST
     	cave = new MineCave();
     	area = new Area(new Location(0, 17), new Location(6, 25));
@@ -228,6 +242,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(area.br.x,  area.tl.y + 2, 16,  area.tl.y + 2);
     	this.addWall(area.br.x, area.tl.y + 3, 16, area.tl.y + 3);
     	cave.tunnels.add(tunnel);
+    	this.controlCave.entrances.add(new Location(16,  area.tl.y + 2));
     	
     	//blackboard/items
     	cave.blackBoard = new Location(5, area.tl.y + 1);
@@ -332,6 +347,13 @@ public class MineModel extends GridWorldModel{
     	if(itemInPlace.isPresent() && itemInPlace.get().getSecond() == object)
     		return true;
 		return false;    	
+    }
+    
+    private Location getRandomLocationInArea(Area area) {
+    	java.util.Random rnd = new java.util.Random();
+    	int x = rnd.nextInt((area.br.x) - (area.tl.x)) + area.tl.x;
+    	int y = rnd.nextInt((area.br.y) - (area.tl.y)) + area.tl.y;
+    	return new Location(x,y);
     }
     
 }

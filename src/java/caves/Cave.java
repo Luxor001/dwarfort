@@ -3,6 +3,7 @@ package caves;
 import java.util.ArrayList;
 
 import jason.environment.grid.Area;
+import jason.environment.grid.Location;
 
 public abstract class Cave {
 	public ArrayList<Area> areas = new ArrayList<Area>();

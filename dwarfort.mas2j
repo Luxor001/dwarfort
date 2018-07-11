@@ -6,7 +6,8 @@ MAS dwarfort {
 	
 	agents:
 		miner #6;
-	//	forger;
+		carrier #6; 
+		forger;
 	//	carrier #2; 
 	//	miner1 miner;
 

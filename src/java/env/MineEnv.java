@@ -28,9 +28,19 @@ public class MineEnv extends Environment{
             final MineView view = new MineView(this.model);
             this.model.setView(view);
         }
+        initializePercepts();
     }
     
 
+    private void initializePercepts() {
+    	for(int i = 0; i < this.model.controlCave.entrances.size(); i++) {
+    		Location entrance = this.model.controlCave.entrances.get(i);
+    		addPercept(Literal.parseLiteral("cave(" + i + ","+entrance.x + "," + entrance.y+")"));
+    	}
+    	this.model.controlCave.entrances.forEach(entrance -> {
+    		
+    	});
+    }
     @Override
     public boolean executeAction(final String ag, final Structure action) {
     	if(action.getFunctor().equals("cycleArea")) {
@@ -56,7 +66,8 @@ public class MineEnv extends Environment{
         			removePercept(ag, Literal.parseLiteral("goleft"));
         			removePercept(ag, Literal.parseLiteral("wall"));
         		}
-        		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.LEFT))) {
+        		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.LEFT)) || 
+        				!caveIAmIn.areas.get(areaIndex).contains(this.model.getLocationByStep(ag,  StepDirection.LEFT))) {
         			addPercept(ag, Literal.parseLiteral("wall")); 
         			if(agentLocation.y == caveIAmIn.areas.get(areaIndex).tl.y) {            			
         				addPercept(ag, Literal.parseLiteral("areaComplete"));
@@ -76,7 +87,8 @@ public class MineEnv extends Environment{
         			removePercept(ag, Literal.parseLiteral("goright"));
         			removePercept(ag, Literal.parseLiteral("wall"));
         		}
-        		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.RIGHT))) {
+        		else if(!this.model.isFreeOfObstacle(this.model.getLocationByStep(ag,  StepDirection.RIGHT)) || 
+        				!caveIAmIn.areas.get(areaIndex).contains(this.model.getLocationByStep(ag,  StepDirection.RIGHT))) {
         			addPercept(ag, Literal.parseLiteral("wall")); 
         			if(agentLocation.y == caveIAmIn.areas.get(areaIndex).tl.y) {
         				addPercept(ag, Literal.parseLiteral("areaComplete"));

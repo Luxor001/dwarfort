@@ -43,6 +43,8 @@ public class MineView  extends GridWorldView {
     	
     	if(MineModel.agentTypebyId.get(id).equals("miner"))
     		c = Color.BLUE;
+    	if(MineModel.agentTypebyId.get(id).equals("carrier"))
+    		c = Color.green;
     	if(MineModel.agentTypebyId.get(id).equals("forger"))
     		c = Color.RED;
         

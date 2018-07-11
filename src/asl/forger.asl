@@ -23,9 +23,4 @@ needs("gold").
 		.send(P, tell, goCollect(Resource));
 	}.
 
-
-// utilizzare ciclo for?
-//+!order(M) : needs(g) & space_avaiable("gold") <- .print("prova").
-
-
 +carrierReady(P) <- +carrier(P).
