@@ -95,7 +95,11 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.br.x, area.tl.y+2, 19, area.tl.y+2);
     	Area tunnel = new Area(area.br.x, area.tl.y+3, 19, area.tl.y+3);
     	this.addWall(area.br.x, area.tl.y+4, 19, area.tl.y+4);
-    	cave.tunnels.add(tunnel);    	
+    	cave.tunnels.add(tunnel);
+    	this.addWall(19, area.tl.y+4, 19, 18);
+    	tunnel = new Area(20, area.tl.y+3, 20, 18);
+    	this.addWall(21, area.tl.y+4, 21, 18);
+    	cave.tunnels.add(tunnel);
 
     	//blackboard/items
     	cave.blackBoard = new Location(5, 7);
@@ -115,8 +119,7 @@ public class MineModel extends GridWorldModel{
 
     	//cunicolo
     	this.addWall(area.tl.x+5, 6, area.tl.x+5, 8);
-    	this.addWall(area.tl.x+5, 10, area.tl.x+5, 18);
-    	tunnel = new Area(new Location(area.tl.x+6, 6), new Location(area.tl.x+6, 18));
+    	tunnel = new Area(area.tl.x+6, 6, area.tl.x+6, 18);
     	this.addWall(area.tl.x+7, 6, area.tl.x+7, 18);
     	cave.tunnels.add(tunnel);
     	
@@ -144,9 +147,9 @@ public class MineModel extends GridWorldModel{
 
     	//cunicolo
     	this.addWall(25, area.tl.y+3, area.tl.x - 1, area.tl.y+3);
-    	tunnel = new Area(25, area.tl.y+4, area.tl.x - 1, area.tl.y+4);
+    	tunnel = new Area(24, area.tl.y+4, area.tl.x, area.tl.y+4);
     	this.addWall(25, area.tl.y+5, area.tl.x - 1, area.tl.y+5);
-    	cave.tunnels.add(tunnel);    	
+    	cave.tunnels.add(tunnel);
 
     	//blackboard/items
     	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 3);
@@ -166,11 +169,11 @@ public class MineModel extends GridWorldModel{
 
     	//cunicolo
     	this.addWall(21, area.tl.y, area.tl.x - 1, area.tl.y);
-    	tunnel = new Area(22, area.tl.y + 1, area.tl.x - 1, area.tl.y + 1);
+    	tunnel = new Area(21, area.tl.y + 1, area.tl.x, area.tl.y + 1);
     	this.addWall(21, area.tl.y + 2, area.tl.x - 1, area.tl.y + 2);
     	cave.tunnels.add(tunnel);
     	this.addWall(19, 23, 19, area.tl.y+2);
-    	tunnel = new Area(20, 23, 20, area.tl.y + 1);
+    	tunnel = new Area(20, 23, 20, area.tl.y);
     	this.addWall(21, 23, 21, area.tl.y);
     	cave.tunnels.add(tunnel);    	
 
