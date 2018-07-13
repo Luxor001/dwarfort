@@ -21,8 +21,8 @@ public class MineModel extends GridWorldModel{
     public static final int STEEL = 32;
     public static final int BLACKBOARD = 64;
     
-    
-    public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();    
+    public static final HashMap<String, Integer> agentIdByName = new HashMap<>();
+    public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();
 	protected final static int GRIDSIZE=40;
 	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
 	ControlCave controlCave;
@@ -52,11 +52,13 @@ public class MineModel extends GridWorldModel{
 	    		mineCave.assignAgent(agentName);
 	    		this.setAgPos(index, this.mineCaves.get(index).areas.get(0).center());
 	    		MineModel.agentTypebyId.put(index, "miner");
+    			MineModel.agentIdByName.put(agentName, index);
     		}
     	});
 
 		//impostazione forger
 		MineModel.agentTypebyId.put(12, "forger");
+		MineModel.agentIdByName.put("forger", 12);
 		this.setAgPos(12, new Location(20, 20));
 		
     	//impostazione carriers
@@ -65,6 +67,7 @@ public class MineModel extends GridWorldModel{
     		if(this.isFree(random)) {
     			this.setAgPos(i, random);	
     			MineModel.agentTypebyId.put(i, "carrier");
+    			MineModel.agentIdByName.put("carrier"+(i - 5) , i);
     			i++;
     		}    		
     	}
@@ -196,7 +199,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(20, 23, 20, area.tl.y);
     	this.addWall(21, 23, 21, area.tl.y);
     	cave.tunnels.add(tunnel);    	
-    	this.controlCave.entrances.add(new Location(20, area.tl.y));
+    	this.controlCave.entrances.add(new Location(33, 20));
 
     	//blackboard/items
     	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 2);
@@ -327,10 +330,10 @@ public class MineModel extends GridWorldModel{
 		return null;    	
     }
     
-    private int getAgentIdByName(String agent) {
-    	if(agent.equals("miner"))
-    		return 0;
-    	return Integer.parseInt(agent.substring(agent.length() -1 , agent.length())) - 1;    	
+    private synchronized int getAgentIdByName(String agent) {
+    	/*if(agent.equals("miner"))
+    		return 0;*/
+    	return MineModel.agentIdByName.get(agent);
     }
     
     public MineCave getCaveOfAgent(String agent) {

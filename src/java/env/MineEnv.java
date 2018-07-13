@@ -31,7 +31,6 @@ public class MineEnv extends Environment{
         initializePercepts();
     }
     
-
     private void initializePercepts() {
     	for(int i = 0; i < this.model.controlCave.entrances.size(); i++) {
     		Location entrance = this.model.controlCave.entrances.get(i);
@@ -115,6 +114,14 @@ public class MineEnv extends Environment{
     	}
     	if(action.getFunctor().equals("deletePersonalPercept")) {
     		removePercept(ag, Literal.parseLiteral(action.getTerm(0).toString()));
+    		return true;
+    	}
+    	if(action.getFunctor().equals("reachEntrance")) {
+    		System.out.print("prova");
+    		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
+    		int x = Integer.parseInt(term.split(",")[1]);
+    		int y = Integer.parseInt(term.split(",")[2]);    		
+    		this.model.moveTowards(ag, new Location(x, y));
     		return true;
     	}
 		return false;

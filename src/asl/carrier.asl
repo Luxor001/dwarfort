@@ -10,22 +10,35 @@ cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
 !start.
 
 +!start: true <- 
-?cavesEntrances(Caves);
-.length(Caves, Length);
-+num_caves(Length);
-.my_name(Name);
-.send(forger, tell, carrierReady(Name)).
+	?cavesEntrances(Caves);
+	.length(Caves, Length);
+	+num_caves(Length);
+	.my_name(Name);
+	.send(forger, tell, carrierReady(Name)).
 
 +goCollect(Resource) <- 
-?num_caves(N);
-?cavesEntrances(Caves);
-for(.range(I, 0, N)) {
-	 .nth(I, Caves, Cave);
-	 .print(Cave);
-	 !goToCave(I);
-	 .wait(5000);
-}
-//!selectCave;
-.print("devo andare a prendere", Resource).
+	?num_caves(N);
+	?cavesEntrances(Caves);
+	for(.range(I, 0, N)) {
+		 .nth(I, Caves, Cave);
+		 !goToCave(Cave);
+		 .wait(5000);
+	}
+	.print("devo andare a prendere", Resource).
 
-+!goToCave(I) <- .print("going to ", I).
++!goToCave(Cave) <- 
+	!reachEntrance(Cave);
+	//goTroughTunnels
+		//?geTunnelsOf(Cave);
+	.print("reached").
+
++!reachEntrance(Cave) : true <- 
+	.print("going to ", Cave);
+	reachEntrance(Cave);
+	.wait(1000);
+	!reachEntrance(Cave).
+
+
+//+!reachEntrance(Cave) : entranceReached <- true.
+
+
