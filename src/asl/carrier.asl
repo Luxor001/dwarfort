@@ -20,7 +20,8 @@ cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
 	?num_caves(N);
 	?cavesEntrances(Caves);
 	for(.range(I, 0, N)) {
-		 .nth(I, Caves, Cave);
+		 utilities.random(0, N, Random);
+		 .nth(Random, Caves, Cave);
 		 !goToCave(Cave);
 		 .wait(5000);
 	}
@@ -35,7 +36,7 @@ cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
 +!reachEntrance(Cave) : true <- 
 	.print("going to ", Cave);
 	reachEntrance(Cave);
-	.wait(1000);
+	.wait(200);
 	!reachEntrance(Cave).
 
 

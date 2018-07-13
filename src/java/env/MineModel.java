@@ -199,7 +199,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(20, 23, 20, area.tl.y);
     	this.addWall(21, 23, 21, area.tl.y);
     	cave.tunnels.add(tunnel);    	
-    	this.controlCave.entrances.add(new Location(33, 20));
+    	this.controlCave.entrances.add(new Location(20, 22));
 
     	//blackboard/items
     	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 2);
@@ -222,7 +222,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(20, 22, 20, area.tl.y);
     	this.addWall(21, area.tl.y - 2, 21, area.tl.y);
     	cave.tunnels.add(tunnel);
-    	this.controlCave.entrances.add(new Location(20, area.tl.y));
+    	this.controlCave.entrances.add(new Location(20, 22));
     	
     	//blackboard/items
     	cave.blackBoard = new Location(19, area.tl.y + 1);

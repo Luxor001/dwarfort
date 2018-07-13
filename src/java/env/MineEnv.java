@@ -117,11 +117,9 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("reachEntrance")) {
-    		System.out.print("prova");
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    		int x = Integer.parseInt(term.split(",")[1]);
-    		int y = Integer.parseInt(term.split(",")[2]);    		
-    		this.model.moveTowards(ag, new Location(x, y));
+    		Location locationToReach = new Location(Integer.parseInt(term.split(",")[1]), Integer.parseInt(term.split(",")[2]));
+    		this.model.moveTowards(ag, locationToReach);
     		return true;
     	}
 		return false;
