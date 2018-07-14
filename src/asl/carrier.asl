@@ -22,37 +22,27 @@ artefact(Prova) :- true.
 	?cavesEntrances(Caves);
 	.shuffle(Caves, ShuffledCaves);
 	for(.range(I, 0, N - 1)) {
-		 .nth(I, ShuffledCaves, Cave);
-		 .print(Cave);
+		 .nth(I, ShuffledCaves, CaveSelected);
 		 deletePersonalPercept(entranceReached);
 		 deletePersonalPercept(artefactFound);
-		 !reachEntrance(Cave);
-		 scanForArtefact;
-		 !goToCave(Cave);
+		 !reachEntrance(CaveSelected);
+		 scanForArtefact(CaveSelected);
+		 !goToCave(CaveSelected);
 		 .wait(500);
-	}
-	.print("devo andare a prendere", Resource).
+	}.
 
-+!goToCave(Cave) : artefactFound <-
-.wait(5).
-//.print("artefact found").
++!goToCave(Cave) : artefactFound <- 
+	true.
 
 +!goToCave(Cave) : not artefactFound <-
-.print("going for", Cave);
-deployArtefact(Cave);
-!traverseTunnels(Cave, "ControlCaveToMineCave").
-/*+!goToCave(Cave) <- 
-	!reachEntrance(Cave);
-	//scanForArtefact
-	.print("Entrata raggiunta");
-	.wait(1000);
-	//goTroughTunnels
-		//?geTunnelsOf(Cave);
-	.print("reached").
-*/
+	deployArtefact(Cave);
+	!traverseTunnels(Cave, "Control-Cave").
+
+
 +!traverseTunnels(Cave, Direction) <-
-.wait(5);
-!traverseTunnels(Cave, Direction).
+	traverseTunnel(Cave, Direction);
+	.wait(100000);
+	!traverseTunnels(Cave, Direction).
 
 +!reachEntrance(Cave) : not entranceReached <-
 	reachEntrance(Cave);

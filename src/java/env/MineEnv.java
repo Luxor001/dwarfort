@@ -126,9 +126,12 @@ public class MineEnv extends Environment{
     	}
     	if(action.getFunctor().equals("scanForArtefact")) {
     		Location agentLocation = this.model.getAgentLocationByName(ag);
-    		//TODO: controllare se si sta andando anche nella stessa cave..
-    		if(this.model.artefactsOnMap.containsKey(agentLocation))
-    			this.addPercept(ag, Literal.parseLiteral("artefactFound"));       			
+    		if(this.model.artefactsOnMap.containsKey(agentLocation)) {
+    			Artefact artefatto = this.model.artefactsOnMap.get(agentLocation);
+        		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
+    			if(artefatto.caveGoingTo.equals(term.split(",")[0]))
+    				this.addPercept(ag, Literal.parseLiteral("artefactFound"));
+    		}
     		return true;
     	}
     	if(action.getFunctor().equals("deployArtefact")) {
@@ -137,6 +140,12 @@ public class MineEnv extends Environment{
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
     		this.model.artefactsOnMap.put(agentLocation, new Artefact(ag, term.split(",")[0]));
     		return true;
+    	}
+    	if(action.getFunctor().equals("traverseTunnel")) {
+    		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
+    	    int caveIndex = Integer.parseInt(term.split(",")[0]);    	    
+    	    MineCave mineCaveToReach = this.model.mineCaves.get(caveIndex);
+    	    
     	}
 		return false;
     }
