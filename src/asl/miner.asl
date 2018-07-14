@@ -13,7 +13,7 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 !scanCave.
 
 +!scanCave: caveScanned
-	<- .print("scansione finita");
+	<- //.print("scansione finita");
 	.wait(20000);
 !scanCave.
 

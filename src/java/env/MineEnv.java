@@ -132,6 +132,7 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("deployArtefact")) {
+    		//System.out.print("DEPLOY ARTEFACT");
     		Location agentLocation = this.model.getAgentLocationByName(ag);
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
     		this.model.artefactsOnMap.put(agentLocation, new Artefact(ag, term.split(",")[0]));
