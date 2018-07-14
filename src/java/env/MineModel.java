@@ -23,6 +23,8 @@ public class MineModel extends GridWorldModel{
     
     public static final HashMap<String, Integer> agentIdByName = new HashMap<>();
     public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();
+    
+    public HashMap<Location, Artefact> artefactsOnMap = new HashMap<>();
 	protected final static int GRIDSIZE=40;
 	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
 	ControlCave controlCave;
@@ -172,7 +174,7 @@ public class MineModel extends GridWorldModel{
     	tunnel = new Area(24, area.tl.y+4, area.tl.x, area.tl.y+4);
     	this.addWall(25, area.tl.y+5, area.tl.x - 1, area.tl.y+5);
     	cave.tunnels.add(tunnel);
-    	this.controlCave.entrances.add(new Location(area.tl.x, area.tl.y+4));
+    	this.controlCave.entrances.add(new Location(24, area.tl.y+4));
 
     	//blackboard/items
     	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 3);
@@ -277,15 +279,14 @@ public class MineModel extends GridWorldModel{
             r1.y--;
         
         this.setAgPos(getAgentIdByName(agent), r1); // actually move the robot in the grid        
-        return true;
-    }
-    
+        return r1.equals(dest);
+    }    
     
     public synchronized void gotocorner(String agent, int area) {
     	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
     	Area areaToMoveTo = caveIAmIn.areas.get(area);
     	moveTowards(agent, areaToMoveTo.br);
-}
+    }
 
     public synchronized boolean isAtCorner(String agent, int area) {
     	Location agentLocation = getAgentLocationByName(agent);

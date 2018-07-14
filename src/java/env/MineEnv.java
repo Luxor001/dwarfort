@@ -119,7 +119,22 @@ public class MineEnv extends Environment{
     	if(action.getFunctor().equals("reachEntrance")) {
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
     		Location locationToReach = new Location(Integer.parseInt(term.split(",")[1]), Integer.parseInt(term.split(",")[2]));
-    		this.model.moveTowards(ag, locationToReach);
+    		boolean reached = this.model.moveTowards(ag, locationToReach);
+    		if(reached) 
+    			this.addPercept(ag, Literal.parseLiteral("entranceReached"));    		
+    		return true;
+    	}
+    	if(action.getFunctor().equals("scanForArtefact")) {
+    		Location agentLocation = this.model.getAgentLocationByName(ag);
+    		//TODO: controllare se si sta andando anche nella stessa cave..
+    		if(this.model.artefactsOnMap.containsKey(agentLocation))
+    			this.addPercept(ag, Literal.parseLiteral("artefactFound"));       			
+    		return true;
+    	}
+    	if(action.getFunctor().equals("deployArtefact")) {
+    		Location agentLocation = this.model.getAgentLocationByName(ag);
+    		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
+    		this.model.artefactsOnMap.put(agentLocation, new Artefact(ag, term.split(",")[0]));
     		return true;
     	}
 		return false;
