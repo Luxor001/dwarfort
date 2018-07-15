@@ -28,7 +28,7 @@ artefact(Prova) :- true.
 		 !reachEntrance(CaveSelected);
 		 scanForArtefact(CaveSelected);
 		 !goToCave(CaveSelected);
-		 .wait(500);
+		 .wait(100);
 	}.
 
 +!goToCave(Cave) : artefactFound <- 
@@ -36,20 +36,30 @@ artefact(Prova) :- true.
 
 +!goToCave(Cave) : not artefactFound <-
 	deployArtefact(Cave);
-	!traverseTunnels(Cave, "Control-Cave").
+	!traverseTunnels(Cave, "Control-Cave");
+	deletePersonalPercept(caveReached);
+	.print("cave reached!");
+	wait(50000).
 
-
-+!traverseTunnels(Cave, Direction) <-
-	traverseTunnel(Cave, Direction);
-	.wait(100000);
-	!traverseTunnels(Cave, Direction).
 
 +!reachEntrance(Cave) : not entranceReached <-
 	reachEntrance(Cave);
-	.wait(500);
+	.wait(100);
 	!reachEntrance(Cave).
 	
-+!reachEntrance(Cave) : true <- true.
+
++!reachEntrance(Cave) : entranceReached <- true.
+
+
++!traverseTunnels(Cave, Direction): not caveReached <-
+	traverseTunnel(Cave, Direction);
+	.wait(50);
+	!traverseTunnels(Cave, Direction).
+	
+	
++!traverseTunnels(Cave, Direction): caveReached <-
+	true.
+	
 
 //+!reachEntrance(Cave) : entranceReached <- true.
 

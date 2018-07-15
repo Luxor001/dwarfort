@@ -112,6 +112,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);    	
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.tl.y+2);
     	this.addWall(area.br.x, area.tl.y+4, area.br.x, area.br.y);
+    	cave.entrance = new Location(area.br.x-1, area.tl.y+3);
     	
     	//cunicolo
     	this.addWall(area.br.x, area.tl.y+2, 19, area.tl.y+2);
@@ -139,6 +140,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x+7, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
     	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.entrance = new Location(area.tl.x+6, area.br.y-1);
 
     	//cunicolo
     	this.addWall(area.tl.x+5, 6, area.tl.x+5, 8);
@@ -168,6 +170,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
     	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.entrance = new Location(area.tl.x+1, area.tl.y+4);
 
     	//cunicolo
     	this.addWall(25, area.tl.y+3, area.tl.x - 1, area.tl.y+3);
@@ -191,6 +194,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
     	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.entrance = new Location(area.tl.x+1, area.tl.y+1);
 
     	//cunicolo
     	this.addWall(21, area.tl.y, area.tl.x - 1, area.tl.y);
@@ -218,6 +222,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.tl.x, area.br.y, area.br.x, area.br.y);
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.br.y);
     	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.entrance = new Location(area.tl.x+4, area.tl.y + 1);
 
     	//cunicolo
     	this.addWall(19, 23, 19, area.tl.y);
@@ -241,6 +246,7 @@ public class MineModel extends GridWorldModel{
     	this.addWall(area.br.x, area.tl.y, area.br.x, area.tl.y + 1);
     	this.addWall(area.br.x, area.tl.y + 3, area.br.x, area.br.y);
     	cave.areas.add(new Area(new Location(area.tl.x + 1, area.tl.y + 1), new Location(area.br.x - 1, area.br.y - 1)));
+    	cave.entrance = new Location(area.br.x - 1, area.tl.y+2);
     	
     	//cunicolo
     	this.addWall(area.br.x, area.tl.y + 1, 16, area.tl.y + 1);

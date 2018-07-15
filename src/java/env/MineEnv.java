@@ -125,6 +125,7 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("scanForArtefact")) {
+    		// TODO refactor nel model!
     		Location agentLocation = this.model.getAgentLocationByName(ag);
     		if(this.model.artefactsOnMap.containsKey(agentLocation)) {
     			Artefact artefatto = this.model.artefactsOnMap.get(agentLocation);
@@ -135,17 +136,24 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("deployArtefact")) {
-    		//System.out.print("DEPLOY ARTEFACT");
+    		//TODO refactor nel model!
     		Location agentLocation = this.model.getAgentLocationByName(ag);
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
     		this.model.artefactsOnMap.put(agentLocation, new Artefact(ag, term.split(",")[0]));
     		return true;
     	}
     	if(action.getFunctor().equals("traverseTunnel")) {
-    		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
+    		//TODO refactor nel model!
+    		String term = action.getTerm(0).toString().replaceAll("[cave(.*?)]", "");
     	    int caveIndex = Integer.parseInt(term.split(",")[0]);    	    
     	    MineCave mineCaveToReach = this.model.mineCaves.get(caveIndex);
     	    
+    		this.model.moveTowards(ag, mineCaveToReach.entrance);
+    		Location agentLocation = this.model.getAgentLocationByName(ag);
+    		
+    		if(mineCaveToReach.areas.stream().filter(area -> area.contains(agentLocation)).count() != 0)
+    			addPercept(ag, Literal.parseLiteral("entranceReached"));
+    		return true;
     	}
 		return false;
     }
