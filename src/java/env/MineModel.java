@@ -5,6 +5,8 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Optional;
 
+import artefacts.Artefact;
+import artefacts.CarrierArtefact;
 import caves.Cave;
 import caves.ControlCave;
 import caves.MineCave;
@@ -24,7 +26,7 @@ public class MineModel extends GridWorldModel{
     public static final HashMap<String, Integer> agentIdByName = new HashMap<>();
     public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();
     
-    public HashMap<Location, Artefact> artefactsOnMap = new HashMap<>();
+    public HashMap<Location, CarrierArtefact> artefactsOnMap = new HashMap<>();
 	protected final static int GRIDSIZE=40;
 	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
 	ControlCave controlCave;

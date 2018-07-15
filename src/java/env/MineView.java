@@ -21,7 +21,6 @@ public class MineView  extends GridWorldView {
     /** draw application objects */
     @Override
     public void draw(final Graphics g, final int x, final int y,final int object) {
-        //final Location lRobot = this.model.getAgPos(0);
        switch (object) {
         case MineModel.GOLD:                      	
             super.drawAgent(g, x, y, Color.yellow, -1);
@@ -49,15 +48,5 @@ public class MineView  extends GridWorldView {
     		c = Color.RED;
         
         super.drawAgent(g, x, y, c, -1);
-        /*if (!agent.equals(this.hmodel.lOwner)
-                && !lRobot.equals(this.hmodel.lFridge)) {
-            c = Color.yellow;
-            if (this.hmodel.carryingBeer) {
-                c = Color.orange;
-            }
-            super.drawAgent(g, x, y, c, -1);
-            g.setColor(Color.black);
-            super.drawString(g, x, y, this.defaultFont, "Robot");
-        }*/
     }
 }

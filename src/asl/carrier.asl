@@ -1,11 +1,7 @@
 // Agent carrier in project dwarfort
 
 /* Initial beliefs and rules */
-
-//cave(Caves) :-	.findall(cave(Index, EntranceX, EntranceY), cave(Index, EntranceX, EntranceY), Caves).
-//cavesEntrances(Index, X, Y) :- .findall(caves(Index, U, P), place(P, Room), Players).
-cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
-artefact(Prova) :- true.
+cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves). 
 /* Initial goals */
 
 !start.
@@ -23,44 +19,32 @@ artefact(Prova) :- true.
 	.shuffle(Caves, ShuffledCaves);
 	for(.range(I, 0, N - 1)) {
 		 .nth(I, ShuffledCaves, CaveSelected);
-		 deletePersonalPercept(entranceReached);
-		 deletePersonalPercept(artefactFound);
-		 !reachEntrance(CaveSelected);
-		 scanForArtefact(CaveSelected);
 		 !goToCave(CaveSelected);
 		 .wait(100);
-	}.
-
-+!goToCave(Cave) : artefactFound <- 
-	true.
+	};
+	.print("prova").
 
 +!goToCave(Cave) : not artefactFound <-
+	!reachEntrance(Cave);
+	deletePersonalPercept(entranceReached);
+	scanForArtefact(Cave);
 	deployArtefact(Cave);
 	!traverseTunnels(Cave, "Control-Cave");
 	deletePersonalPercept(caveReached);
-	.print("cave reached!");
-	wait(50000).
-
+	?goCollect(Resource);
+	.send(miner1, tell, forgerNeeds(Resource));
+	.wait(100000).
++!goToCave(Cave) : artefactFound <- true.
 
 +!reachEntrance(Cave) : not entranceReached <-
 	reachEntrance(Cave);
 	.wait(100);
-	!reachEntrance(Cave).
-	
-
+	!reachEntrance(Cave).	
 +!reachEntrance(Cave) : entranceReached <- true.
-
 
 +!traverseTunnels(Cave, Direction): not caveReached <-
 	traverseTunnel(Cave, Direction);
 	.wait(50);
-	!traverseTunnels(Cave, Direction).
-	
-	
-+!traverseTunnels(Cave, Direction): caveReached <-
-	true.
-	
-
-//+!reachEntrance(Cave) : entranceReached <- true.
-
+	!traverseTunnels(Cave, Direction).	
++!traverseTunnels(Cave, Direction): caveReached <- true.
 

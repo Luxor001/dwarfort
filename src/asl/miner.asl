@@ -1,6 +1,7 @@
 /* Initial beliefs */
 
-area_to_scan(0). // It's supermarket's "knowledge base"	
+area_to_scan(0).
+resourceLocation(Type, Resources) :- .findall(resource(Type, _, _), resource(Type, _, _), Resources). //& .nth(0, Resources, Resource).
 /*
 +!attendiOrdini : not ordiniArrivati <- .print("attendo"); !attendiOrdini.
 */
@@ -11,11 +12,7 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 	!scanArea(N);
 	-+area_to_scan(N+1);
 !scanCave.
-
-+!scanCave: caveScanned
-	<- //.print("scansione finita");
-	.wait(20000);
-!scanCave.
++!scanCave: caveScanned <- true.
 
 	+!scanArea(N)
 		: true
@@ -41,10 +38,13 @@ area_to_scan(0). // It's supermarket's "knowledge base"
 			.wait(50);
 		!go_to_bottomright(N).
 	
-		+!go_to_bottomright(N).
++!go_to_bottomright(N).
 			 // ...that's all, do nothing, the "original" intention (the "context") can continue
 			 
-				
++forgerNeeds(Resource) <- 
+	.wait(100);
+	?resourceLocation(Resource, Resources);
+	.print(Resources). 
 
 /* 
 <- ?last_order_id(N); // test-goal

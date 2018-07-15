@@ -3,6 +3,8 @@ package env;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import artefacts.Artefact;
+import artefacts.CarrierArtefact;
 import caves.Cave;
 import caves.MineCave;
 import env.MineModel.StepDirection;
@@ -50,10 +52,10 @@ public class MineEnv extends Environment{
     			addPercept(ag, Literal.parseLiteral("goleft"));
     		   			
     		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.GOLD))
-    			addPercept(ag, Literal.parseLiteral("gold(" + agentLocation.toString() + ")"));
+    			addPercept(ag, Literal.parseLiteral("resource(gold," + agentLocation.toString() + ")"));
 
     		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.STEEL))
-    			addPercept(ag, Literal.parseLiteral("steel(" + agentLocation.toString() + ")"));
+    			addPercept(ag, Literal.parseLiteral("resource(steel," + agentLocation.toString() + ")"));
     		
     		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.BLACKBOARD))
     			addPercept(ag, Literal.parseLiteral("blackboard(" + agentLocation.toString() + ")"));
@@ -128,10 +130,10 @@ public class MineEnv extends Environment{
     		// TODO refactor nel model!
     		Location agentLocation = this.model.getAgentLocationByName(ag);
     		if(this.model.artefactsOnMap.containsKey(agentLocation)) {
-    			Artefact artefatto = this.model.artefactsOnMap.get(agentLocation);
+    			CarrierArtefact artefatto = this.model.artefactsOnMap.get(agentLocation);
         		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    			if(artefatto.caveGoingTo.equals(term.split(",")[0]))
-    				this.addPercept(ag, Literal.parseLiteral("artefactFound"));
+    			if(artefatto.caveGoingTo.equals(term.split(",")[0])) 
+    				this.addPercept(ag, Literal.parseLiteral("artefactFound"));    			
     		}
     		return true;
     	}
@@ -139,7 +141,7 @@ public class MineEnv extends Environment{
     		//TODO refactor nel model!
     		Location agentLocation = this.model.getAgentLocationByName(ag);
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    		this.model.artefactsOnMap.put(agentLocation, new Artefact(ag, term.split(",")[0]));
+    		this.model.artefactsOnMap.put(agentLocation, new CarrierArtefact(ag, term.split(",")[0]));
     		return true;
     	}
     	if(action.getFunctor().equals("traverseTunnel")) {
@@ -151,8 +153,9 @@ public class MineEnv extends Environment{
     		this.model.moveTowards(ag, mineCaveToReach.entrance);
     		Location agentLocation = this.model.getAgentLocationByName(ag);
     		
-    		if(mineCaveToReach.areas.stream().filter(area -> area.contains(agentLocation)).count() != 0)
-    			addPercept(ag, Literal.parseLiteral("entranceReached"));
+    		if(mineCaveToReach.entrance.equals(agentLocation)) 
+    			addPercept(ag, Literal.parseLiteral("caveReached"));
+    		
     		return true;
     	}
 		return false;
