@@ -132,9 +132,12 @@ public class MineEnv extends Environment{
     		if(this.model.artefactsOnMap.containsKey(agentLocation)) {
     			CarrierArtefact artefatto = this.model.artefactsOnMap.get(agentLocation);
         		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    			if(artefatto.caveGoingTo.equals(term.split(",")[0])) 
-    				this.addPercept(ag, Literal.parseLiteral("artefactFound"));    			
+    			if(artefatto.caveGoingTo.equals(term.split(",")[0])) {
+    				System.out.println(term.split(",")[0] + "con" + artefatto.caveGoingTo);
+    				return true;
+    			}
     		}
+    		this.addPercept(ag, Literal.parseLiteral("caveFound(" + action.getTerm(0).toString() + ")"));
     		return true;
     	}
     	if(action.getFunctor().equals("deployArtefact")) {

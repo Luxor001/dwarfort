@@ -17,24 +17,23 @@ cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
 	?num_caves(N);
 	?cavesEntrances(Caves);
 	.shuffle(Caves, ShuffledCaves);
-	for(.range(I, 0, N - 1)) {
-		 .nth(I, ShuffledCaves, CaveSelected);
-		 !goToCave(CaveSelected);
-		 .wait(100);
-	};
-	.print("prova").
+	!searchFreeCave(ShuffledCaves, 0).
 
-+!goToCave(Cave) : not artefactFound <-
-	!reachEntrance(Cave);
++caveFound(Cave) <- deployArtefact(Cave); .print(Cave); !!goToCave(Cave).
+	
++!searchFreeCave(ShuffledCaves, I): not caveFound(_) & I < .length(ShuffledCaves)<-
+ 	.nth(I, ShuffledCaves, CaveSelected);
+	!reachEntrance(CaveSelected);
 	deletePersonalPercept(entranceReached);
-	scanForArtefact(Cave);
-	deployArtefact(Cave);
+	scanForArtefact(CaveSelected);
+!searchFreeCave(ShuffledCaves, I+1).
++!searchFreeCave(ShuffledCaves, I): true <- true.
+
++!goToCave(Cave) <-
 	!traverseTunnels(Cave, "Control-Cave");
 	deletePersonalPercept(caveReached);
 	?goCollect(Resource);
-	.send(miner1, tell, forgerNeeds(Resource));
-	.wait(100000).
-+!goToCave(Cave) : artefactFound <- true.
+	.send(miner1, tell, forgerNeeds(Resource)).	
 
 +!reachEntrance(Cave) : not entranceReached <-
 	reachEntrance(Cave);
