@@ -36,11 +36,9 @@ public class MineEnv extends Environment{
     private void initializePercepts() {
     	for(int i = 0; i < this.model.controlCave.entrances.size(); i++) {
     		Location entrance = this.model.controlCave.entrances.get(i);
-    		addPercept(Literal.parseLiteral("cave(" + i + ","+entrance.x + "," + entrance.y+")"));
+    		MineCave cave = this.model.mineCaves.get(i);
+    		addPercept(Literal.parseLiteral("cave(" + i + ","+ cave.agentAssigned+","+entrance.x + "," + entrance.y+")"));
     	}
-    	this.model.controlCave.entrances.forEach(entrance -> {
-    		
-    	});
     }
     @Override
     public boolean executeAction(final String ag, final Structure action) {
@@ -120,7 +118,7 @@ public class MineEnv extends Environment{
     	}
     	if(action.getFunctor().equals("reachEntrance")) {
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    		Location locationToReach = new Location(Integer.parseInt(term.split(",")[1]), Integer.parseInt(term.split(",")[2]));
+    		Location locationToReach = new Location(Integer.parseInt(term.split(",")[2]), Integer.parseInt(term.split(",")[3]));
     		boolean reached = this.model.moveTowards(ag, locationToReach);
     		if(reached) 
     			this.addPercept(ag, Literal.parseLiteral("entranceReached"));    		
@@ -133,7 +131,6 @@ public class MineEnv extends Environment{
     			CarrierArtefact artefatto = this.model.artefactsOnMap.get(agentLocation);
         		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
     			if(artefatto.caveGoingTo.equals(term.split(",")[0])) {
-    				System.out.println(term.split(",")[0] + "con" + artefatto.caveGoingTo);
     				return true;
     			}
     		}

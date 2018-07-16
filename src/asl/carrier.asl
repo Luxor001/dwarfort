@@ -1,7 +1,7 @@
 // Agent carrier in project dwarfort
 
 /* Initial beliefs and rules */
-cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves). 
+cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Caves).
 /* Initial goals */
 
 !start.
@@ -12,14 +12,6 @@ cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
 	+num_caves(Length);
 	.my_name(Name);
 	.send(forger, tell, carrierReady(Name)).
-
-+goCollect(Resource) <- 
-	?num_caves(N);
-	?cavesEntrances(Caves);
-	.shuffle(Caves, ShuffledCaves);
-	!searchFreeCave(ShuffledCaves, 0).
-
-+caveFound(Cave) <- deployArtefact(Cave); .print(Cave); !!goToCave(Cave).
 	
 +!searchFreeCave(ShuffledCaves, I): not caveFound(_) & I < .length(ShuffledCaves)<-
  	.nth(I, ShuffledCaves, CaveSelected);
@@ -29,11 +21,13 @@ cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
 !searchFreeCave(ShuffledCaves, I+1).
 +!searchFreeCave(ShuffledCaves, I): true <- true.
 
-+!goToCave(Cave) <-
-	!traverseTunnels(Cave, "Control-Cave");
++!goToCave(cave(Index, Miner, X, Y)) <-
+	!traverseTunnels(cave(Index, Miner, X, Y), "Control-Cave");
 	deletePersonalPercept(caveReached);
+	.wait(5000);
+	?cave(Index, MinerName, _, _);
 	?goCollect(Resource);
-	.send(miner1, tell, forgerNeeds(Resource)).	
+	.send(MinerName, tell, forgerNeeds(Resource)).	
 
 +!reachEntrance(Cave) : not entranceReached <-
 	reachEntrance(Cave);
@@ -47,3 +41,15 @@ cavesEntrances(Caves) :- .findall(cave(I, X, Y), cave(I, X, Y), Caves).
 	!traverseTunnels(Cave, Direction).	
 +!traverseTunnels(Cave, Direction): caveReached <- true.
 
+
++goCollect(Resource) <- 
+	.random(X); .wait(X*1000); // From time to time, I get bored...
+	?num_caves(N); 
+	?cavesEntrances(Caves);
+	.shuffle(Caves, ShuffledCaves);
+	!searchFreeCave(ShuffledCaves, 0).
+
++caveFound(Cave) <- 
+	deployArtefact(Cave); 
+	.print(Cave); 
+	!!goToCave(Cave).
