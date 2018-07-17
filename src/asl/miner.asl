@@ -50,9 +50,13 @@ area_to_scan(0).
 	?resource(Resource, X, Y); 
 	!goTo(X, Y);
 	deletePersonalPercept(positionReached);	
-	/*!collect;
-	!bringToStorage;*/
+	!collect(Resource);
+	/*!bringToStorage;*/
 	.print("finito").
+
++!collect(Resource) <- 
+	.wait(200);
+	collect(Resource).
 	
 
 /* 

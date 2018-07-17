@@ -153,7 +153,6 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("traverseTunnel")) {
-    		//TODO refactor nel model!
     		String term = action.getTerm(0).toString().replaceAll("[cave(.*?)]", "");
     	    int caveIndex = Integer.parseInt(term.split(",")[0]);    	    
     	    MineCave mineCaveToReach = this.model.mineCaves.get(caveIndex);
@@ -164,6 +163,13 @@ public class MineEnv extends Environment{
     		if(mineCaveToReach.entrance.equals(agentLocation)) 
     			addPercept(ag, Literal.parseLiteral("caveReached"));
     		
+    		return true;
+    	}
+    	if(action.getFunctor().equals("collect")) {
+    		//TODO refactor nel model!
+    		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
+    		int kgCollected = this.model.collect(ag, resourceType);
+    		System.out.print(kgCollected);
     		return true;
     	}
 		return false;

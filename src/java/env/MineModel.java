@@ -10,10 +10,12 @@ import artefacts.CarrierArtefact;
 import caves.Cave;
 import caves.ControlCave;
 import caves.MineCave;
+import jason.asSyntax.NumberTerm;
+import jason.asSyntax.NumberTermImpl;
 import jason.environment.grid.Area;
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.Location;
-import jason.functions.Random;
+import java.util.Random;
 import jason.util.Pair;
 
 public class MineModel extends GridWorldModel{
@@ -22,6 +24,7 @@ public class MineModel extends GridWorldModel{
     public static final int GOLD = 16;
     public static final int STEEL = 32;
     public static final int BLACKBOARD = 64;
+    public static final int MAX_MINING_CAPABILITY = 5;
     
     public static final HashMap<String, Integer> agentIdByName = new HashMap<>();
     public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();
@@ -291,14 +294,14 @@ public class MineModel extends GridWorldModel{
     }    
     
     public synchronized void gotocorner(String agent, int area) {
-    	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
+    	Cave caveIAmIn = this.getCaveOfAgent(agent);
     	Area areaToMoveTo = caveIAmIn.areas.get(area);
     	moveTowards(agent, areaToMoveTo.br);
     }
 
     public synchronized boolean isAtCorner(String agent, int area) {
     	Location agentLocation = getAgentLocationByName(agent);
-    	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
+    	Cave caveIAmIn = this.getCaveOfAgent(agent);
     	Area areaToMoveTo = caveIAmIn.areas.get(area);
     	return agentLocation.distance(areaToMoveTo.br) == 0;    	
     }
@@ -310,7 +313,7 @@ public class MineModel extends GridWorldModel{
     }
     public synchronized void cycleArea(String agent, int area, boolean direction) {
     	Location agentLocation = getAgentLocationByName(agent);
-    	Cave caveIAmIn = this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();
+    	Cave caveIAmIn = this.getCaveOfAgent(agent);
     	Area currentarea = caveIAmIn.areas.get(area);
     	
     	if(agentLocation.x > currentarea.tl.x)
@@ -346,7 +349,7 @@ public class MineModel extends GridWorldModel{
     }
     
     public MineCave getCaveOfAgent(String agent) {
-    	return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
+		return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
     }
     
     public boolean agentOverObject(String agent, int object) {
@@ -367,5 +370,10 @@ public class MineModel extends GridWorldModel{
     	int y = rnd.nextInt((area.br.y) - (area.tl.y)) + area.tl.y;
     	return new Location(x,y);
     }
-    
+    public int collect(String agent, int resourceType) {
+    	Location agentLocation = this.getAgentLocationByName(agent);
+    	if(this.agentOverObject(agent, resourceType)) 
+            return new Random().nextInt(MineModel.MAX_MINING_CAPABILITY + 1);    	
+    	return 0;
+    }    
 }
