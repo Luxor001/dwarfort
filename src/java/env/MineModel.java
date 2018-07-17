@@ -236,7 +236,7 @@ public class MineModel extends GridWorldModel{
     	//blackboard/items
     	cave.blackBoard = new Location(19, area.tl.y + 1);
     	cave.items.add(new Pair<Location, Integer>(new Location(area.br.x -1, area.br.y - 1), GOLD));
-    	cave.items.add(new Pair<Location, Integer>(new Location(38,32), STEEL));
+    	cave.items.add(new Pair<Location, Integer>(new Location(17,35), STEEL));
     	this.mineCaves.add(cave);
 
     	//OVEST

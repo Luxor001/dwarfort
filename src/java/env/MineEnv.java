@@ -51,7 +51,7 @@ public class MineEnv extends Environment{
     		   			
     		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.GOLD))
     			addPercept(ag, Literal.parseLiteral("resource(gold," + agentLocation.toString() + ")"));
-
+    		
     		if(this.model.agentOverObject(agentLocation, caveIAmIn, MineModel.STEEL))
     			addPercept(ag, Literal.parseLiteral("resource(steel," + agentLocation.toString() + ")"));
     		
@@ -110,6 +110,14 @@ public class MineEnv extends Environment{
     		this.model.gotocorner(ag, areaIndex);
     		if(this.model.isAtCorner(ag, areaIndex))
         		addPercept(ag, Literal.parseLiteral("atcorner"));
+    		return true;
+    	}
+    	if(action.getFunctor().equals("goTo")) {
+    		int X = Integer.parseInt(action.getTerm(0).toString());
+    		int Y = Integer.parseInt(action.getTerm(1).toString());
+    		boolean reached = this.model.moveTowards(ag, new Location(X, Y));
+    		if(reached) 
+    			this.addPercept(ag, Literal.parseLiteral("positionReached"));    
     		return true;
     	}
     	if(action.getFunctor().equals("deletePersonalPercept")) {

@@ -43,7 +43,7 @@ cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Ca
 
 
 +goCollect(Resource) <- 
-	.random(X); .wait(X*1000); // From time to time, I get bored...
+	.random(X); .wait(X*1000);
 	?num_caves(N); 
 	?cavesEntrances(Caves);
 	.shuffle(Caves, ShuffledCaves);

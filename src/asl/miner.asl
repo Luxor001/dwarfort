@@ -1,7 +1,6 @@
 /* Initial beliefs */
 
 area_to_scan(0).
-resourceLocation(Type, Resources) :- .findall(resource(Type, _, _), resource(Type, _, _), Resources). //& .nth(0, Resources, Resource).
 /*
 +!attendiOrdini : not ordiniArrivati <- .print("attendo"); !attendiOrdini.
 */
@@ -40,11 +39,21 @@ resourceLocation(Type, Resources) :- .findall(resource(Type, _, _), resource(Typ
 	
 +!go_to_bottomright(N).
 			 // ...that's all, do nothing, the "original" intention (the "context") can continue
+
++!goTo(X, Y) : not positionReached <- 
+ 	goTo(X, Y); 	
+	.wait(250);
+	!goTo(X, Y).	
++!goTo(X, Y) : positionReached <-  true.
 			 
-+forgerNeeds(Resource) <- 
-	.wait(100);
-	?resourceLocation(Resource, Resources);
-	.print(Resources). 
++forgerNeeds(Resource) <-
+	?resource(Resource, X, Y); 
+	!goTo(X, Y);
+	deletePersonalPercept(positionReached);	
+	/*!collect;
+	!bringToStorage;*/
+	.print("finito").
+	
 
 /* 
 <- ?last_order_id(N); // test-goal
