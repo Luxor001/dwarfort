@@ -29,7 +29,7 @@ public class MineModel extends GridWorldModel{
     public static final HashMap<String, Integer> agentIdByName = new HashMap<>();
     public static final HashMap<Integer, String> agentTypebyId = new HashMap<>();
     
-    public HashMap<Location, CarrierArtefact> artefactsOnMap = new HashMap<>();
+    public HashMap<Location, ArrayList<CarrierArtefact>> artefactsOnMap = new HashMap<>();
 	protected final static int GRIDSIZE=40;
 	ArrayList<MineCave> mineCaves = new ArrayList<MineCave>();
 	ControlCave controlCave;
@@ -129,7 +129,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(20, 18));
 
     	//blackboard/items
-    	cave.items.add(new Pair<Location, Integer>(new Location(5, 7), STORAGE));
+    	cave.items.add(new Pair<Location, Integer>(new Location(5, 8), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(8,1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(1,4), STEEL));
     	this.mineCaves.add(cave);
@@ -153,7 +153,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(area.tl.x+6, 18));
     	
     	//blackboard/items
-    	cave.items.add(new Pair<Location, Integer>(new Location(area.tl.x+4, 5), STORAGE));
+    	cave.items.add(new Pair<Location, Integer>(new Location(area.tl.x+5, 5), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(15,1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(25,4), STEEL));
     	this.mineCaves.add(cave);

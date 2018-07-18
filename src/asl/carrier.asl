@@ -2,6 +2,7 @@
 
 /* Initial beliefs and rules */
 cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Caves).
+storageFilled :- true.
 /* Initial goals */
 
 !start.
@@ -19,7 +20,7 @@ cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Ca
 	deletePersonalPercept(entranceReached);
 	scanForArtefact(CaveSelected);
 !searchFreeCave(ShuffledCaves, I+1).
-+!searchFreeCave(ShuffledCaves, I): true <- true.
++!searchFreeCave(ShuffledCaves, I): true.
 
 +!goToCave(cave(Index, Miner, X, Y)) <-
 	!traverseTunnels(cave(Index, Miner, X, Y), "Control-Cave");
@@ -27,7 +28,7 @@ cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Ca
 	.wait(5000);
 	?cave(Index, MinerName, _, _);
 	?goCollect(Resource);
-	.send(MinerName, tell, forgerNeeds(Resource)).	
+	.send(MinerName, tell, forgerNeeds(Resource)).
 
 +!reachEntrance(Cave) : not entranceReached <-
 	reachEntrance(Cave);
@@ -53,3 +54,6 @@ cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Ca
 	deployArtefact(Cave); 
 	.print(Cave); 
 	!!goToCave(Cave).
+
++storageFilled(A, B) <- 
+ .print("Received").

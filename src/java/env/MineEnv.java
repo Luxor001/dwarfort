@@ -141,11 +141,10 @@ public class MineEnv extends Environment{
     		// TODO refactor nel model!
     		Location agentLocation = this.model.getAgentLocationByName(agent);
     		if(this.model.artefactsOnMap.containsKey(agentLocation)) {
-    			CarrierArtefact artefatto = this.model.artefactsOnMap.get(agentLocation);
+    			ArrayList<CarrierArtefact> artefacts = this.model.artefactsOnMap.get(agentLocation);
         		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    			if(artefatto.caveGoingTo.equals(term.split(",")[0])) {
+    			if(artefacts.stream().filter(artefact -> artefact.caveGoingTo.equals(term.split(",")[0])).count() != 0)
     				return true;
-    			}
     		}
     		this.addPercept(agent, Literal.parseLiteral("caveFound(" + action.getTerm(0).toString() + ")"));
     		return true;
@@ -154,7 +153,10 @@ public class MineEnv extends Environment{
     		//TODO refactor nel model!
     		Location agentLocation = this.model.getAgentLocationByName(agent);
     		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    		this.model.artefactsOnMap.put(agentLocation, new CarrierArtefact(agent, term.split(",")[0]));
+    		CarrierArtefact artefact = new CarrierArtefact(agent,  term.split(",")[0]);
+    		if(!this.model.artefactsOnMap.containsKey(agentLocation))
+    			this.model.artefactsOnMap.put(agentLocation, new ArrayList<>());    		
+    		this.model.artefactsOnMap.get(agentLocation).add(artefact);
     		return true;
     	}
     	if(action.getFunctor().equals("traverseTunnel")) {
@@ -178,7 +180,7 @@ public class MineEnv extends Environment{
 				totalKg = this.model.collect(agent, resourceType) + kgCarrying.solve();
 		    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying_kg(Kg)"));
 				addPercept(agent, Literal.parseLiteral("carrying_kg(" + totalKg + ")"));
-			} catch (NoValueException e) {}
+			} catch (Exception e) {System.out.print("exception");}
     		return true;
     	}
     	if(action.getFunctor().equals("dropResource")) {
@@ -188,8 +190,10 @@ public class MineEnv extends Environment{
 				kgCarrying = ((NumberTerm)action.getTerm(1)).solve();
 	    		this.model.dropResource(agent, resourceType, kgCarrying);
 		    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying_kg(Kg)"));
-				addPercept(agent, Literal.parseLiteral("carrying_kg(" + 0 + ")"));
-			} catch (NoValueException e) {}
+				addPercept(agent, Literal.parseLiteral("carrying_kg(0)"));
+			} catch (Exception e) {
+				System.out.print("exception");
+			}
     		return true;
     	}
 		return false;

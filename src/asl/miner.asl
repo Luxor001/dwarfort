@@ -11,7 +11,7 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 +!scanCave(AreaIndex): caveScanned.
 
 	+!scanArea(N) : true <- 
-		!go_to_bottomright(N);
+		!go_to_bottomright(N);		
 		deletePersonalPercept(atcorner);
 		!cycleArea(N);
 		deletePersonalPercept(areaComplete).
@@ -41,26 +41,28 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 +!goTo(X, Y) : positionReached.
 			 
 // Collect some resource in my feets..
-+!collect(Resource) : not atCapacity <- 
-	//.random(X); .wait(X*1800 + 200);
-	.wait(200);
-	.print("adsdas");
++!pickup(Resource) : not atCapacity <- 
+	.random(X); .wait(X*1800 + 200);	
 	?carrying_kg(CarryingKg);
 	collect(Resource, CarryingKg);	
 	!collect(Resource).
-+!collect(Resource) : atCapacity.
++!pickup(Resource) : atCapacity.
 	
 +!dropResource(Resource) <-
 	?carrying_kg(Kg);
 	dropResource(Resource, Kg).
 	
-+forgerNeeds(Resource) : true<- 
++forgerNeeds(Resource)[source(Ag)]<-
+	!!collect(Resource).
+	
++!collect(Resource) <- 
 	?resource(Resource, X, Y);
 	!goTo(X, Y);
 	deletePersonalPercept(positionReached);	
-	!collect(Resource);
+	!pickup(Resource);
 	?storage(A, B);
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);	
 	!dropResource(Resource);
-	+forgerNeeds(Resource)[source(self)].
+	.send(carrier1, tell, storageFilled(A, B));	
+	!collect(Resource).
