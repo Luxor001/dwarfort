@@ -23,7 +23,7 @@ public class MineModel extends GridWorldModel{
     // "objects"
     public static final int GOLD = 16;
     public static final int STEEL = 32;
-    public static final int BLACKBOARD = 64;
+    public static final int STORAGE = 64;
     public static final int MAX_MINING_CAPABILITY = 5;
     
     public static final HashMap<String, Integer> agentIdByName = new HashMap<>();
@@ -36,8 +36,6 @@ public class MineModel extends GridWorldModel{
 
     protected MineModel() {
 		super(GRIDSIZE, GRIDSIZE, 13);
-
-		System.out.println("number of agents"+ this.getNbOfAgs());
 		buildEnvironment();
 		setAgentsPositions();
     }
@@ -131,7 +129,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(20, 18));
 
     	//blackboard/items
-    	cave.blackBoard = new Location(5, 7);
+    	cave.items.add(new Pair<Location, Integer>(new Location(5, 7), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(8,1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(1,4), STEEL));
     	this.mineCaves.add(cave);
@@ -155,7 +153,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(area.tl.x+6, 18));
     	
     	//blackboard/items
-    	cave.blackBoard = new Location(area.tl.x+4, 5);
+    	cave.items.add(new Pair<Location, Integer>(new Location(area.tl.x+4, 5), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(15,1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(25,4), STEEL));
     	this.mineCaves.add(cave);
@@ -185,7 +183,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(24, area.tl.y+4));
 
     	//blackboard/items
-    	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 3);
+    	cave.items.add(new Pair<Location, Integer>(new Location(area.tl.x+1, area.tl.y + 3), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(area.br.x -1, area.br.y - 1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(37,9), STEEL));
     	this.mineCaves.add(cave);
@@ -213,7 +211,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(20, 22));
 
     	//blackboard/items
-    	cave.blackBoard = new Location(area.tl.x+1, area.tl.y + 2);
+    	cave.items.add(new Pair<Location, Integer>(new Location(area.tl.x+1, area.tl.y + 2), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(area.br.x -1, area.br.y - 1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(38,32), STEEL));
     	this.mineCaves.add(cave);
@@ -237,7 +235,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(20, 22));
     	
     	//blackboard/items
-    	cave.blackBoard = new Location(19, area.tl.y + 1);
+    	cave.items.add(new Pair<Location, Integer>(new Location(19, area.tl.y + 1), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(area.br.x -1, area.br.y - 1), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(17,35), STEEL));
     	this.mineCaves.add(cave);
@@ -261,7 +259,7 @@ public class MineModel extends GridWorldModel{
     	this.controlCave.entrances.add(new Location(16,  area.tl.y + 2));
     	
     	//blackboard/items
-    	cave.blackBoard = new Location(5, area.tl.y + 1);
+    	cave.items.add(new Pair<Location, Integer>(new Location(5, area.tl.y + 1), STORAGE));
     	cave.items.add(new Pair<Location, Integer>(new Location(1, 22), GOLD));
     	cave.items.add(new Pair<Location, Integer>(new Location(1,20), STEEL));
     	this.mineCaves.add(cave);
@@ -269,10 +267,9 @@ public class MineModel extends GridWorldModel{
     }
     private void setItemsOnGrid() {
     	this.mineCaves.forEach(mineCave -> {
-    		if(mineCave.areas.size() != 0 && mineCave.blackBoard != null) {
-	    		mineCave.items.forEach(item -> this.add(item.getSecond(), item.getFirst()));
-	    		this.add(BLACKBOARD, mineCave.blackBoard);
-    		}
+    		mineCave.items.forEach(item -> this.add(item.getSecond(), item.getFirst()));
+    		mineCave.storage.put(GOLD, 0);
+    		mineCave.storage.put(STEEL, 0);
     	});
     }
     
@@ -375,5 +372,10 @@ public class MineModel extends GridWorldModel{
     	if(this.agentOverObject(agent, resourceType)) 
             return new Random().nextInt(MineModel.MAX_MINING_CAPABILITY + 1);    	
     	return 0;
-    }    
+    }
+    public void dropResource(String agent, int resourceType, double kgCarrying) {
+    	MineCave cave = getCaveOfAgent(agent);
+    	int kgInStorage = cave.storage.get(resourceType);
+    	cave.storage.put(resourceType, (int) (kgInStorage + kgCarrying));
+    }
 }

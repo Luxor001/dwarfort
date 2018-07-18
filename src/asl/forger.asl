@@ -19,9 +19,6 @@ needs(gold).
 +!give_orders <-
 	 ?needs(Resource);
 	.findall(P,carrier(P),Carriers);	
-	for(.member(P, Carriers)){		
-		.send(P, tell, goCollect(Resource));
-	}.
-
+	.send(Carriers, tell, goCollect(Resource)).
 +carrierReady(P) <- +carrier(P).
 

@@ -1,21 +1,16 @@
 /* Initial beliefs */
+strength_kg(10).
+carrying_kg(0).
+atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 
-area_to_scan(0).
-/*
-+!attendiOrdini : not ordiniArrivati <- .print("attendo"); !attendiOrdini.
-*/
-!scanCave.
+!scanCave(0).
 
-+!scanCave: not caveScanned
-	<- ?area_to_scan(N);	
-	!scanArea(N);
-	-+area_to_scan(N+1);
-!scanCave.
-+!scanCave: caveScanned <- true.
++!scanCave(AreaIndex): not caveScanned	<- 
+	!scanArea(AreaIndex);
+!scanCave(AreaIndex+1).
++!scanCave(AreaIndex): caveScanned.
 
-	+!scanArea(N)
-		: true
-		<- 
+	+!scanArea(N) : true <- 
 		!go_to_bottomright(N);
 		deletePersonalPercept(atcorner);
 		!cycleArea(N);
@@ -35,40 +30,37 @@ area_to_scan(0).
 		 not atcorner <-
 			gotocorner(N);
 			.wait(50);
-		!go_to_bottomright(N).
-	
+		!go_to_bottomright(N).	
 +!go_to_bottomright(N).
-			 // ...that's all, do nothing, the "original" intention (the "context") can continue
+			
 
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
 	.wait(250);
-	!goTo(X, Y).	
-+!goTo(X, Y) : positionReached <-  true.
+	!goTo(X, Y).
++!goTo(X, Y) : positionReached.
 			 
-+forgerNeeds(Resource) <-
-	?resource(Resource, X, Y); 
+// Collect some resource in my feets..
++!collect(Resource) : not atCapacity <- 
+	//.random(X); .wait(X*1800 + 200);
+	.wait(200);
+	.print("adsdas");
+	?carrying_kg(CarryingKg);
+	collect(Resource, CarryingKg);	
+	!collect(Resource).
++!collect(Resource) : atCapacity.
+	
++!dropResource(Resource) <-
+	?carrying_kg(Kg);
+	dropResource(Resource, Kg).
+	
++forgerNeeds(Resource) : true<- 
+	?resource(Resource, X, Y);
 	!goTo(X, Y);
 	deletePersonalPercept(positionReached);	
 	!collect(Resource);
-	/*!bringToStorage;*/
-	.print("finito").
-
-+!collect(Resource) <- 
-	.wait(200);
-	collect(Resource).
-	
-
-/* 
-<- ?last_order_id(N); // test-goal
-		OrderId = N + 1; -+last_order_id(OrderId); // notice ATOMIC belief update
-*/
-	/*?position(X,Y,Z);
-	moveTo(X,Y,Z);*/
-//Usare scanMine(L) dove L è la location?
-
-/*+!at(robot,P) // if NOT arrived at destination (P = "owner" | "fridge")...
-	: not at(robot,P)
-	<- move_towards(P); !at(robot,P). // ...continue attempting to reach destination
-	* 
-	*/
+	?storage(A, B);
+	!goTo(A, B);
+	deletePersonalPercept(positionReached);	
+	!dropResource(Resource);
+	+forgerNeeds(Resource)[source(self)].

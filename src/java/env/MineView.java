@@ -28,7 +28,7 @@ public class MineView  extends GridWorldView {
         case MineModel.STEEL:                      	
             super.drawAgent(g, x, y, Color.LIGHT_GRAY, -1);
             break;
-        case MineModel.BLACKBOARD:                      	
+        case MineModel.STORAGE:                      	
             super.drawAgent(g, x, y, Color.BLACK, -1);
             break;
         default:
