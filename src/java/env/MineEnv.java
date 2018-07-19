@@ -14,6 +14,7 @@ import jason.NoValueException;
 import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
 import jason.asSyntax.Structure;
+import jason.asSyntax.Term;
 import jason.environment.Environment;
 import jason.environment.grid.Area;
 import jason.environment.grid.GridWorldModel;
@@ -42,7 +43,9 @@ public class MineEnv extends Environment{
     		Location entrance = this.model.controlCave.entrances.get(i);
     		MineCave cave = this.model.mineCaves.get(i);
     		addPercept(Literal.parseLiteral("cave(" + i + ","+ cave.agentAssigned+","+entrance.x + "," + entrance.y+")"));
+    		addPercept(Literal.parseLiteral("caveE(" + i + ","+ cave.agentAssigned+","+cave.entrance.x + "," + cave.entrance.y+")"));
     	}
+    	addPercept(Literal.parseLiteral("controlCave(" + this.model.controlCave.areas.get(0).center().toString()+")"));
     }
     @Override
     public boolean executeAction(final String agent, final Structure action) {
@@ -129,14 +132,6 @@ public class MineEnv extends Environment{
     		removePercept(agent, Literal.parseLiteral(action.getTerm(0).toString()));
     		return true;
     	}
-    	if(action.getFunctor().equals("reachEntrance")) {
-    		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    		Location locationToReach = new Location(Integer.parseInt(term.split(",")[2]), Integer.parseInt(term.split(",")[3]));
-    		boolean reached = this.model.moveTowards(agent, locationToReach);
-    		if(reached) 
-    			this.addPercept(agent, Literal.parseLiteral("entranceReached"));    		
-    		return true;
-    	}
     	if(action.getFunctor().equals("scanForArtefact")) {
     		// TODO refactor nel model!
     		Location agentLocation = this.model.getAgentLocationByName(agent);
@@ -159,19 +154,6 @@ public class MineEnv extends Environment{
     		this.model.artefactsOnMap.get(agentLocation).add(artefact);
     		return true;
     	}
-    	if(action.getFunctor().equals("traverseTunnel")) {
-    		String term = action.getTerm(0).toString().replaceAll("[cave(.*?)]", "");
-    	    int caveIndex = Integer.parseInt(term.split(",")[0]);    	    
-    	    MineCave mineCaveToReach = this.model.mineCaves.get(caveIndex);
-    	    
-    		this.model.moveTowards(agent, mineCaveToReach.entrance);
-    		Location agentLocation = this.model.getAgentLocationByName(agent);
-    		
-    		if(mineCaveToReach.entrance.equals(agentLocation)) 
-    			addPercept(agent, Literal.parseLiteral("caveReached"));
-    		
-    		return true;
-    	}
     	if(action.getFunctor().equals("pickup") || action.getFunctor().equals("pickupFromStorage") || action.getFunctor().equals("dropResource")) {
     		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
     		NumberTerm kgCarrying = (NumberTerm)action.getTerm(1);
@@ -191,7 +173,12 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("checkStorage")) {
-    		System.out.print("checking Storage");
+    		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
+    		int caveIndex = Integer.parseInt(action.getTerm(1).toString());
+    		int kgInStorage = this.model.getStorageAmount(caveIndex, resourceType);
+
+	    	removePerceptsByUnif(agent, Literal.parseLiteral("storageKg(Kg)"));
+			addPercept(agent, Literal.parseLiteral("storageKg("+action.getTerm(0).toString() + ","+kgInStorage + ")"));
     		return true;
     	}    		
     	if(action.getFunctor().equals("dropResource")) {

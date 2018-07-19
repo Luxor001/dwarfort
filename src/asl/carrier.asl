@@ -1,76 +1,78 @@
 // Agent carrier in project dwarfort
-strength_kg(50).
+strength_kg(10).
 carrying_kg(0).
 atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
+storageKg(gold, 0).
+storageKg(steel, 0).
 
 /* Initial beliefs and rules */
-cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Caves).
+cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Entrances).
 /* Initial goals */
 
 !start.
 
 +!start: true <- 
-	?cavesEntrances(Caves);
-	.length(Caves, Length);
-	+num_caves(Length);
 	.my_name(Name);
 	.send(forger, tell, carrierReady(Name)).
 	
 +!searchFreeCave(ShuffledCaves, I): not caveFound(_) & I < .length(ShuffledCaves)<-
- 	.nth(I, ShuffledCaves, CaveSelected);
-	!reachEntrance(CaveSelected);
-	deletePersonalPercept(entranceReached);
-	scanForArtefact(CaveSelected);
+ 	.nth(I, ShuffledCaves, cave(Index, Miner, X, Y));
+	!goTo(X,Y);
+	deletePersonalPercept(positionReached);
+	scanForArtefact(cave(Index, Miner, X, Y));
 !searchFreeCave(ShuffledCaves, I+1).
 +!searchFreeCave(ShuffledCaves, I): true.
 
-+!goToCave(cave(Index, Miner, X, Y)) <-
-	!traverseTunnels(cave(Index, Miner, X, Y), "Control-Cave");
-	deletePersonalPercept(caveReached);
++!goToCave(cave(Index, Miner, _, _)) <-
+	?caveE(Index, _, X, Y);
+	!goTo(X, Y);
+	deletePersonalPercept(positionReached);
 	.wait(5000);
 	?cave(Index, MinerName, _, _);
 	?goCollect(Resource);
-	.send(MinerName, tell, forgerNeeds(Resource)).
-
-+!reachEntrance(Cave) : not entranceReached <-
-	reachEntrance(Cave);
-	.wait(100);
-	!reachEntrance(Cave).	
-+!reachEntrance(Cave) : entranceReached <- true.
-
-+!traverseTunnels(Cave, Direction): not caveReached <-
-	traverseTunnel(Cave, Direction);
-	.wait(50);
-	!traverseTunnels(Cave, Direction).	
-+!traverseTunnels(Cave, Direction): caveReached <- true.
+	.send(MinerName, tell, forgerNeeds(Resource));	
+	!!checkStorageForResource(Resource).
+	
 
 
 +goCollect(Resource) <- 
 	.random(X); .wait(X*1000);
-	?num_caves(N); 
 	?cavesEntrances(Caves);
 	.shuffle(Caves, ShuffledCaves);
-	!searchFreeCave(ShuffledCaves, 0);
-	!!checkStorageForResource(Resource).
+	!searchFreeCave(ShuffledCaves, 0).
 
 +caveFound(Cave) <- 
 	deployArtefact(Cave); 
 	.print(Cave); 
 	!!goToCave(Cave).
 	
-//+kgInStorage(Resource, Kg) <- .print("aa"); .random(Kg).
++kgInStorage(ResourceType, Kg) <-
+	?caveFound(cave(CaveIndex, _, _, _));
+	checkStorage(ResourceType, CaveIndex);
+	?storageKg(ResourceType, Kg).
+	
 
-+!checkStorageForResource(Resource): not atCapacity <- 
-	.wait(500);
-	//?strength_kg(Strength);
++!checkStorageForResource(Resource)<-
+	?strength_kg(Strength);
 	+kgInStorage(Resource, Kg);
-	//checkStorage(Resource);
-	.print("waiting..", Kg).
-	//?carrying_kg(CarryingKg);
-	//?strength_kg(Strength);
-	//pickupFromStorage(Resource, CarryingKg, Strength).
-+!checkStorageForResource(Resource): atCapacity.
+	if(Kg >= Strength) {
+		pickupFromStorage(Resource, 0, Strength);
+		!!bringBackResource;
+	}
+	else {
+		.wait(500);
+		!checkStorageForResource(Resource);
+	}.
 
-+kgInStorage(ResourceType, Kg) <- 
-	checkStorage(ResourceType); 
-	.random(Kg).
++!bringBackResource <-
+	?controlCave(X,Y);
+	deletePersonalPercept(positionReached);
+	goTo(X,Y);
+	deletePersonalPercept(positionReached);
+	.print("reached").
+
++!goTo(X, Y) : not positionReached <- 
+ 	goTo(X, Y); 	
+	.wait(100);
+	!goTo(X, Y).
++!goTo(X, Y) : positionReached.

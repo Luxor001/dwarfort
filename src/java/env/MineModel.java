@@ -383,6 +383,10 @@ public class MineModel extends GridWorldModel{
     	}
     	return 0;
     }
+    public int getStorageAmount(int caveIndex, int resourceType) {
+    	MineCave cave = this.mineCaves.get(caveIndex);
+    	return cave.storage.get(resourceType);
+    }
     public void dropResource(String agent, int resourceType, double kgCarrying) {
     	MineCave cave = getCaveOfAgent(agent);
     	int kgInStorage = cave.storage.get(resourceType);
