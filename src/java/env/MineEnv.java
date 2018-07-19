@@ -172,28 +172,36 @@ public class MineEnv extends Environment{
     		
     		return true;
     	}
-    	if(action.getFunctor().equals("collect")) {
+    	if(action.getFunctor().equals("pickup") || action.getFunctor().equals("pickupFromStorage") || action.getFunctor().equals("dropResource")) {
     		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
     		NumberTerm kgCarrying = (NumberTerm)action.getTerm(1);
-    		double totalKg;
+    		double carryingKg = 0;
 			try {
-				totalKg = this.model.collect(agent, resourceType) + kgCarrying.solve();
-		    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying_kg(Kg)"));
-				addPercept(agent, Literal.parseLiteral("carrying_kg(" + totalKg + ")"));
-			} catch (Exception e) {System.out.print("exception");}
+				if(action.getFunctor().equals("pickup"))
+					carryingKg = this.model.collect(agent, resourceType) + kgCarrying.solve();
+				if(action.getFunctor().equals("pickupFromStorage"))
+					carryingKg = this.model.pickupFromStorage(agent, resourceType, ((NumberTerm)action.getTerm(2)).solve());
+				if(action.getFunctor().equals("dropResource"))
+		    		this.model.dropResource(agent, resourceType, kgCarrying.solve());
+			} catch (Exception e) {}
+
+			
+	    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying_kg(Kg)"));
+			addPercept(agent, Literal.parseLiteral("carrying_kg(" + carryingKg + ")"));
     		return true;
     	}
+    	if(action.getFunctor().equals("checkStorage")) {
+    		System.out.print("checking Storage");
+    		return true;
+    	}    		
     	if(action.getFunctor().equals("dropResource")) {
     		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
-    		double kgCarrying;
+    		NumberTerm kgCarrying =  ((NumberTerm)action.getTerm(1));
 			try {
-				kgCarrying = ((NumberTerm)action.getTerm(1)).solve();
-	    		this.model.dropResource(agent, resourceType, kgCarrying);
+	    		this.model.dropResource(agent, resourceType, kgCarrying.solve());
 		    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying_kg(Kg)"));
 				addPercept(agent, Literal.parseLiteral("carrying_kg(0)"));
-			} catch (Exception e) {
-				System.out.print("exception");
-			}
+			} catch (Exception e) {}
     		return true;
     	}
 		return false;

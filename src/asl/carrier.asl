@@ -1,8 +1,10 @@
 // Agent carrier in project dwarfort
+strength_kg(50).
+carrying_kg(0).
+atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 
 /* Initial beliefs and rules */
 cavesEntrances(Caves) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y), Caves).
-storageFilled :- true.
 /* Initial goals */
 
 !start.
@@ -48,12 +50,27 @@ storageFilled :- true.
 	?num_caves(N); 
 	?cavesEntrances(Caves);
 	.shuffle(Caves, ShuffledCaves);
-	!searchFreeCave(ShuffledCaves, 0).
+	!searchFreeCave(ShuffledCaves, 0);
+	!!checkStorageForResource(Resource).
 
 +caveFound(Cave) <- 
 	deployArtefact(Cave); 
 	.print(Cave); 
 	!!goToCave(Cave).
+	
+//+kgInStorage(Resource, Kg) <- .print("aa"); .random(Kg).
 
-+storageFilled(A, B) <- 
- .print("Received").
++!checkStorageForResource(Resource): not atCapacity <- 
+	.wait(500);
+	//?strength_kg(Strength);
+	+kgInStorage(Resource, Kg);
+	//checkStorage(Resource);
+	.print("waiting..", Kg).
+	//?carrying_kg(CarryingKg);
+	//?strength_kg(Strength);
+	//pickupFromStorage(Resource, CarryingKg, Strength).
++!checkStorageForResource(Resource): atCapacity.
+
++kgInStorage(ResourceType, Kg) <- 
+	checkStorage(ResourceType); 
+	.random(Kg).

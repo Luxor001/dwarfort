@@ -373,6 +373,16 @@ public class MineModel extends GridWorldModel{
             return new Random().nextInt(MineModel.MAX_MINING_CAPABILITY + 1);    	
     	return 0;
     }
+    public int pickupFromStorage(String agent, int resourceType, double amountDesired) {
+    	MineCave cave = this.getCaveOfAgent(agent);
+    	int kgInStorage = cave.storage.get(resourceType);
+    	//pickup 
+    	if(kgInStorage >= amountDesired) {
+    		cave.storage.put(resourceType, (int) (kgInStorage-amountDesired));
+    		return (int) amountDesired;
+    	}
+    	return 0;
+    }
     public void dropResource(String agent, int resourceType, double kgCarrying) {
     	MineCave cave = getCaveOfAgent(agent);
     	int kgInStorage = cave.storage.get(resourceType);

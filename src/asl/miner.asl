@@ -44,15 +44,15 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 +!pickup(Resource) : not atCapacity <- 
 	.random(X); .wait(X*1800 + 200);	
 	?carrying_kg(CarryingKg);
-	collect(Resource, CarryingKg);	
-	!collect(Resource).
+	pickup(Resource, CarryingKg);	
+	!pickup(Resource).
 +!pickup(Resource) : atCapacity.
 	
 +!dropResource(Resource) <-
 	?carrying_kg(Kg);
 	dropResource(Resource, Kg).
 	
-+forgerNeeds(Resource)[source(Ag)]<-
++forgerNeeds(Resource)[source(Ag)] <-
 	!!collect(Resource).
 	
 +!collect(Resource) <- 
@@ -64,5 +64,4 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);	
 	!dropResource(Resource);
-	.send(carrier1, tell, storageFilled(A, B));	
 	!collect(Resource).
