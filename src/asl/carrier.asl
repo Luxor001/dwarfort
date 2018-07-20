@@ -19,7 +19,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
  	.nth(I, ShuffledCaves, cave(Index, Miner, X, Y));
 	!goTo(X,Y);
 	deletePersonalPercept(positionReached);
-	scanForArtefact(cave(Index, Miner, X, Y));
+	scanForArtefact(Index, Miner, X, Y);
 !searchFreeCave(ShuffledCaves, I+1).
 +!searchFreeCave(ShuffledCaves, I): true.
 
@@ -41,10 +41,10 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	.shuffle(Caves, ShuffledCaves);
 	!searchFreeCave(ShuffledCaves, 0).
 
-+caveFound(Cave) <- 
-	deployArtefact(Cave); 
-	.print(Cave); 
-	!!goToCave(Cave).
++caveFound(cave(Index, Miner, X, Y)) <- 
+	deployArtefact(Index); 
+	.print(cave(Index, Miner, X, Y)); 
+	!!goToCave(cave(Index, Miner, X, Y)).
 	
 +kgInStorage(ResourceType, Kg) <-
 	?caveFound(cave(CaveIndex, _, _, _));
@@ -65,14 +65,15 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	}.
 
 +!bringBackResource <-
-	?controlCave(X,Y);
+	?caveFound(cave(Index,_, X, Y))
+	!goTo(X,Y);
 	deletePersonalPercept(positionReached);
-	goTo(X,Y);
-	deletePersonalPercept(positionReached);
+	removeArtefact(Index);
+	
 	.print("reached").
 
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
-	.wait(100);
+	.wait(50);
 	!goTo(X, Y).
 +!goTo(X, Y) : positionReached.

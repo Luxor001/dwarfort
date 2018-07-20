@@ -134,24 +134,25 @@ public class MineEnv extends Environment{
     	}
     	if(action.getFunctor().equals("scanForArtefact")) {
     		// TODO refactor nel model!
+    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
     		Location agentLocation = this.model.getAgentLocationByName(agent);
     		if(this.model.artefactsOnMap.containsKey(agentLocation)) {
     			ArrayList<CarrierArtefact> artefacts = this.model.artefactsOnMap.get(agentLocation);
-        		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    			if(artefacts.stream().filter(artefact -> artefact.caveGoingTo.equals(term.split(",")[0])).count() != 0)
+    			if(artefacts.stream().filter(artefact -> artefact.caveGoingTo == caveIndex).count() != 0)
     				return true;
     		}
-    		this.addPercept(agent, Literal.parseLiteral("caveFound(" + action.getTerm(0).toString() + ")"));
+    		this.addPercept(agent, Literal.parseLiteral(String.format("caveFound(cave(%s,%s,%s,%s))",action.getTerm(0), action.getTerm(1),action.getTerm(2),action.getTerm(3))));
     		return true;
     	}
     	if(action.getFunctor().equals("deployArtefact")) {
     		//TODO refactor nel model!
-    		Location agentLocation = this.model.getAgentLocationByName(agent);
-    		String term = action.getTerm(0).toString().replaceAll("[(.*?)]", "");
-    		CarrierArtefact artefact = new CarrierArtefact(agent,  term.split(",")[0]);
-    		if(!this.model.artefactsOnMap.containsKey(agentLocation))
-    			this.model.artefactsOnMap.put(agentLocation, new ArrayList<>());    		
-    		this.model.artefactsOnMap.get(agentLocation).add(artefact);
+    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
+    		this.model.deployArtefactOnMyPosition(agent, caveIndex);
+    		return true;
+    	}
+    	if(action.getFunctor().equals("removeArtefact")) {
+    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
+    		this.model.removeArtefactOnMyPosition(agent, caveIndex);
     		return true;
     	}
     	if(action.getFunctor().equals("pickup") || action.getFunctor().equals("pickupFromStorage") || action.getFunctor().equals("dropResource")) {

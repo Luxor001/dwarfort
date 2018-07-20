@@ -42,7 +42,7 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 			 
 // Collect some resource in my feets..
 +!pickup(Resource) : not atCapacity <- 
-	.random(X); .wait(X*1800 + 200);	
+	//.random(X); .wait(X*1800 + 200);	
 	?carrying_kg(CarryingKg);
 	pickup(Resource, CarryingKg);	
 	!pickup(Resource).

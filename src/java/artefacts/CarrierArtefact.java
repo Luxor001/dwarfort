@@ -2,8 +2,8 @@ package artefacts;
 
 public class CarrierArtefact extends Artefact {
 
-	public String caveGoingTo;
-	public CarrierArtefact(String agentName, String caveGoingTo) {
+	public int caveGoingTo;
+	public CarrierArtefact(String agentName, int caveGoingTo) {
 		super(agentName);
 		this.caveGoingTo = caveGoingTo;
 	}

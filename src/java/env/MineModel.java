@@ -270,7 +270,7 @@ public class MineModel extends GridWorldModel{
     		mineCave.items.forEach(item -> this.add(item.getSecond(), item.getFirst()));
     		mineCave.storage.put(GOLD, 0);
     		mineCave.storage.put(STEEL, 0);
-    	});
+    	});    	
     }
     
     boolean moveTowards(String agent, final Location dest) {
@@ -286,7 +286,7 @@ public class MineModel extends GridWorldModel{
         else if (r1.y > dest.y && this.isFreeOfObstacle(new Location(r1.x, r1.y - 1))) 
             r1.y--;
         
-        this.setAgPos(getAgentIdByName(agent), r1); // actually move the robot in the grid        
+        this.setAgPos(getAgentIdByName(agent), r1); // actually move the robot in the grid
         return r1.equals(dest);
     }    
     
@@ -368,7 +368,6 @@ public class MineModel extends GridWorldModel{
     	return new Location(x,y);
     }
     public int collect(String agent, int resourceType) {
-    	Location agentLocation = this.getAgentLocationByName(agent);
     	if(this.agentOverObject(agent, resourceType)) 
             return new Random().nextInt(MineModel.MAX_MINING_CAPABILITY + 1);    	
     	return 0;
@@ -391,5 +390,18 @@ public class MineModel extends GridWorldModel{
     	MineCave cave = getCaveOfAgent(agent);
     	int kgInStorage = cave.storage.get(resourceType);
     	cave.storage.put(resourceType, (int) (kgInStorage + kgCarrying));
+    }
+    public void deployArtefactOnMyPosition(String agent, int indexCaveGoingTo) {
+		Location agentLocation = getAgentLocationByName(agent);
+		CarrierArtefact artefact = new CarrierArtefact(agent,  indexCaveGoingTo);
+		if(!artefactsOnMap.containsKey(agentLocation))
+			artefactsOnMap.put(agentLocation, new ArrayList<>());    		
+		artefactsOnMap.get(agentLocation).add(artefact);
+    }
+    public void removeArtefactOnMyPosition(String agent, int indexCaveGoingTo) {
+    	Location agentLocation = this.getAgentLocationByName(agent);
+    	ArrayList<CarrierArtefact> artefactsOnMyLocation = artefactsOnMap.get(agentLocation);    	
+    	if(artefactsOnMyLocation != null) 
+    		artefactsOnMyLocation.removeIf(artefact -> artefact.caveGoingTo == indexCaveGoingTo);
     }
 }
