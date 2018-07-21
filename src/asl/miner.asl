@@ -33,7 +33,6 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 		!go_to_bottomright(N).	
 +!go_to_bottomright(N).
 			
-
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
 	.wait(250);
@@ -52,11 +51,12 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	?carrying(Resource, Kg);
 	dropResource(Resource, Kg).
 	
-+forgerNeeds(Resource)[source(Ag)] <-
-	!collect(Resource, Ag).
++forgerNeeds(Resource) <-
+	.drop_intention(collect(_));
+	.wait(2000);
+	!collect(Resource).
 	
-+!collect(Resource, Ag)<-
-	.print("My task is from ", Ag); 
++!collect(Resource)<- 
 	?resource(Resource, X, Y);
 	!goTo(X, Y);
 	deletePersonalPercept(positionReached);	
@@ -65,4 +65,4 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);	
 	!dropBag;
-	!collect(Resource, Ag).
+	!collect(Resource).
