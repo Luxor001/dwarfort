@@ -291,14 +291,14 @@ public class MineModel extends GridWorldModel{
     }    
     
     public synchronized void gotocorner(String agent, int area) {
-    	Cave caveIAmIn = this.getCaveOfAgent(agent);
+    	Cave caveIAmIn = this.getCaveAssignedToAgent(agent);
     	Area areaToMoveTo = caveIAmIn.areas.get(area);
     	moveTowards(agent, areaToMoveTo.br);
     }
 
     public synchronized boolean isAtCorner(String agent, int area) {
     	Location agentLocation = getAgentLocationByName(agent);
-    	Cave caveIAmIn = this.getCaveOfAgent(agent);
+    	Cave caveIAmIn = this.getCaveAssignedToAgent(agent);
     	Area areaToMoveTo = caveIAmIn.areas.get(area);
     	return agentLocation.distance(areaToMoveTo.br) == 0;    	
     }
@@ -310,7 +310,7 @@ public class MineModel extends GridWorldModel{
     }
     public synchronized void cycleArea(String agent, int area, boolean direction) {
     	Location agentLocation = getAgentLocationByName(agent);
-    	Cave caveIAmIn = this.getCaveOfAgent(agent);
+    	Cave caveIAmIn = this.getCaveAssignedToAgent(agent);
     	Area currentarea = caveIAmIn.areas.get(area);
     	
     	if(agentLocation.x > currentarea.tl.x)
@@ -340,17 +340,15 @@ public class MineModel extends GridWorldModel{
     }
     
     private synchronized int getAgentIdByName(String agent) {
-    	/*if(agent.equals("miner"))
-    		return 0;*/
     	return MineModel.agentIdByName.get(agent);
     }
     
-    public MineCave getCaveOfAgent(String agent) {
+    public MineCave getCaveAssignedToAgent(String agent) {
 		return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
     }
     
     public boolean agentOverObject(String agent, int object) {
-    	MineCave cave = this.getCaveOfAgent(agent);    	
+    	MineCave cave = this.getCaveAssignedToAgent(agent);    	
     	Location agentLocation = this.getAgentLocationByName(agent);
     	return this.agentOverObject(agentLocation, cave, object); 	
     }
@@ -367,15 +365,22 @@ public class MineModel extends GridWorldModel{
     	int y = rnd.nextInt((area.br.y) - (area.tl.y)) + area.tl.y;
     	return new Location(x,y);
     }
+    private Cave getCaveInLocation(Location location) {
+    	Optional<MineCave> mineCaveFound = mineCaves.stream().filter(mineCave -> mineCave.areas.stream().anyMatch(area -> area.contains(location))).findFirst();
+    	if(mineCaveFound.isPresent())
+    		return mineCaveFound.get();
+    	if(controlCave.areas.stream().anyMatch(area -> area.contains(location)))
+    		return controlCave;
+		return null;    	
+    }
     public int collect(String agent, int resourceType) {
     	if(this.agentOverObject(agent, resourceType)) 
             return new Random().nextInt(MineModel.MAX_MINING_CAPABILITY + 1);    	
     	return 0;
     }
     public int pickupFromStorage(String agent, int resourceType, double amountDesired) {
-    	MineCave cave = this.getCaveOfAgent(agent);
+    	Cave cave = getCaveInLocation(getAgentLocationByName(agent));
     	int kgInStorage = cave.storage.get(resourceType);
-    	//pickup 
     	if(kgInStorage >= amountDesired) {
     		cave.storage.put(resourceType, (int) (kgInStorage-amountDesired));
     		return (int) amountDesired;
@@ -387,7 +392,7 @@ public class MineModel extends GridWorldModel{
     	return cave.storage.get(resourceType);
     }
     public void dropResource(String agent, int resourceType, double kgCarrying) {
-    	MineCave cave = getCaveOfAgent(agent);
+    	Cave cave = getCaveInLocation(getAgentLocationByName(agent));
     	int kgInStorage = cave.storage.get(resourceType);
     	cave.storage.put(resourceType, (int) (kgInStorage + kgCarrying));
     }

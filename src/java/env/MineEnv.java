@@ -51,7 +51,7 @@ public class MineEnv extends Environment{
     public boolean executeAction(final String agent, final Structure action) {
     	if(action.getFunctor().equals("cycleArea")) {
     		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
-    		MineCave caveIAmIn = this.model.getCaveOfAgent(agent);
+    		MineCave caveIAmIn = this.model.getCaveAssignedToAgent(agent);
     		Location agentLocation =this.model.getAgentLocationByName(agent);  
     		if(!containsPercept(agent, Literal.parseLiteral("goleft")) && !containsPercept(agent, Literal.parseLiteral("goright")))
     			addPercept(agent, Literal.parseLiteral("goleft"));
@@ -180,16 +180,6 @@ public class MineEnv extends Environment{
 
 	    	removePerceptsByUnif(agent, Literal.parseLiteral("storageKg(Kg)"));
 			addPercept(agent, Literal.parseLiteral("storageKg("+action.getTerm(0).toString() + ","+kgInStorage + ")"));
-    		return true;
-    	}    		
-    	if(action.getFunctor().equals("dropResource")) {
-    		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
-    		NumberTerm kgCarrying =  ((NumberTerm)action.getTerm(1));
-			try {
-	    		this.model.dropResource(agent, resourceType, kgCarrying.solve());
-		    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying_kg(Kg)"));
-				addPercept(agent, Literal.parseLiteral("carrying_kg(0)"));
-			} catch (Exception e) {}
     		return true;
     	}
 		return false;

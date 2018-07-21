@@ -1,6 +1,7 @@
 package caves;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jason.environment.grid.Area;
 import jason.environment.grid.Location;
@@ -8,6 +9,7 @@ import jason.environment.grid.Location;
 public abstract class Cave {
 	public ArrayList<Area> areas = new ArrayList<Area>();
 	public ArrayList<Area> tunnels = new ArrayList<Area>();
+	public HashMap<Integer, Integer> storage = new HashMap<Integer, Integer>();
 	public String agentAssigned;
 	public Location entrance;
 	public Cave(Area area) {

@@ -63,13 +63,19 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 		.wait(500);
 		!checkStorageForResource(Resource);
 	}.
+	
++!dropResource(Resource) <-
+	?carrying_kg(Kg);
+	dropResource(Resource, Kg).
 
 +!bringBackResource <-
 	?caveFound(cave(Index,_, X, Y))
-	!goTo(X,Y);
+	!goTo(X,Y); //go to the entrance of the cave...
 	deletePersonalPercept(positionReached);
-	removeArtefact(Index);
-	
+	removeArtefact(Index); //remove the artefact of "cave occupied.."
+	.wait(500);
+	//!dropResource(A);
+	.send(forger, tell, carrierBack("aa"));
 	.print("reached").
 
 +!goTo(X, Y) : not positionReached <- 

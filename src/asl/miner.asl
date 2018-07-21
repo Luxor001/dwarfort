@@ -48,7 +48,7 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 	!pickup(Resource).
 +!pickup(Resource) : atCapacity.
 	
-+!dropResource(Resource) <-
++!dropBag(Resource) <-
 	?carrying_kg(Kg);
 	dropResource(Resource, Kg).
 	
@@ -63,5 +63,5 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 	?storage(A, B);
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);	
-	!dropResource(Resource);
+	!dropBag(Resource);
 	!collect(Resource).
