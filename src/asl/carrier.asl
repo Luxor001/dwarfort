@@ -76,7 +76,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	.wait(500);
 	!dropBag;
 	.my_name(Name);
-	.send(forger, tell, carrierBack(Name, "all ok")).
+	.send(forger, untell, carrierBack(Name, _));.send(forger, tell, carrierBack(Name, "all ok")).
 
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
