@@ -3,6 +3,7 @@ package env;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import artefacts.Artefact;
@@ -36,6 +37,19 @@ public class MineEnv extends Environment{
             this.model.setView(view);
         }
         initializePercepts();
+        
+
+		new Thread(()->{
+			try {
+				Thread.sleep(10000);
+				int random = new Random().nextInt(3);
+				System.out.println("OrkOrderIncoming?");
+				if(random <= 2)
+					addPercept("forger", Literal.parseLiteral("orkOrdeIncoming"));
+				else					
+					removePercept("forger", Literal.parseLiteral("orkOrderIncoming"));
+			} catch (InterruptedException e) {}
+		}).start();
     }
     
     private void initializePercepts() {
@@ -169,8 +183,8 @@ public class MineEnv extends Environment{
 			} catch (Exception e) {}
 
 			
-	    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying_kg(Kg)"));
-			addPercept(agent, Literal.parseLiteral("carrying_kg(" + carryingKg + ")"));
+	    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying(Resource, Kg)"));
+			addPercept(agent, Literal.parseLiteral("carrying("+action.getTerm(0).toString()+"," + carryingKg + ")"));
     		return true;
     	}
     	if(action.getFunctor().equals("checkStorage")) {
@@ -180,6 +194,11 @@ public class MineEnv extends Environment{
 
 	    	removePerceptsByUnif(agent, Literal.parseLiteral("storageKg(Kg)"));
 			addPercept(agent, Literal.parseLiteral("storageKg("+action.getTerm(0).toString() + ","+kgInStorage + ")"));
+    		return true;
+    	}
+    	if(action.getFunctor().equals("clearPercepts")) {
+    		clearPercepts(agent);
+    		initializePercepts();
     		return true;
     	}
 		return false;

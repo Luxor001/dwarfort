@@ -1,7 +1,7 @@
 /* Initial beliefs */
 strength_kg(10).
-carrying_kg(0).
-atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
+carrying(Resource, 0).
+atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 
 !scanCave(0).
 
@@ -43,19 +43,20 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 // Collect some resource in my feets..
 +!pickup(Resource) : not atCapacity <- 
 	//.random(X); .wait(X*1800 + 200);	
-	?carrying_kg(CarryingKg);
+	?carrying(Resource, CarryingKg);
 	pickup(Resource, CarryingKg);	
 	!pickup(Resource).
 +!pickup(Resource) : atCapacity.
 	
-+!dropBag(Resource) <-
-	?carrying_kg(Kg);
++!dropBag <-
+	?carrying(Resource, Kg);
 	dropResource(Resource, Kg).
 	
 +forgerNeeds(Resource)[source(Ag)] <-
-	!!collect(Resource).
+	!collect(Resource, Ag).
 	
-+!collect(Resource) <- 
++!collect(Resource, Ag)<-
+	.print("My task is from ", Ag); 
 	?resource(Resource, X, Y);
 	!goTo(X, Y);
 	deletePersonalPercept(positionReached);	
@@ -63,5 +64,5 @@ atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
 	?storage(A, B);
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);	
-	!dropBag(Resource);
-	!collect(Resource).
+	!dropBag;
+	!collect(Resource, Ag).

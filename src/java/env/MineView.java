@@ -39,14 +39,14 @@ public class MineView  extends GridWorldView {
     @Override
     public void drawAgent(final Graphics g, final int x, final int y, Color c,
             final int id) {
-    	
-    	if(MineModel.agentTypebyId.get(id).equals("miner"))
-    		c = Color.BLUE;
-    	if(MineModel.agentTypebyId.get(id).equals("carrier"))
-    		c = Color.green;
-    	if(MineModel.agentTypebyId.get(id).equals("forger"))
-    		c = Color.RED;
-        
+    	if(id != -1) {
+	    	if(MineModel.agentTypebyId.get(id).equals("miner"))
+	    		c = Color.BLUE;
+	    	if(MineModel.agentTypebyId.get(id).equals("carrier"))
+	    		c = Color.green;
+	    	if(MineModel.agentTypebyId.get(id).equals("forger"))
+	    		c = Color.RED;
+    	}
         super.drawAgent(g, x, y, c, -1);
     }
 }

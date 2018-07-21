@@ -1,7 +1,7 @@
 // Agent carrier in project dwarfort
 strength_kg(10).
-carrying_kg(0).
-atCapacity :- carrying_kg(Kg) & strength_kg(S) & S <= Kg.
+carrying(Resource, 0).
+atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 storageKg(gold, 0).
 storageKg(steel, 0).
 
@@ -29,13 +29,14 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	deletePersonalPercept(positionReached);
 	.wait(5000);
 	?cave(Index, MinerName, _, _);
-	?goCollect(Resource);
+	?goCollect(Resource);	
+	.send(MinerName, untell, forgerNeeds(_));
+	//.wait(500);	
 	.send(MinerName, tell, forgerNeeds(Resource));	
 	!!checkStorageForResource(Resource).
 	
-
-
-+goCollect(Resource) <- 
++goCollect(Resource) <-
+	clearPercepts;
 	.random(X); .wait(X*1000);
 	?cavesEntrances(Caves);
 	.shuffle(Caves, ShuffledCaves);
@@ -43,7 +44,6 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 
 +caveFound(cave(Index, Miner, X, Y)) <- 
 	deployArtefact(Index); 
-	.print(cave(Index, Miner, X, Y)); 
 	!!goToCave(cave(Index, Miner, X, Y)).
 	
 +kgInStorage(ResourceType, Kg) <-
@@ -64,8 +64,8 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 		!checkStorageForResource(Resource);
 	}.
 	
-+!dropResource(Resource) <-
-	?carrying_kg(Kg);
++!dropBag <-
+	?carrying(Resource, Kg);
 	dropResource(Resource, Kg).
 
 +!bringBackResource <-
@@ -74,9 +74,9 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	deletePersonalPercept(positionReached);
 	removeArtefact(Index); //remove the artefact of "cave occupied.."
 	.wait(500);
-	//!dropResource(A);
-	.send(forger, tell, carrierBack("aa"));
-	.print("reached").
+	!dropBag;
+	.my_name(Name);
+	.send(forger, tell, carrierBack(Name, "all ok")).
 
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
