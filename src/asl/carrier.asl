@@ -10,6 +10,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 /* Initial goals */
 
 !start.
+!repaint.
 
 +!start: true <- 
 	.my_name(Name);
@@ -33,7 +34,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	.send(MinerName, untell, forgerNeeds(_));
 	//.wait(500);	
 	.send(MinerName, tell, forgerNeeds(Resource));	
-	!!checkStorageForResource(Resource).
+	!checkStorageForResource(Resource).
 	
 +goCollect(Resource) <-
 	clearPercepts;
@@ -44,7 +45,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 
 +caveFound(cave(Index, Miner, X, Y)) <- 
 	deployArtefact(Index); 
-	!!goToCave(cave(Index, Miner, X, Y)).
+	!goToCave(cave(Index, Miner, X, Y)).
 	
 +kgInStorage(ResourceType, Kg) <-
 	?caveFound(cave(CaveIndex, _, _, _));
@@ -57,7 +58,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	+kgInStorage(Resource, Kg);
 	if(Kg >= Strength) {
 		pickupFromStorage(Resource, 0, Strength);
-		!!bringBackResource;
+		!bringBackResource;
 	}
 	else {
 		.wait(500);
@@ -83,3 +84,8 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	.wait(50);
 	!goTo(X, Y).
 +!goTo(X, Y) : positionReached.
+
++!repaint <-
+	paint_me;
+	.wait(400);
+	!repaint.

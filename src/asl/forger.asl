@@ -1,8 +1,3 @@
-
-//controlliamo se è rimasto posto in magazzino..
-space_avaiable(M) :- // What does "drinking too much" implies?
-	.date(YY,MM,DD) & // that in the same day...
-	.count(consumed(YY,MM,DD,_,_,_,B), QtdB) & limit(B,Limit) & QtdB > Limit. //...owner consumed more beers than allowed
 needs(gold, 150).
 
 /*!impartisciOrdini.
@@ -10,13 +5,7 @@ needs(gold, 150).
 
 !init.
 
-+!init <- !execDeferredPlan(10,give_orders).
-
-+!execDeferredPlan(Waitms,Plan) <- 
-	.wait(Waitms);
-	!Plan.
-	
-+!give_orders <-
++!init <- .wait(10);
 	 ?needs(Resource, _);
 	.findall(P,carrier(P),Carriers);	
 	.send(Carriers, tell, goCollect(Resource)).
@@ -27,5 +16,10 @@ needs(gold, 150).
 	?needs(Resource, _);
 	.send(Name, untell, goCollect(Resource));.send(Name, tell, goCollect(Resource)).
 
-+orkOrdeIncoming <- .print("Ork orde is incoming!");
--+needs(steel).
++orkOrdeIncoming <-
+.print("ork order coming!");
+-+needs(steel, 150).
+-orkOrderIncoming <-
+.print("ork order not coming!");
+
+-+needs(gold, 150).

@@ -43,7 +43,6 @@ public class MineEnv extends Environment{
 			try {
 				Thread.sleep(10000);
 				int random = new Random().nextInt(3);
-				System.out.println("OrkOrderIncoming?");
 				if(random <= 2)
 					addPercept("forger", Literal.parseLiteral("orkOrdeIncoming"));
 				else					
@@ -199,6 +198,10 @@ public class MineEnv extends Environment{
     	if(action.getFunctor().equals("clearPercepts")) {
     		clearPercepts(agent);
     		initializePercepts();
+    		return true;
+    	}
+    	if(action.getFunctor().equals("paint_me")) {
+    		this.model.setAgPos(this.model.agentIdByName.get(agent), this.model.getAgentLocationByName(agent));
     		return true;
     	}
 		return false;

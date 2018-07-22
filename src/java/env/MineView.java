@@ -3,7 +3,9 @@ package env;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.Random;
 
+import jason.asSyntax.Literal;
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.GridWorldView;
 import jason.environment.grid.Location;
@@ -46,7 +48,7 @@ public class MineView  extends GridWorldView {
 	    		c = Color.green;
 	    	if(MineModel.agentTypebyId.get(id).equals("forger"))
 	    		c = Color.RED;
+	        super.drawAgent(g, x, y, c, -1);
     	}
-        super.drawAgent(g, x, y, c, -1);
     }
 }
