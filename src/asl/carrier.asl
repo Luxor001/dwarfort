@@ -16,6 +16,13 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	.my_name(Name);
 	.send(forger, tell, carrierReady(Name)).
 	
++goCollect(Resource) <-
+	clearPercepts;
+	.random(X); .wait(X*1000);
+	?cavesEntrances(Caves);
+	.shuffle(Caves, ShuffledCaves);
+	!searchFreeCave(ShuffledCaves, 0).
+	
 +!searchFreeCave(ShuffledCaves, I): not caveFound(_) & I < .length(ShuffledCaves)<-
  	.nth(I, ShuffledCaves, cave(Index, Miner, X, Y));
 	!goTo(X,Y);
@@ -24,35 +31,25 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 !searchFreeCave(ShuffledCaves, I+1).
 +!searchFreeCave(ShuffledCaves, I): true.
 
-+!goToCave(cave(Index, Miner, _, _)) <-
-	?caveE(Index, _, X, Y);
-	!goTo(X, Y);
-	deletePersonalPercept(positionReached);
-	.wait(5000);
-	?cave(Index, MinerName, _, _);
-	?goCollect(Resource);	
-	.send(MinerName, untell, forgerNeeds(_));
-	//.wait(500);	
-	.send(MinerName, tell, forgerNeeds(Resource));	
-	!checkStorageForResource(Resource).
-	
-+goCollect(Resource) <-
-	clearPercepts;
-	.random(X); .wait(X*1000);
-	?cavesEntrances(Caves);
-	.shuffle(Caves, ShuffledCaves);
-	!searchFreeCave(ShuffledCaves, 0).
-
 +caveFound(cave(Index, Miner, X, Y)) <- 
 	deployArtefact(Index); 
 	!goToCave(cave(Index, Miner, X, Y)).
 	
++!goToCave(cave(Index, Miner, _, _)) <-
+	?caveE(Index, _, X, Y);
+	!goTo(X, Y);
+	deletePersonalPercept(positionReached);
+	?cave(Index, MinerName, _, _);
+	?goCollect(Resource);	
+	.send(MinerName, untell, forgerNeeds(_));
+	.send(MinerName, tell, forgerNeeds(Resource));	
+	!checkStorageForResource(Resource).
+	
+	
 +kgInStorage(ResourceType, Kg) <-
-	?caveFound(cave(CaveIndex, _, _, _));
-	checkStorage(ResourceType, CaveIndex);
+	checkStorage;
 	?storageKg(ResourceType, Kg).
 	
-
 +!checkStorageForResource(Resource)<-
 	?strength_kg(Strength);
 	+kgInStorage(Resource, Kg);
@@ -77,7 +74,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	.wait(500);
 	!dropBag;
 	.my_name(Name);
-	.send(forger, untell, carrierBack(Name, _));.send(forger, tell, carrierBack(Name, "all ok")).
+	.send(forger, untell, carrierBack(Name));.send(forger, tell, carrierBack(Name)).
 
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
@@ -87,5 +84,8 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 
 +!repaint <-
 	paint_me;
-	.wait(400);
+	.wait(1000);
 	!repaint.
+	
++minerThirsty[source(Ag)] <- 
+.print("someone is thirsty!", Ag).

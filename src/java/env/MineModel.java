@@ -270,7 +270,9 @@ public class MineModel extends GridWorldModel{
     		mineCave.items.forEach(item -> this.add(item.getSecond(), item.getFirst()));
     		mineCave.storage.put(GOLD, 0);
     		mineCave.storage.put(STEEL, 0);
-    	});    	
+    	}); 
+    	controlCave.storage.put(GOLD, 0);
+    	controlCave.storage.put(STEEL, 0);
     }
     
     boolean moveTowards(String agent, final Location dest) {
@@ -309,8 +311,6 @@ public class MineModel extends GridWorldModel{
     }
     
     public Location getAgentLocationByName(String agent) {
-    	if(agent.equals("miner"))
-    		return this.getAgPos(0);    	
     	return this.getAgPos(getAgentIdByName(agent));
     }
     public Location getLocationByStep(String agent, StepDirection step) {
@@ -374,12 +374,16 @@ public class MineModel extends GridWorldModel{
     	}
     	return 0;
     }
+    public int getStorageAmount(String agent, int resourceType) {
+    	Cave cave = getCaveInLocation(getAgentLocationByName(agent));
+    	return cave.storage.get(resourceType);
+    }/*
     public int getStorageAmount(int caveIndex, int resourceType) {
     	MineCave cave = this.mineCaves.get(caveIndex);
     	return cave.storage.get(resourceType);
-    }
+    }*/
     public void dropResource(String agent, int resourceType, double kgCarrying) {
-    	Cave cave = getCaveInLocation(getAgentLocationByName(agent));
+    	Cave cave = agent.contains("carrier") ? controlCave : getCaveInLocation(getAgentLocationByName(agent));
     	int kgInStorage = cave.storage.get(resourceType);
     	cave.storage.put(resourceType, (int) (kgInStorage + kgCarrying));
     }

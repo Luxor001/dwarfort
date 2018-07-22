@@ -177,8 +177,8 @@ public class MineEnv extends Environment{
 					carryingKg = this.model.collect(agent, resourceType) + kgCarrying.solve();
 				if(action.getFunctor().equals("pickupFromStorage"))
 					carryingKg = this.model.pickupFromStorage(agent, resourceType, ((NumberTerm)action.getTerm(2)).solve());
-				if(action.getFunctor().equals("dropResource"))
-		    		this.model.dropResource(agent, resourceType, kgCarrying.solve());
+				if(action.getFunctor().equals("dropResource")) 
+		    		this.model.dropResource(agent, resourceType, kgCarrying.solve());				
 			} catch (Exception e) {}
 
 			
@@ -187,12 +187,9 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("checkStorage")) {
-    		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
-    		int caveIndex = Integer.parseInt(action.getTerm(1).toString());
-    		int kgInStorage = this.model.getStorageAmount(caveIndex, resourceType);
-
-	    	removePerceptsByUnif(agent, Literal.parseLiteral("storageKg(Kg)"));
-			addPercept(agent, Literal.parseLiteral("storageKg("+action.getTerm(0).toString() + ","+kgInStorage + ")"));
+    		removePerceptsByUnif(agent, Literal.parseLiteral("storageKg(_, Kg)"));
+    		addPercept(agent, Literal.parseLiteral("storageKg(gold,"+ this.model.getStorageAmount(agent, MineModel.GOLD) + ")"));
+    		addPercept(agent, Literal.parseLiteral("storageKg(steel,"+this.model.getStorageAmount(agent, MineModel.STEEL) + ")"));
     		return true;
     	}
     	if(action.getFunctor().equals("clearPercepts")) {
@@ -201,7 +198,7 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("paint_me")) {
-    		this.model.setAgPos(this.model.agentIdByName.get(agent), this.model.getAgentLocationByName(agent));
+    		this.model.setAgPos(MineModel.agentIdByName.get(agent), this.model.getAgentLocationByName(agent));
     		return true;
     	}
 		return false;

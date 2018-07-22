@@ -1,4 +1,5 @@
 /* Initial beliefs */
+thirstiness(0).
 strength_kg(10).
 carrying(Resource, 0).
 atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
@@ -8,6 +9,8 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 +!scanCave(AreaIndex): not caveScanned	<- 
 	!scanArea(AreaIndex);
 !scanCave(AreaIndex+1).
++!scanCave(AreaIndex): caveScanned & forgerNeeds(Resource) <-
+	!collect(Resource).
 +!scanCave(AreaIndex).
 
 	+!scanArea(N)<- 
@@ -15,15 +18,14 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 		!goTo(X,Y, 50);		
 		deletePersonalPercept(positionReached);
 		!cycleArea(N);
-		deletePersonalPercept(areaComplete).
-			
+		deletePersonalPercept(areaComplete).			
 		+!cycleArea(N):
 		not areaComplete <-
 		     cycleArea(N);
 			.wait(50);
 		!cycleArea(N).
 		
-		+!cycleArea(N) // if arrived at destination (P = "owner" | "fridge")...
+		+!cycleArea(N)
 			: areaComplete
 			<- deletePersonalPercept(goleft); deletePersonalPercept(goright); deletePersonalPercept(wall).
 			
@@ -51,11 +53,12 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	?carrying(Resource, Kg);
 	dropResource(Resource, Kg).
 	
-+forgerNeeds(Resource) <-
+// message from the carrier!
++forgerNeeds(Resource): caveScanned <-
 	.drop_intention(collect(_));
-	.wait(2000);
 	!collect(Resource).
 	
+//+!collect(Resource): thirstiness(N) & N<=5<-
 +!collect(Resource)<- 
 	?resource(Resource, X, Y);
 	!goTo(X, Y);
@@ -65,4 +68,6 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);	
 	!dropBag;
+	?thirstiness(Thirstiness);
+	-+thirstiness(Thirstiness+1);
 	!collect(Resource).
