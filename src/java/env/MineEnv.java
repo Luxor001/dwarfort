@@ -56,10 +56,17 @@ public class MineEnv extends Environment{
     		Location entrance = this.model.controlCave.entrances.get(i);
     		MineCave cave = this.model.mineCaves.get(i);
     		addPercept(Literal.parseLiteral("cave(" + i + ","+ cave.agentAssigned+","+entrance.x + "," + entrance.y+")"));
-    		addPercept(Literal.parseLiteral("caveE(" + i + ","+ cave.agentAssigned+","+cave.entrance.x + "," + cave.entrance.y+")"));
+    		addPercept(Literal.parseLiteral("caveE(" + i + ","+ cave.agentAssigned+","+cave.entrance.x + "," + cave.entrance.y+")"));    		
     	}
     	addPercept(Literal.parseLiteral("controlCave(" + this.model.controlCave.areas.get(0).center().toString()+")"));
+    	
+    	this.model.mineCaves.forEach(cave -> {
+    		for(int i= 0; i < cave.areas.size(); i++) {
+    			Area area = cave.areas.get(i);
+    			addPercept(cave.agentAssigned, Literal.parseLiteral(String.format("corner(%d,%d,%d)", i, area.br.x, area.br.y)));    		}
+    	});    	    		
     }
+    
     @Override
     public boolean executeAction(final String agent, final Structure action) {
     	if(action.getFunctor().equals("cycleArea")) {
@@ -124,13 +131,6 @@ public class MineEnv extends Environment{
   		
   			System.out.flush();
     		
-    		return true;
-    	}
-    	if(action.getFunctor().equals("gotocorner")) {
-    		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
-    		this.model.gotocorner(agent, areaIndex);
-    		if(this.model.isAtCorner(agent, areaIndex))
-        		addPercept(agent, Literal.parseLiteral("atcorner"));
     		return true;
     	}
     	if(action.getFunctor().equals("goTo")) {

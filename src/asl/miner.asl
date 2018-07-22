@@ -8,11 +8,12 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 +!scanCave(AreaIndex): not caveScanned	<- 
 	!scanArea(AreaIndex);
 !scanCave(AreaIndex+1).
-+!scanCave(AreaIndex): caveScanned.
++!scanCave(AreaIndex).
 
-	+!scanArea(N) : true <- 
-		!go_to_bottomright(N);		
-		deletePersonalPercept(atcorner);
+	+!scanArea(N)<- 
+		?corner(N, X, Y);
+		!goTo(X,Y, 50);		
+		deletePersonalPercept(positionReached);
 		!cycleArea(N);
 		deletePersonalPercept(areaComplete).
 			
@@ -25,19 +26,18 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 		+!cycleArea(N) // if arrived at destination (P = "owner" | "fridge")...
 			: areaComplete
 			<- deletePersonalPercept(goleft); deletePersonalPercept(goright); deletePersonalPercept(wall).
-								
-		+!go_to_bottomright(N):
-		 not atcorner <-
-			gotocorner(N);
-			.wait(50);
-		!go_to_bottomright(N).	
-+!go_to_bottomright(N).
 			
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
 	.wait(250);
 	!goTo(X, Y).
 +!goTo(X, Y) : positionReached.
+
++!goTo(X, Y, MS) : not positionReached <- 
+ 	goTo(X, Y); 	
+	.wait(MS);
+	!goTo(X, Y, MS).
++!goTo(X, Y, MS) : positionReached.
 			 
 // Collect some resource in my feets..
 +!pickup(Resource) : not atCapacity <- 

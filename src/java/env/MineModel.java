@@ -290,19 +290,6 @@ public class MineModel extends GridWorldModel{
         return r1.equals(dest);
     }    
     
-    public synchronized void gotocorner(String agent, int area) {
-    	Cave caveIAmIn = this.getCaveAssignedToAgent(agent);
-    	Area areaToMoveTo = caveIAmIn.areas.get(area);
-    	moveTowards(agent, areaToMoveTo.br);
-    }
-
-    public synchronized boolean isAtCorner(String agent, int area) {
-    	Location agentLocation = getAgentLocationByName(agent);
-    	Cave caveIAmIn = this.getCaveAssignedToAgent(agent);
-    	Area areaToMoveTo = caveIAmIn.areas.get(area);
-    	return agentLocation.distance(areaToMoveTo.br) == 0;    	
-    }
-    
     public boolean moveAStep(String agent, StepDirection direction) {
     	Location newLocation = this.getLocationByStep(agent, direction);
         this.setAgPos(getAgentIdByName(agent), newLocation); // actually move the robot in the grid            	
