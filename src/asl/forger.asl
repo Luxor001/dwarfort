@@ -1,4 +1,5 @@
 needs(gold, 150).
+items(armor, 0).
 
 !init.
 !repaint.
@@ -12,7 +13,6 @@ needs(gold, 150).
 +carrierReady(Name) <- +carrier(Name).
 
 +carrierBack(Name) <-
--storageKg(_,_);
 	checkStorage;
 	?needs(Resource, _);
 	.send(Name, untell, goCollect(_));.send(Name, tell, goCollect(Resource)).
@@ -25,13 +25,11 @@ needs(gold, 150).
 	.wait(200);
 	!repaint.
 
-+storageKg(Resource, Kg)<-
-if(Resource == steel){
-	.print(steel);
-};
-.print("asda", Kg, Resource).
++storageKg(steel, Kg): Kg >= 50<-
+buildArmor;
+?items(armor, N);
+-+items(armor, N+1);
+.print("Forger built an Armor! Total Armors:",N+1).
 
-+storageKg(Resource, Kg): storageKg(Resourcea, _) & Resourcea == steel<-
-?items(armor, N); 
--+items(armor, N+1).
-	
++?passMeABeerPlz(Beer) <-
+	Beer = true;.

@@ -197,6 +197,10 @@ public class MineEnv extends Environment{
     		initializePercepts();
     		return true;
     	}
+    	if(action.getFunctor().equals("buildArmor")) {
+    		this.model.buildArmor();
+    		return true;
+    	}
     	if(action.getFunctor().equals("paint_me")) {
     		this.model.setAgPos(MineModel.agentIdByName.get(agent), this.model.getAgentLocationByName(agent));
     		return true;

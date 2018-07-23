@@ -51,6 +51,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	?storageKg(ResourceType, Kg).
 	
 +!checkStorageForResource(Resource)<-
+	.print("Checking for resources!");
 	?strength_kg(Strength);
 	+kgInStorage(Resource, Kg);
 	if(Kg >= Strength) {
@@ -87,5 +88,18 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	.wait(1000);
 	!repaint.
 	
-+minerThirsty[source(Ag)] <- 
-.print("someone is thirsty!", Ag).
++?minerNeedsBeer(Beer)[source(Miner)]<-
+	.drop_intention(checkStorageForResource(_));
+	?caveFound(cave(_,Miner, X, Y))
+	!goTo(X,Y); //go to the entrance of the cave...
+	deletePersonalPercept(positionReached);
+	.send("forger", askOne, passMeABeerPlz(_), Beer);
+	.print("requested a beer");
+	?caveE(_,Miner, A, B);
+	!goTo(A, B);
+	deletePersonalPercept(positionReached);
+	?goCollect(Resource);
+	!checkStorageForResource(Resource).
+	
+	
+	

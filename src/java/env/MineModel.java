@@ -376,12 +376,12 @@ public class MineModel extends GridWorldModel{
     }
     public int getStorageAmount(String agent, int resourceType) {
     	Cave cave = getCaveInLocation(getAgentLocationByName(agent));
+    	if(cave == null) {
+    		System.out.println(agent + "" + resourceType);
+    		return 0;
+    	}
     	return cave.storage.get(resourceType);
-    }/*
-    public int getStorageAmount(int caveIndex, int resourceType) {
-    	MineCave cave = this.mineCaves.get(caveIndex);
-    	return cave.storage.get(resourceType);
-    }*/
+    }
     public void dropResource(String agent, int resourceType, double kgCarrying) {
     	Cave cave = agent.contains("carrier") ? controlCave : getCaveInLocation(getAgentLocationByName(agent));
     	int kgInStorage = cave.storage.get(resourceType);
@@ -399,5 +399,9 @@ public class MineModel extends GridWorldModel{
     	ArrayList<CarrierArtefact> artefactsOnMyLocation = artefactsOnMap.get(agentLocation);    	
     	if(artefactsOnMyLocation != null) 
     		artefactsOnMyLocation.removeIf(artefact -> artefact.caveGoingTo == indexCaveGoingTo);
+    }
+    public void buildArmor() {
+    	int kgInStorage = this.controlCave.storage.get(STEEL);
+    	this.controlCave.storage.put(STEEL, kgInStorage-50);
     }
 }

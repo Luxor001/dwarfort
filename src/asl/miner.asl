@@ -1,5 +1,6 @@
 /* Initial beliefs */
 thirstiness(0).
+thirsty :- thirstiness(N) & N >= 10. 
 strength_kg(10).
 carrying(Resource, 0).
 atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
@@ -54,12 +55,12 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	dropResource(Resource, Kg).
 	
 // message from the carrier!
-+forgerNeeds(Resource): caveScanned <-
++forgerNeeds(Resource)[source[Ag]]: caveScanned <-
 	.drop_intention(collect(_));
 	!collect(Resource).
 	
 //+!collect(Resource): thirstiness(N) & N<=5<-
-+!collect(Resource)<- 
++!collect(Resource): not thirsty<-
 	?resource(Resource, X, Y);
 	!goTo(X, Y);
 	deletePersonalPercept(positionReached);	
@@ -71,3 +72,15 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	?thirstiness(Thirstiness);
 	-+thirstiness(Thirstiness+1);
 	!collect(Resource).
+
++!collect(Resource): thirsty<-
+.print("i am thirsty");
+//retrieve the carrier in my cave..
+.print("i need beer");
+?forgerNeeds(_)[source(Ag)];
+.send(Ag, askOne, minerNeedsBeer(_), Beer);
+//drink the beer
+-+thirstiness(0);
+?forgerNeeds(Resource);
+!collect(Resource).
+	
