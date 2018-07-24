@@ -55,12 +55,14 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	dropResource(Resource, Kg).
 	
 // message from the carrier!
-+forgerNeeds(Resource)[source[Ag]]: caveScanned <-
++!goCollect(Resource)[source(Ag)]<-
+	.abolish(forgerNeeds(_));
+	+forgerNeeds(Resource)[source(Ag)];
 	.drop_intention(collect(_));
 	!collect(Resource).
 	
 //+!collect(Resource): thirstiness(N) & N<=5<-
-+!collect(Resource): not thirsty<-
++!collect(Resource): not thirsty & caveScanned<-
 	?resource(Resource, X, Y);
 	!goTo(X, Y);
 	deletePersonalPercept(positionReached);	
@@ -73,14 +75,11 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	-+thirstiness(Thirstiness+1);
 	!collect(Resource).
 
-+!collect(Resource): thirsty<-
-.print("i am thirsty");
-//retrieve the carrier in my cave..
-.print("i need beer");
++!collect(Resource): thirsty & caveScanned<-
 ?forgerNeeds(_)[source(Ag)];
 .send(Ag, askOne, minerNeedsBeer(_), Beer);
-//drink the beer
--+thirstiness(0);
+-+thirstiness(0); //drink the beer
 ?forgerNeeds(Resource);
 !collect(Resource).
 	
++!collect(Resource).

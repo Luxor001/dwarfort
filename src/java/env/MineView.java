@@ -48,7 +48,8 @@ public class MineView  extends GridWorldView {
 	    		c = Color.green;
 	    	if(MineModel.agentTypebyId.get(id).equals("forger"))
 	    		c = Color.RED;
-	        super.drawAgent(g, x, y, c, -1);
+	        super.drawAgent(g, x, y, c, id);
+	        this.drawString(g, x, y, this.defaultFont, id+"");
     	}
     }
 }

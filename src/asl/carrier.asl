@@ -41,8 +41,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	deletePersonalPercept(positionReached);
 	?cave(Index, MinerName, _, _);
 	?goCollect(Resource);	
-	.send(MinerName, untell, forgerNeeds(_));
-	.send(MinerName, tell, forgerNeeds(Resource));	
+	.send(MinerName, achieve, goCollect(Resource));	
 	!checkStorageForResource(Resource).
 	
 	
@@ -50,10 +49,10 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	checkStorage;
 	?storageKg(ResourceType, Kg).
 	
-+!checkStorageForResource(Resource)<-
-	.print("Checking for resources!");
++!checkStorageForResource(Resource)<-	
 	?strength_kg(Strength);
 	+kgInStorage(Resource, Kg);
+	//.print("Checking for resources!", Kg);
 	if(Kg >= Strength) {
 		pickupFromStorage(Resource, 0, Strength);
 		!bringBackResource;
@@ -89,12 +88,12 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	!repaint.
 	
 +?minerNeedsBeer(Beer)[source(Miner)]<-
+	.print("miner needs a beer");
 	.drop_intention(checkStorageForResource(_));
 	?caveFound(cave(_,Miner, X, Y))
 	!goTo(X,Y); //go to the entrance of the cave...
 	deletePersonalPercept(positionReached);
 	.send("forger", askOne, passMeABeerPlz(_), Beer);
-	.print("requested a beer");
 	?caveE(_,Miner, A, B);
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);

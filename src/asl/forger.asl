@@ -17,19 +17,25 @@ items(armor, 0).
 	?needs(Resource, _);
 	.send(Name, untell, goCollect(_));.send(Name, tell, goCollect(Resource)).
 
-+orkOrdeIncoming <- -+needs(steel, 150).
--orkOrderIncoming <- -+needs(gold, 150).
++orkOrdeIncoming <-	
+	.print("ork orde coming!"); 
+	-+needs(steel, 150).
+-orkOrdeIncoming <-
+
+	.print("ork stopped!");  
+-+needs(gold, 150).
 
 +!repaint <-
 	paint_me;
 	.wait(200);
 	!repaint.
 
-+storageKg(steel, Kg): Kg >= 50<-
++storageKg(steel, Kg): Kg >= 100<-
 buildArmor;
 ?items(armor, N);
 -+items(armor, N+1);
 .print("Forger built an Armor! Total Armors:",N+1).
+
 
 +?passMeABeerPlz(Beer) <-
 	Beer = true;.

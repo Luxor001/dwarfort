@@ -41,12 +41,16 @@ public class MineEnv extends Environment{
 
 		new Thread(()->{
 			try {
-				Thread.sleep(10000);
-				int random = new Random().nextInt(3);
-				if(random <= 2)
-					addPercept("forger", Literal.parseLiteral("orkOrdeIncoming"));
-				else					
-					removePercept("forger", Literal.parseLiteral("orkOrderIncoming"));
+				while(true) {
+					Thread.sleep(10000);
+					int random = new Random().nextInt(3);
+					System.out.println("ork orde?" + random);
+					//33% possibility of ork orde. hard times for the dwarfes.
+					if(random == 0)
+						addPercept("forger", Literal.parseLiteral("orkOrdeIncoming"));
+					else 
+						removePercept("forger", Literal.parseLiteral("orkOrdeIncoming"));					
+				}
 			} catch (InterruptedException e) {}
 		}).start();
     }
