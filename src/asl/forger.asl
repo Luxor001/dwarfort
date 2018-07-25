@@ -36,6 +36,5 @@ buildArmor;
 -+items(armor, N+1);
 .print("Forger built an Armor! Total Armors:",N+1).
 
-
 +?passMeABeerPlz(Beer) <-
 	Beer = true;.

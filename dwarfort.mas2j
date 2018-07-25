@@ -8,9 +8,7 @@ MAS dwarfort {
 		miner #6;
 		carrier #6; 
 		forger;
-	//	carrier #2; 
-	//	miner1 miner;
-
+		
 	aslSourcePath:
 		"src/asl";
 }

@@ -14,27 +14,26 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	!collect(Resource).
 +!scanCave(AreaIndex).
 
-	+!scanArea(N)<- 
-		?corner(N, X, Y);
-		!goTo(X,Y, 50);		
-		deletePersonalPercept(positionReached);
-		!cycleArea(N);
-		deletePersonalPercept(areaComplete).			
-		+!cycleArea(N):
-		not areaComplete <-
-		     cycleArea(N);
-			.wait(50);
-		!cycleArea(N).
++!scanArea(N)<- 
+	?corner(N, X, Y);
+	!goTo(X,Y, 50);		
+	deletePersonalPercept(positionReached);
+	!cycleArea(N);
+	deletePersonalPercept(areaComplete).
+				
++!cycleArea(N): not areaComplete <-
+     cycleArea(N);
+	.wait(50);
+!cycleArea(N).
 		
-		+!cycleArea(N)
-			: areaComplete
-			<- deletePersonalPercept(goleft); deletePersonalPercept(goright); deletePersonalPercept(wall).
++!cycleArea(N)	: areaComplete <-
+ deletePersonalPercept(goleft); deletePersonalPercept(goright); deletePersonalPercept(wall).
 			
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
 	.wait(250);
 	!goTo(X, Y).
-+!goTo(X, Y) : positionReached.
++!goTo(X, Y).
 
 +!goTo(X, Y, MS) : not positionReached <- 
  	goTo(X, Y); 	

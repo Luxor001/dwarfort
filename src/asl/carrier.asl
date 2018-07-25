@@ -45,13 +45,15 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	!checkStorageForResource(Resource).
 	
 	
-+kgInStorage(ResourceType, Kg) <-
++?kgInStorage(ResourceType, Kg) <-
+	-storageKg(ResourceType, _);
 	checkStorage;
 	?storageKg(ResourceType, Kg).
+-storageKg <- true.
 	
 +!checkStorageForResource(Resource)<-	
 	?strength_kg(Strength);
-	+kgInStorage(Resource, Kg);
+	?kgInStorage(Resource, Kg);
 	//.print("Checking for resources!", Kg);
 	if(Kg >= Strength) {
 		pickupFromStorage(Resource, 0, Strength);
@@ -80,7 +82,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
  	goTo(X, Y); 	
 	.wait(50);
 	!goTo(X, Y).
-+!goTo(X, Y) : positionReached.
++!goTo(X, Y).
 
 +!repaint <-
 	paint_me;
@@ -98,7 +100,4 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 	!goTo(A, B);
 	deletePersonalPercept(positionReached);
 	?goCollect(Resource);
-	!checkStorageForResource(Resource).
-	
-	
-	
+	!checkStorageForResource(Resource).	

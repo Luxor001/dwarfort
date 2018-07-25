@@ -191,7 +191,6 @@ public class MineEnv extends Environment{
     		return true;
     	}
     	if(action.getFunctor().equals("checkStorage")) {
-    		removePerceptsByUnif(agent, Literal.parseLiteral("storageKg(_, Kg)"));
     		addPercept(agent, Literal.parseLiteral("storageKg(gold,"+ this.model.getStorageAmount(agent, MineModel.GOLD) + ")"));
     		addPercept(agent, Literal.parseLiteral("storageKg(steel,"+this.model.getStorageAmount(agent, MineModel.STEEL) + ")"));
     		return true;
