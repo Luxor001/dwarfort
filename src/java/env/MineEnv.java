@@ -59,15 +59,15 @@ public class MineEnv extends Environment{
     	for(int i = 0; i < this.model.controlCave.entrances.size(); i++) {
     		Location entrance = this.model.controlCave.entrances.get(i);
     		MineCave cave = this.model.mineCaves.get(i);
-    		addPercept(Literal.parseLiteral("cave(" + i + ","+ cave.agentAssigned+","+entrance.x + "," + entrance.y+")"));
-    		addPercept(Literal.parseLiteral("caveE(" + i + ","+ cave.agentAssigned+","+cave.entrance.x + "," + cave.entrance.y+")"));    		
+    		addPercept(Literal.parseLiteral("cave(" + i + ","+ cave.minerAssigned+","+entrance.x + "," + entrance.y+")"));
+    		addPercept(Literal.parseLiteral("caveE(" + i + ","+ cave.minerAssigned+","+cave.entrance.x + "," + cave.entrance.y+")"));    		
     	}
     	addPercept(Literal.parseLiteral("controlCave(" + this.model.controlCave.areas.get(0).center().toString()+")"));
     	
     	this.model.mineCaves.forEach(cave -> {
     		for(int i= 0; i < cave.areas.size(); i++) {
     			Area area = cave.areas.get(i);
-    			addPercept(cave.agentAssigned, Literal.parseLiteral(String.format("corner(%d,%d,%d)", i, area.br.x, area.br.y)));    		}
+    			addPercept(cave.minerAssigned, Literal.parseLiteral(String.format("corner(%d,%d,%d)", i, area.br.x, area.br.y)));    		}
     	});    	    		
     }
     

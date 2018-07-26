@@ -54,7 +54,7 @@ public class MineModel extends GridWorldModel{
     		// tralasciamo alcune caves se non ci sono abbastanza minatori..
     		if(index < this.getNbOfAgs()) {    			
 	    		String agentName = "miner" + (index + 1);
-	    		mineCave.assignAgent(agentName);
+	    		mineCave.assignMiner(agentName);
 	    		this.setAgPos(index, this.mineCaves.get(index).areas.get(0).center());
 	    		MineModel.agentTypebyId.put(index, "miner");
     			MineModel.agentIdByName.put(agentName, index);
@@ -331,7 +331,7 @@ public class MineModel extends GridWorldModel{
     }
     
     public MineCave getCaveAssignedToAgent(String agent) {
-		return this.mineCaves.stream().filter(cave -> cave.getAgent().equals(agent)).findFirst().get();    	
+		return this.mineCaves.stream().filter(cave -> cave.getMinerAssigned().equals(agent)).findFirst().get();    	
     }
     
     public boolean agentOverObject(String agent, int object) {

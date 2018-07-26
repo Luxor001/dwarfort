@@ -1,8 +1,7 @@
  	\documentclass{llncs}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% package sillabazione italiana e uso lettere accentate
-\usepackage[latin1]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}\usepackage[T1]{fontenc}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage{url}
@@ -17,34 +16,32 @@
 \makeatother
 
 \usepackage{listings}
+\usepackage{xcolor}
+
+
+\usepackage{inconsolata}
+
 \usepackage{color}
-\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
-\definecolor{comment}{rgb}{0.42, 0.56, 0.14}
 
-\lstdefinelanguage{qa}{
-  keywords={System, Event, Dispatch, Context, ip, host, port, -httpserver, EventHandler, for, switch, memoCurrentEvent, -lastonly, QActor, context, Rules, Plan, normal, actions, transition, whenTime, whenEvent, finally, repeatPl	an, resumeLastPlan, println, removeRule, onEvent, demo, forward, not, else, emit, -m, whenMsg, actorOp, connectUnity, javaRun, onward, time, onMsg, stopAfter, delay, printCurrentEvent},
-  keywordstyle=\color{purple}\bfseries,
-  ndkeywords={class, export, boolean, throw, implements, import, this},
-  ndkeywordstyle=\color{darkgray}\bfseries,
-  identifierstyle=\color{black},
-  sensitive=false,
-  comment=[l]{//},
-  morecomment=[s]{/*}{*/},
-  commentstyle=\color{comment}\bfseries,
-  stringstyle=\color{blue}\ttfamily,
-  morestring=[b]',
-  morestring=[b]"
-}
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
 
-\lstset{
-   language=qa,
-   backgroundcolor=\color{white},
-   extendedchars=true,
-   basicstyle=\footnotesize\ttfamily,
-   showstringspaces=false,
-   showspaces=false,
-   numbers=none,
-   linewidth=16cm,
+\usepackage{listings}
+\lstset{language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{\$\$},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%},  
+   linewidth=14cm,
 	frame=single,
     basicstyle=\footnotesize, %or \small or \footnotesize et
    numberstyle=\footnotesize,
@@ -131,9 +128,7 @@
 \newcommand{\ssecsname}{\subsectionsname}
 \newcommand{\onpagename}{on page}
 
-\newcommand{\xauthA}{Jun Hao Xia}
-\newcommand{\xauthB}{Andrea Vecchiotti}
-\newcommand{\xauthC}{Stefano Belli}
+\newcommand{\xauthA}{Stefano Belli}
 \newcommand{\xfaculty}{II Faculty of Engineering}
 \newcommand{\xunibo}{Alma Mater Studiorum -- University of Bologna}
 \newcommand{\xaddrBO}{viale Risorgimento 2}
@@ -149,15 +144,14 @@
 
 \begin{document}
 
-\title{Software Engineering\\
- process report template}
+\title{Dwarfort\\
+ Relazione di progetto per Sistemi Autonomi}
 
 %%% \author{\xauthA,\xauthB and \xauthC}
-\author{\xauthA, \xauthB, \xauthC}
+\author{\xauthA}
 
-\institute{%
-%%%  \xunibo\\\xaddrCE, \xcityCE\\\email{\{nameA.studentA, nameB.studentB\}@studio.unibo.it}
-  \xunibo\\\xaddrCE, \xcityCE\\\email{\{andrea.vecchiotti, junhao.xia, stefano.belli4\}@studio.unibo.it}
+\institute{
+  \xunibo\\\xaddrCE, \xcityCE\\\email{stefano.belli4\@studio.unibo.it}
 }
 
 \maketitle
@@ -173,83 +167,61 @@
 %%% \sloppy
 
 %===========================================================================
-\section{Introduction}
-\labelsec{intro}
-This document describes the process adopted as a team to develop a Software System prototype, in respect with the user given functional requiments.\\
-All the different steps of analysis, prototyping and actual implementation of the system will be reported in this document and then analized from an engineering point of view.\\
-Moreover, the actual phases of software development will be studied from an analytic point of view: apart from give a valid functioning prototype, one of the main objectives of this work will be to provide a valid case study for the applicance of Software Engineering tecniques.\\\\
-Considering their actual use in this project, this paper can also serve as a case study of AGILE methodologies, in particular in the SCRUM variant: aspect such as applied product backlogs will be covered in this report, with the final purpose of minimize the project risk and thus software failure.
+\section{Introduzione}
+\labelsec{Introduzione}
+Lo scopo di questo progetto è quello di dimostrare e implementare alcuni dei concetti chiave della programmazione BDI presentati durante il corso di \textit{Sistemi Autonomi} presieduto dal prof. Andrea Omicini.\\
+%È bene ricordare che, nei sistemi autonomi, gli agenti vengono interpretati come entità in grado di agire autonomamente all'interno dell'ambiente in cui vengono situati, adattando il loro comportamento e le loro azioni in base alla percezione del contesto in cui operano.\\
+Più specificatamente, verrà approfondito il concetto di autonomia all'interno di un MAS attraverso la simulazione di una piccola società di agenti autonomi (nani) all'interno di un contesto (una miniera).\\
+Come caso di studio questo progetto può avere una certa rilevanza perché integra concetti di collaborazione tra agenti, percezione dell'ambiente e deliberazione di processi atti a raggiungere obiettivi entro una serie di regole predefinite.
 %===========================================================================
 
 %===========================================================================
 \newpage
-\section{Vision}
-\labelsec{Vision}
-%FIXME: Da sistemare bibliografia. ho messo il riferimento a glass in template2013.bbl
-The development of software systems has undergone a significant number of failures (even on quite large realities) during the period 1970-1980, thanks to a series of concurrent causes:
+\section{Requisiti}
+I requisiti derivano dalla struttura e dalle regole del sistem
+\newpage
+\section{Modello}
+\labelsec{Modello}
+\subsection{Agenti}
+\newpage
+\subsection{Ambiente}
+\begin{figure}[htbp]
+  \centering
+   \includegraphics[scale = 0.55]{img/miniera.png}
+  \caption{Rappresentazione della miniera}
+\end{figure}
+Il modello realizzato è formato da una griglia 50x50 che rappresenta una miniera composta da una serie di caverne.\\
+Le sezioni nere del modello aiutano a rappresentare (anche visivamente) la sua struttura, delineando ostacoli non attraversabili dagli agenti del sistema.\\
+La miniera è logicamente e fisicamente suddivisa dai seguenti elementi:
 \begin{itemize}
-\item Bad (or entirely absent) requiments management.
-\item Weak system architectures.
-\item Many inconsistencies between requiments, project and final realization.
-\item Entirely absence of software testing.
+	\item n.1 \textit{ControlCave}: posizionata al centro dell'intera miniera, è un punto focale di coordinamento per gli agenti.\\
+	Ogni \textit{carrier}, infatti, ritornerà periodicamente all'interno di questa cave per ottenere dei compiti da svolgere e/o risorse richieste dai miners (ad esempio, birra).\\Al suo interno risiede staticamente l'unico agente \textit{forger} presente, rappresentato in rosso.\\
+	\item n.6 \textit{MineCave}: dimora di ogni \textit{miner} del sistema, è il luogo nel quale le risorse previste del sistema vengono posizionate per essere raccolte.\\ Possono essere di varia forma e, per ipotesi semplificatrice, hanno un unica uscita che porta alla \textit{ControlCave} attraverso una serie di tunnel.\\
+	Come già premesso, ogni \textit{MineCave} contiene esclusivamente un \textit{miner} (rappresentato da un pallino di colore blu) e da una serie di punti di interesse, qui elencati:
+	\begin{itemize}
+		\item Una vena di oro (in giallo)
+		\item Una vena di ferro (in grigio)
+		\item uno punto di stoccaggio (in nero) delle risorse raccolte localmente
+	\end{itemize}\vspace*{0.4cm}
+	
+	\item \textit{Tunnel}: ogni \textit{MineCave} e collegata alla \textit{ControlCave} attraverso una serie di cunicoli chiamati \textit{Tunnel}.\\ Possono esistere più \textit{Tunnel} consecutivi che conducono a una stessa caverna.\\ Gli unici agenti in grado di percorrerli sono i \textit{carrier}, rappresentati in verde.
 \end{itemize}
-Nowadays the situation has been (partially) solved by making software engineering principles one of the key study subjects in Computer Science: the adoption of good concepts of \textit{software creation and testing automation} has led to a better quality of software developed.\\ 
-In fact, the main purpose of this project (final assignment of \textit{Ingengeria dei Sistemi Software}, lead by prof. \textit{Antonio Natali}) is to actually learn and succesfully adopt good concept of \textit{software creation and testing automation}, in order to develop more reliable products, both for the client and the developer: our desire to master such tecniques lead to a careful engineering of this project.\\\\
-In fact, this system can serve as an excellent case study for:
-\begin{itemize}
-\item Understanding the role and the importance of \textit{Requiments analysis} and its related pratical roles on software production.\\
-Software deployment cannot start without requiments from the clients, and any ambiguity of it must be cleared; generally, a statement that can be considered useful amongst any non-trivial software development project is:\\
-\begin{nscenter}
-\textit{There is no code without a project, no project without problem
-analysis and no problem without requirements}
-\end{nscenter}\\
-\item Show the process of deployment a software product trough \textit{Iterations}, thanks the adoption of SCRUM framework: with this approach, management and actual deployment of complex products can be greatly simplified.\\
-As a matter of fact, each work iteration was organized by a done \textit{sprint planning}, aiding the team on scheduling the features for each \textit{Increment}; the set of requiments to accomplish on each iteration was led by the so-called \textit{sprint goal}, foundamental to share the same purpose in the team.\\
-\item Learn to develop in a secure way, with the release of small iterations of an already complete and functioning product: each release can be concieved as a small integration of the previous one.\\
-Moreover, this way of software release could not be done at all without a strict testing plan for each iteration; the motto we faithfully followed was:\\
-\begin{nscenter}
-\textit{Analyze a little. Design a little. Code a little. Test what you can}
-\end{nscenter}
-Since we adopted an AGILE approach (SCRUM variant), for each iteration we used a \textit{sprint retrospective} to understand what went wrong, and what we need to keep on in our workflow.\\
-\item Adopt a good grade of teamwork and sharing of knowledge along the team: considering the inherent difficulties that can arise in the coordination of three developers, this project can be extremely useful as case study for such issues, and their resolution attempts.\\
-Who can be defined team leader, and why? There is a need for a flatten hierarchy, or the roles can be, more or less, statically defined?
-
-
-\end{itemize}
-%da completare..
-
-%tra le altre cose, dire di scrum: alla fine un obiettivo del progetto è utilizzarlo.
-
-%L'idea principale è di essere sinceri: qual'è la vision di questo progetto? imparare ad adottare stili giusti di creazione software. è questa la vision
-
-
-%As a team, we firmly believe that good software cannnot be achieved in a reasonable amount of time without following concepts of \textit{Agile development of software}; in fact, the usage of SCRUM framework for the development of this project has perfectlyx satisfied the needs of the team for collaborative work.\\
-%As a matter of fact, each work iteration was organized by a done \textit{sprint planning}, aiding the team on scheduling the features for each \textit{Increment}; the set of requiments to accomplish on each iteration was led by the so-called \textit{sprint goal}, foundamental to share the same purpose in the team.\\\\%migliorare come forma? è corretto pienamente ciò che ho scritto?
-%Inserire Analyze a little. Design a little. Code a little. Test what you can
-%However, we also think that the adoption of concepts of \textit{Model Driven Software Development (MDSD)} can reduce %copiato spudoratamente da relazione2.pdf%
-%time to market and improve the overall quality of the software: for this reason...\\\\%...il team ha adottato DSL in questo punti del progetto ecc.ecc.
-%The main principle, amongst many others, that the team followed on the develop of this project is:
-%\begin{center}
-%\textit{There's no code without project, there's no project without problem analysis,
-%there's no problem without requirements.}
-%\end{center}
-%The intepretation of this principle is pretty simple: without specifications and requiments analysis, it's impossible to talk about good development of software.\\
-%In other terms, a detailed analysis and a study of traceability of requiments it's mandatory before writing any line of code; othewise, the risk of writing useless code it's highly probable.\\\\%scriverlo in una maniera più elegante..
-%inserire frasi fatte del prof
-%===========================================================================
-%===========================================================================
-\section{Goals}
-\labelsec{Goals}
-The main purpose of this project is to build a functioning software system that is:
-\begin{itemize}
-\item Built in a collaborative by a team of 3 developers, following a series of AGILE methodologies (specifically in the SCRUM variant).\\
-As a result of this adoption, the team will have to keep track the actual progress utilizing, for istance, product backlogs and sprint reviews.
-\item Built with meta-model programming languages such as \textit{qa} and its provided software factory.
-\item Built with agent-oriented programming approach, considering its advantages and limitations (agents will be natively provided with the qa language).
-\item Characterized by a minimal abstraction gap, good overall maintainability and short completion time.\\
-\end{itemize}
-Obviously, considering this is an academic project, our primary objective is to please the expectations of our primary and sole committent, Prof. Antonio Natali, and demostrate our knowledge about software engineering theories and techniques he explained during the \textit{Ingegneria dei sistemi software} course.\\
-Therefore, this project will try to adopt as much as possible all the techniques explained during the lessons we attained.
+Ogni tipologia di caverna è una specializzazione della classe astratta \textit{Cave}, ognuna caratterizzata da una lista di oggetti \textit{Area} e un dizionario degli items contenuti:
+\lstinputlisting[float=h,caption=Cave.java]{code/Cave.java}
+\lstinputlisting[float=h,caption=MineCave.java]{code/MineCave.java}
+\lstinputlisting[float=h,caption=ControlCave.java]{code/ControlCave.java}
+%\newgeometry{left=2.5cm,
+ %       right=3cm,} 
+ %       \section{Project}
+%\labelsec{Project}
+%\lstinputlisting[]{rover.qa}
+%\restoregeometry 
+%\newgeometry{left=2.5cm,
+ %       right=3cm,} 
+ %       \section{Project}
+%\labelsec{Project}
+%\lstinputlisting[]{rover.qa}
+%\restoregeometry 
 %===========================================================================
 %===========================================================================
 \newpage
@@ -446,18 +418,6 @@ In fact, our code ingegnerization should limit the changes needed for a non-triv
 %The system is easily expandable and reusable. The conﬁguration of the system is extremely simple with the introduction of Prolog rules and Java methods containing the variable system’s parameters. The choices made guarantee also strong ﬂexibility even with new or modiﬁed requirements: for example, adding new sensors do not involve drastic changes to the system
 %===========================================================================
 \newpage
-%===========================================================================
-\section{Information about the author}
-\labelsec{Author}
-%===========================================================================
-\begin{table}[]
-\centering
-\begin{tabular}{ccc}
- \xauthA & \xauthB & \xauthC \\
-\hspace{-1.5cm}
- \includegraphics[width=5cm,height=5cm,keepaspectratio]{img/xia.jpg}& \includegraphics[width=5cm,height=5cm,keepaspectratio]{img/vecchiotti.jpg} &\includegraphics[width=5cm,height=5cm, keepaspectratio]{img/belli.jpg} 
-\end{tabular}
-\end{table}
 
 \bibliographystyle{abbrv}
 \bibliography{biblio}

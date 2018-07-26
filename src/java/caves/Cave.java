@@ -8,10 +8,7 @@ import jason.environment.grid.Location;
 
 public abstract class Cave {
 	public ArrayList<Area> areas = new ArrayList<Area>();
-	public ArrayList<Area> tunnels = new ArrayList<Area>();
 	public HashMap<Integer, Integer> storage = new HashMap<Integer, Integer>();
-	public String agentAssigned;
-	public Location entrance;
 	public Cave(Area area) {
 		this.areas.add(area);
 	}
@@ -20,12 +17,5 @@ public abstract class Cave {
 	}
 	public Cave() {
 		
-	}
-	
-	public void assignAgent(String agent) {
-		this.agentAssigned = agent;
-	}
-	public String getAgent() {
-		return this.agentAssigned;
 	}
 }
