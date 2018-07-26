@@ -8,3 +8,7 @@ report/*
 !report/*.sty
 !report/*.tex
 !report/*.qa
+!report/code/*
+!report/img/miniera.png
+!report/code
+!report/img
