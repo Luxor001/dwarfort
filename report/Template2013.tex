@@ -1,0 +1,559 @@
+ 	\documentclass{llncs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% package sillabazione italiana e uso lettere accentate
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{url}
+\usepackage{xspace}
+\usepackage{hyperref}
+
+\usepackage[a4paper,hmargin=4.4cm, vmargin=5.2cm]{geometry}
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{manifest}
+
+\makeatother
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{comment}{rgb}{0.42, 0.56, 0.14}
+
+\lstdefinelanguage{qa}{
+  keywords={System, Event, Dispatch, Context, ip, host, port, -httpserver, EventHandler, for, switch, memoCurrentEvent, -lastonly, QActor, context, Rules, Plan, normal, actions, transition, whenTime, whenEvent, finally, repeatPl	an, resumeLastPlan, println, removeRule, onEvent, demo, forward, not, else, emit, -m, whenMsg, actorOp, connectUnity, javaRun, onward, time, onMsg, stopAfter, delay, printCurrentEvent},
+  keywordstyle=\color{purple}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{comment}\bfseries,
+  stringstyle=\color{blue}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=qa,
+   backgroundcolor=\color{white},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=none,
+   linewidth=16cm,
+	frame=single,
+    basicstyle=\footnotesize, %or \small or \footnotesize et
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+
+%%%%%%%
+ \newif\ifpdf
+ \ifx\pdfoutput\undefined
+ \pdffalse % we are not running PDFLaTeX
+ \else
+ \pdfoutput=1 % we are running PDFLaTeX
+ \pdftrue
+ \fi
+%%%%%%%
+ \ifpdf
+ \usepackage[pdftex]{graphicx}
+ \else
+ \usepackage{graphicx}
+ \fi
+%%%%%%%%%%%%%%%
+ \ifpdf
+ \DeclareGraphicsExtensions{.pdf, .jpg, .tif}
+ \else
+ \DeclareGraphicsExtensions{.eps, .jpg}
+ \fi
+%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{rotating}
+
+\newenvironment{nscenter}
+ {\parskip=0pt\par\nopagebreak\centering}
+ {\par\noindent\ignorespacesafterend}
+
+\newcommand{\java}{\textsf{Java}}
+\newcommand{\contact}{\emph{Contact}}
+\newcommand{\corecl}{\texttt{corecl}}
+\newcommand{\medcl}{\texttt{medcl}}
+\newcommand{\msgcl}{\texttt{msgcl}}
+\newcommand{\android}{\texttt{Android}}
+\newcommand{\dsl}{\texttt{DSL}}
+\newcommand{\jazz}{\texttt{Jazz}}
+\newcommand{\rtc}{\texttt{RTC}}
+\newcommand{\ide}{\texttt{Contact-ide}}
+\newcommand{\xtext}{\texttt{XText}}
+\newcommand{\xpand}{\texttt{Xpand}}
+\newcommand{\xtend}{\texttt{Xtend}}
+\newcommand{\pojo}{\texttt{POJO}}
+\newcommand{\junit}{\texttt{JUnit}}
+
+\newcommand{\action}[1]{\texttt{#1}\xspace}
+\newcommand{\code}[1]{{\small{\texttt{#1}}}\xspace}
+\newcommand{\codescript}[1]{{\scriptsize{\texttt{#1}}}\xspace}
+
+% Cross-referencing
+\newcommand{\labelsec}[1]{\label{sec:#1}}
+\newcommand{\xs}[1]{\sectionname~\ref{sec:#1}}
+\newcommand{\xsp}[1]{\sectionname~\ref{sec:#1} \onpagename~\pageref{sec:#1}}
+\newcommand{\labelssec}[1]{\label{ssec:#1}}
+\newcommand{\xss}[1]{\subsectionname~\ref{ssec:#1}}
+\newcommand{\xssp}[1]{\subsectionname~\ref{ssec:#1} \onpagename~\pageref{ssec:#1}}
+\newcommand{\labelsssec}[1]{\label{sssec:#1}}
+\newcommand{\xsss}[1]{\subsectionname~\ref{sssec:#1}}
+\newcommand{\xsssp}[1]{\subsectionname~\ref{sssec:#1} \onpagename~\pageref{sssec:#1}}
+\newcommand{\labelfig}[1]{\label{fig:#1}}
+\newcommand{\xf}[1]{\figurename~\ref{fig:#1}}
+\newcommand{\xfp}[1]{\figurename~\ref{fig:#1} \onpagename~\pageref{fig:#1}}
+\newcommand{\labeltab}[1]{\label{tab:#1}}
+\newcommand{\xt}[1]{\tablename~\ref{tab:#1}}
+\newcommand{\xtp}[1]{\tablename~\ref{tab:#1} \onpagename~\pageref{tab:#1}}
+% Category Names
+\newcommand{\sectionname}{Section}
+\newcommand{\subsectionname}{Subsection}
+\newcommand{\sectionsname}{Sections}
+\newcommand{\subsectionsname}{Subsections}
+\newcommand{\secname}{\sectionname}
+\newcommand{\ssecname}{\subsectionname}
+\newcommand{\secsname}{\sectionsname}
+\newcommand{\ssecsname}{\subsectionsname}
+\newcommand{\onpagename}{on page}
+
+\newcommand{\xauthA}{Jun Hao Xia}
+\newcommand{\xauthB}{Andrea Vecchiotti}
+\newcommand{\xauthC}{Stefano Belli}
+\newcommand{\xfaculty}{II Faculty of Engineering}
+\newcommand{\xunibo}{Alma Mater Studiorum -- University of Bologna}
+\newcommand{\xaddrBO}{viale Risorgimento 2}
+\newcommand{\xaddrCE}{via Venezia 52}
+\newcommand{\xcityBO}{40136 Bologna, Italy}
+\newcommand{\xcityCE}{47023 Cesena, Italy}
+
+%
+% Comments
+%
+%%% \newcommand{\todo}[1]{\bf{TODO:}\emph{#1}}
+
+
+\begin{document}
+
+\title{Software Engineering\\
+ process report template}
+
+%%% \author{\xauthA,\xauthB and \xauthC}
+\author{\xauthA, \xauthB, \xauthC}
+
+\institute{%
+%%%  \xunibo\\\xaddrCE, \xcityCE\\\email{\{nameA.studentA, nameB.studentB\}@studio.unibo.it}
+  \xunibo\\\xaddrCE, \xcityCE\\\email{\{andrea.vecchiotti, junhao.xia, stefano.belli4\}@studio.unibo.it}
+}
+
+\maketitle
+
+%% \begin{abstract}
+%% \footnotesize
+%%This a Latex template to be used for the reports of Software Engineering.
+%%\keywords{Software engineering, managed software development, reports, ....}
+%%\end{abstract}
+
+
+
+%%% \sloppy
+
+%===========================================================================
+\section{Introduction}
+\labelsec{intro}
+This document describes the process adopted as a team to develop a Software System prototype, in respect with the user given functional requiments.\\
+All the different steps of analysis, prototyping and actual implementation of the system will be reported in this document and then analized from an engineering point of view.\\
+Moreover, the actual phases of software development will be studied from an analytic point of view: apart from give a valid functioning prototype, one of the main objectives of this work will be to provide a valid case study for the applicance of Software Engineering tecniques.\\\\
+Considering their actual use in this project, this paper can also serve as a case study of AGILE methodologies, in particular in the SCRUM variant: aspect such as applied product backlogs will be covered in this report, with the final purpose of minimize the project risk and thus software failure.
+%===========================================================================
+
+%===========================================================================
+\newpage
+\section{Vision}
+\labelsec{Vision}
+%FIXME: Da sistemare bibliografia. ho messo il riferimento a glass in template2013.bbl
+The development of software systems has undergone a significant number of failures (even on quite large realities) during the period 1970-1980, thanks to a series of concurrent causes:
+\begin{itemize}
+\item Bad (or entirely absent) requiments management.
+\item Weak system architectures.
+\item Many inconsistencies between requiments, project and final realization.
+\item Entirely absence of software testing.
+\end{itemize}
+Nowadays the situation has been (partially) solved by making software engineering principles one of the key study subjects in Computer Science: the adoption of good concepts of \textit{software creation and testing automation} has led to a better quality of software developed.\\ 
+In fact, the main purpose of this project (final assignment of \textit{Ingengeria dei Sistemi Software}, lead by prof. \textit{Antonio Natali}) is to actually learn and succesfully adopt good concept of \textit{software creation and testing automation}, in order to develop more reliable products, both for the client and the developer: our desire to master such tecniques lead to a careful engineering of this project.\\\\
+In fact, this system can serve as an excellent case study for:
+\begin{itemize}
+\item Understanding the role and the importance of \textit{Requiments analysis} and its related pratical roles on software production.\\
+Software deployment cannot start without requiments from the clients, and any ambiguity of it must be cleared; generally, a statement that can be considered useful amongst any non-trivial software development project is:\\
+\begin{nscenter}
+\textit{There is no code without a project, no project without problem
+analysis and no problem without requirements}
+\end{nscenter}\\
+\item Show the process of deployment a software product trough \textit{Iterations}, thanks the adoption of SCRUM framework: with this approach, management and actual deployment of complex products can be greatly simplified.\\
+As a matter of fact, each work iteration was organized by a done \textit{sprint planning}, aiding the team on scheduling the features for each \textit{Increment}; the set of requiments to accomplish on each iteration was led by the so-called \textit{sprint goal}, foundamental to share the same purpose in the team.\\
+\item Learn to develop in a secure way, with the release of small iterations of an already complete and functioning product: each release can be concieved as a small integration of the previous one.\\
+Moreover, this way of software release could not be done at all without a strict testing plan for each iteration; the motto we faithfully followed was:\\
+\begin{nscenter}
+\textit{Analyze a little. Design a little. Code a little. Test what you can}
+\end{nscenter}
+Since we adopted an AGILE approach (SCRUM variant), for each iteration we used a \textit{sprint retrospective} to understand what went wrong, and what we need to keep on in our workflow.\\
+\item Adopt a good grade of teamwork and sharing of knowledge along the team: considering the inherent difficulties that can arise in the coordination of three developers, this project can be extremely useful as case study for such issues, and their resolution attempts.\\
+Who can be defined team leader, and why? There is a need for a flatten hierarchy, or the roles can be, more or less, statically defined?
+
+
+\end{itemize}
+%da completare..
+
+%tra le altre cose, dire di scrum: alla fine un obiettivo del progetto è utilizzarlo.
+
+%L'idea principale è di essere sinceri: qual'è la vision di questo progetto? imparare ad adottare stili giusti di creazione software. è questa la vision
+
+
+%As a team, we firmly believe that good software cannnot be achieved in a reasonable amount of time without following concepts of \textit{Agile development of software}; in fact, the usage of SCRUM framework for the development of this project has perfectlyx satisfied the needs of the team for collaborative work.\\
+%As a matter of fact, each work iteration was organized by a done \textit{sprint planning}, aiding the team on scheduling the features for each \textit{Increment}; the set of requiments to accomplish on each iteration was led by the so-called \textit{sprint goal}, foundamental to share the same purpose in the team.\\\\%migliorare come forma? è corretto pienamente ciò che ho scritto?
+%Inserire Analyze a little. Design a little. Code a little. Test what you can
+%However, we also think that the adoption of concepts of \textit{Model Driven Software Development (MDSD)} can reduce %copiato spudoratamente da relazione2.pdf%
+%time to market and improve the overall quality of the software: for this reason...\\\\%...il team ha adottato DSL in questo punti del progetto ecc.ecc.
+%The main principle, amongst many others, that the team followed on the develop of this project is:
+%\begin{center}
+%\textit{There's no code without project, there's no project without problem analysis,
+%there's no problem without requirements.}
+%\end{center}
+%The intepretation of this principle is pretty simple: without specifications and requiments analysis, it's impossible to talk about good development of software.\\
+%In other terms, a detailed analysis and a study of traceability of requiments it's mandatory before writing any line of code; othewise, the risk of writing useless code it's highly probable.\\\\%scriverlo in una maniera più elegante..
+%inserire frasi fatte del prof
+%===========================================================================
+%===========================================================================
+\section{Goals}
+\labelsec{Goals}
+The main purpose of this project is to build a functioning software system that is:
+\begin{itemize}
+\item Built in a collaborative by a team of 3 developers, following a series of AGILE methodologies (specifically in the SCRUM variant).\\
+As a result of this adoption, the team will have to keep track the actual progress utilizing, for istance, product backlogs and sprint reviews.
+\item Built with meta-model programming languages such as \textit{qa} and its provided software factory.
+\item Built with agent-oriented programming approach, considering its advantages and limitations (agents will be natively provided with the qa language).
+\item Characterized by a minimal abstraction gap, good overall maintainability and short completion time.\\
+\end{itemize}
+Obviously, considering this is an academic project, our primary objective is to please the expectations of our primary and sole committent, Prof. Antonio Natali, and demostrate our knowledge about software engineering theories and techniques he explained during the \textit{Ingegneria dei sistemi software} course.\\
+Therefore, this project will try to adopt as much as possible all the techniques explained during the lessons we attained.
+%===========================================================================
+%===========================================================================
+\newpage
+\section{Requirements}
+\labelsec{Requirements}
+\newpage
+\subsection{Key aspects for Autonomous system}
+%===========================================================================
+%===========================================================================
+\newpage
+\section{Requirement analysis}
+\labelsec{ReqAnalysis}
+\subsection{Glossary}
+The below glossary can be useful to describe how some specific nouns and verbs have been interpreted by the team: this systematic approach can clear any ambiguity of the terms referred in the project.\\ Furthermore, the analysis of nouns used in the requiments can help the production of a domain model based of the domain entities of the system; on the other hand, the analysis of verbs can lead to the identifications of possible actions the system will have to perform.
+\begin{center}
+    \begin{tabular}{ | l |  p{8cm} |}
+    \hline
+    \textbf{Name} & \textbf{Definition} \\ \hline
+    Differential Drive Robot & Device composed of dedicated hardware making it able to move physically and to detect obstacles along his route.\\ \hline
+    Sonar & A device able to detect a physical object in the environment. \\ \hline
+    Obstacle & A physical object being able to block the path of the robot; obstacles can be fixed (like pilar1 and pilar2) or mobile (like mobileObstacle)\\ \hline
+    Command & Order to the robot to perform a specified action. Commands includes \textit{Stop} command and \textit{Start} command. \\ \hline %FIXME: aggiungere STEP 2
+    Console & Interface in which the user can send commands to the Robot. \\ \hline
+    User & Adopter of the built system.\\ \hline
+    Alarm & Event that, if accurred,compleately stops the robot.\\ \hline
+    \end{tabular}
+\end{center}
+\subsection{(Domain)model}
+The definition of a Domain model its used by software developers to express and describe the entities of the know system, in the form of structure, interaction and behaviour:\\\\
+\textit{\textbf{Rover}}
+\begin{itemize}
+\item \textit{Structure:} a reactive and hardware-composed entity by a sonar and a motor.
+\item \textit{Interaction:} can be controlled and interacted entirely with a series of commands and events, coming both from the final user and 										its sensors.
+\item \textit{Behaviour:} consist in travelling trough a path between a point A and a point B.
+During the route, it's capable of react accordingly to a series of events and user input.
+\end{itemize}
+%FIXME: inserire diagramma di stato per tutti i behaviours?
+%FIXME:capire se come nome (sonar subsystem) può andare bene!
+\textit{\textbf{Sonar system}}
+\begin{itemize}
+\item \textit{Structure:} it can be considered a composed entity: the user requiments explicity express the need of 2 indipendent sonars.\\It can be considered a proactive entity.
+\item \textit{Interaction:} the only interaction this entity performs is the emission of informations in the form of events: in fact, no explicit command can be sent to this entity.\\
+It should be noted that the emitted events are explicity defined in the requiments.
+\item \textit{Behaviour:} Each of the sonar composing this subsystem must emit an event whenever a Robot passes in front of it. 
+\end{itemize}
+%FIXME: Tutta la descrizione di console allo stato attuale va bene?
+\textit{\textbf{Console}}
+\begin{itemize}
+\item \textit{Structure:} a proactive component that let the user interact with the system.\\ It's mainly composed of a set of predefined graphical elements.
+\item \textit{Interaction:} the only interaction this component performs is towards the robot.\\Being proactive, the interaction it's obiviously one-way.
+\item \textit{Behaviour:} this entity has the sole purpose to intercept and forward the user commands to the robot.
+\end{itemize}
+%===========================================================================
+\newpage
+\section{Problem analysis}
+\labelsec{ProblemAnalysis}
+%===========================================================================
+\subsection{Logic architecture}
+\begin{figure}[htbp]
+  \centering
+   \includegraphics[scale = 0.6]{img/logica.png}
+  \caption{Logic architecture}
+\end{figure}
+\newpage
+%===========================================================================
+\newpage
+\section{Work plan}
+\labelsec{wplan}
+The work plan is an essential phase of the software development process used to organize the different steps of the project\\\\
+Chronologically speaking, once the problem analysis was completed (and the functional requirements of the problem was understood), the team set up a work plan as follow:
+\begin{enumerate}
+\item definition of the system contexts and subsystems
+\item definition of the actors of the system
+\item definition of interactions in the system: events and messages.
+\item definition of the logical interaction with the scene entities.
+\item accurate testing of the built system
+\item deployment of the system
+\end{enumerate}
+We then produced a detailed product backlog to list all the main issues needed to be solved for the work completion: every single issue was followed by an estimate (from 1 to 5) of the aspected cost to realize the functionality, and a score of its priority.
+\begin{table}[]
+\centering
+\label{my-label}
+\begin{tabular}{llll}
+\hline
+\multicolumn{1}{|l|}{\textbf{ID}} & \multicolumn{1}{l|}{\textbf{Item}}                                                        & \multicolumn{1}{l|}{\textbf{Priority}} & \multicolumn{1}{l|}{\textbf{Score}} \\ \hline
+\multicolumn{1}{|l|}{1}           & \multicolumn{1}{l|}{Robot goes forward from sonar1 to sonar2 autonomously.} & \multicolumn{1}{l|}{1}                 & \multicolumn{1}{l|}{2}              
+\\ \hline
+\multicolumn{1}{|l|}{2}           & \multicolumn{1}{l|}{Robot stops itself when a mobileObstacle is detected.} & \multicolumn{1}{l|}{1}                 & \multicolumn{1}{l|}{2}              
+\\ \hline
+\multicolumn{1}{|l|}{3}           & \multicolumn{1}{l|}{Robot avoids fixed obstacles and finds an alternative route to sonar2.} & \multicolumn{1}{l|}{2}                 & \multicolumn{1}{l|}{3}              
+\\ \hline
+\multicolumn{1}{|l|}{4}           & \multicolumn{1}{l|}{Robot moves in accord to user inputs.} & \multicolumn{1}{l|}{3}                 & \multicolumn{1}{l|}{3}              
+\\ \hline
+\multicolumn{1}{|l|}{5}           & \multicolumn{1}{l|}{Robot is able to return autonomously to sonar1 starting position.} & \multicolumn{1}{l|}{3}                 & \multicolumn{1}{l|}{5}              
+\\ \hline
+\multicolumn{1}{|l|}{6}           & \multicolumn{1}{l|}{Robot should stops immediately when an alarm event accours.} & \multicolumn{1}{l|}{3}                 & \multicolumn{1}{l|}{2}              
+\\ \hline
+                                  &                                                                                           &                                        &                                    
+\end{tabular}
+\caption{Product backlog}
+\end{table}\\
+Based on the product backlog above, every member of the team worked a different aspect of the project, enforcing specialization of work.\\
+Obviously, this subdivision was based solely on each person's individual skills and preferences, and only for the deployment phase: during the first stages all the team focused on the same aspects to solve any ambiguity beforehand.
+\newpage
+Finally, every issue and bug we found during the development was tracked and documented (and discussed, too) with the built-in bug tracker tool of our repository hoster, \textit{Github}.
+\begin{center}
+\includegraphics[scale=0.4]{img/issues.jpg}    
+\end{center}
+The usage of such collaborative tool helped us coordinate about the open tasks and issues, and reduce the needs of personal metups.
+\newpage
+%===========================================================================
+
+%===========================================================================
+
+%===========================================================================
+%\newgeometry{left=2.5cm,
+ %       right=3cm,} 
+ %       \section{Project}
+%\labelsec{Project}
+%\lstinputlisting[]{rover.qa}
+%\restoregeometry 
+\newpage
+\subsection{Structure}
+
+\subsection{Interaction}
+\newpage
+%===========================================================================
+\section{Implementation}
+\labelsec{Implementation}
+Thanks to the generation performed by the XText Tool, nearly all the code of this project has been written by the use of \textit{qa} models.\\
+All the source code directly written by this team can be found in the \textit{src} folder of the project; the generated source code files, however, can be found in two separate folders: \textit{src-gen} and \textit{srcMore}.\\
+As a result of careful engineering process of the functional requiments we were able to keep minimal the abstraction gap of the project: only a single java file (of about ~70 lines of source code) is mandatory for the step 2, by containing all the \textit{javaRun} used by the rover.\\\\
+We then proceed by presenting a brief explanation of all methods contained in \textit{it.unibo.custom.path}:
+\begin{itemize}
+\item \textit{register} it's a method called by the QActor rover to track and keep history of every physical movement performed.\\
+The movements tracking is made possible by the use of a \textit{Stack} of custom objects called \textit{Action}, each containing the movement name, its duration and timeout value.\\
+\item \textit{startReverse} permits, as the name suggests, to start a reverse sequence of all the actions tracked by the \textit{register} method: every registered movement will be sent back (in the correct order) to the rover by the use of qactor messages.
+\end{itemize}
+It should be noted that the actual implementation of the reverse mechanism has the peculiarity of recording in a "mirror" way some of the input data movements: for istance, "left" movements are registered as "right" in the data stack and viceversa.
+\newpage
+\subsection{GUI Commands}
+Some of the functional requiments explained in the subsection \hyperref[sec:Functional requiments]{4.3} premise the user direct interaction with the system (for example it's made clear that the reverse sequence it's expressely started, at any moment, by the user if it deems).\\
+Since no indication was given by the functional requiments, we opted for a \\manual insertion of commands from the GUI input box, as shown in the image below:\\
+
+\hspace{-1cm}
+ \includegraphics[scale=0.4]{img/gui.jpg} 
+A definition of the actual commands for the system was also necessary, along with the ability to parameterize the inputs.\\
+Therefore, we provide a brief list of the accepted commands of the system, with a synthetic explanation of their required parameters and effects:
+
+\begin{table}[ht]
+\hspace{-1cm}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Command}             & \textbf{Parameters}                                                                                                                                  & \textbf{Effect}                                                                                                                                          \\ \hline
+\textit{connectToUnity(X)}   & \begin{tabular}[c]{@{}l@{}}X: a string rapresenting the IP address \\ of the unity environment to connect to\end{tabular}                            & \begin{tabular}[c]{@{}l@{}}This command links the robot system to \\ its unity representation\end{tabular}                                               \\ \hline
+\textit{setStartDistance(X)} & \begin{tabular}[c]{@{}l@{}}X: an integer value rapresenting the \\ starting distance between the robot\\ initial position and the sonar\end{tabular} & \begin{tabular}[c]{@{}l@{}}This command can be used to accordingly\\ set the initial starting position of the\\ rover (relative to sonar1).\end{tabular} \\ \hline
+\textit{startReverse}        & \multicolumn{1}{c|}{/}                                                                                                                               & \begin{tabular}[c]{@{}l@{}}This command starts the reverse sequence\\ of the robot.\end{tabular}                                                         \\ \hline
+\end{tabular}
+\caption{Enabled commands from the GUI}
+\end{table}
+\newpage
+%===========================================================================
+
+%===========================================================================
+\section{Testing}
+\labelsec{testing}
+Thanks to the unity game engine, virtualization of a real robot has been particularly useful: this way, all the problematics of a real world robot (circuitry, voltage regulation, motors calibration etc.) has been avoided, and so all the tests related to these hardware components.\\
+Moreover, the unity scene let us to replicate instantly the environment the rover has to run across: this ease of use permitted the execution of a high number of stress tests with minimal effort.\\\\
+Then, the behaviour of every single \textit{QActor} has been tested by forging a series of messages (or events, depending on the entity) and studying the consequent reaction.\\
+This kind of tests has been part of our \textit{unit testing} plan described in section \hyperref[sec:Test plan]{5.4}.\\\\
+Ensured that every single entity, taken individually, behave as expected, we then proceed to test the system in a whole; to our surprise, the integration of the different \textit{QActors} of the project lead to many issues and unexpected behaviour (more than the issues found during the previous testing phase), primarly due to calibration, timing and message exchange problems.\\
+However, as stated above, the ease of use of the unity scene let us to perform an high number of integration tests in a reduced time window.\\\\
+Finally, our concern has been to test the system in different network conditions: considering that it's possible for the user to connect to a remote unity scene (situated, for istance, in a different machine) we promptly tested this use case and also with a slow-network condition.
+%===========================================================================
+
+%===========================================================================
+\section{Deployment}
+\labelsec{Deployment}
+The system will be deployed through a generated zip file by the gradle tool, which has the benefit of dealing and resolving all the necessary dependency of the project.\\
+Fortunately, the configuration file for gradle is automatically generated by the XText tool on each iteration, granting an enormous simplification of this phase for each subsequent version; this could be also usefult to reduce the effort needed to train new developers on the development of the software.
+
+%===========================================================================
+
+%===========================================================================
+\section{Maintenance}
+\labelsec{Maintenance}
+The system it's, on overall, greatly expandable and reusable: for example, the obstacles length, position, number and shape may vary with little to none necessary modifications to the source code.\\
+In fact, our code ingegnerization should limit the changes needed for a non-trivial functional requirement to the sole \textit{rovermind} QActor, and leave the other parts of the project intact.
+
+%Our system has been tested and validated so its components can be reused for future problems that involve differential drive robots, leds, distance sensors, WebCams. The custom language QActor is a solid meta-model that can be used to model any other distributed software system; QRobot and Baseddr are solid meta-models useful to model systems that include physical robots. A possible extension of the system is the installation of a real WebCam on the robot to capture photos of the surrounding environmen
+
+%The system, as previously said and described, has been tested in each of its parts and it is functioning; moreover, the single parts can be used to create dierent kind of systems, realizing dierent behaviours. A possible, future extension could concern the adding of a WebCam on the Raspberry.
+
+%The system is easily expandable and reusable. The conﬁguration of the system is extremely simple with the introduction of Prolog rules and Java methods containing the variable system’s parameters. The choices made guarantee also strong ﬂexibility even with new or modiﬁed requirements: for example, adding new sensors do not involve drastic changes to the system
+%===========================================================================
+\newpage
+%===========================================================================
+\section{Information about the author}
+\labelsec{Author}
+%===========================================================================
+\begin{table}[]
+\centering
+\begin{tabular}{ccc}
+ \xauthA & \xauthB & \xauthC \\
+\hspace{-1.5cm}
+ \includegraphics[width=5cm,height=5cm,keepaspectratio]{img/xia.jpg}& \includegraphics[width=5cm,height=5cm,keepaspectratio]{img/vecchiotti.jpg} &\includegraphics[width=5cm,height=5cm, keepaspectratio]{img/belli.jpg} 
+\end{tabular}
+\end{table}
+
+\bibliographystyle{abbrv}
+\bibliography{biblio}
+
+\end{document}
+
+%RELAZIONE (domande e concetti)
+premessa da piaga: chiedo scusa, alla fine di ogni capitolo nei commenti,
+aggiungo dei concetti di teoria per comodità e per orientarci sul cosa scrivere nella relazione
+
+
+1)INTRODUZIONE
+Scopo della relazione
+Introduzione a metodologie usate per sviluppare il progetto
+Scopo dell'elaborato
+
+2)VISIONE (si faccia riferimento soprattutto alla visione del percorso di riferimento)
+Concetti e punti di vista sulle metodologie usate
+Concetto teorico su cui si basa lo sviluppo del sistema software
+Perchè è necessaria l'analisi?
+Quali metodologie e modelli si possono sfruttare?
+Perchè non UML?
+Quale modello si può usare per creare il codice autogenerato?
+Definire gli step del processo di produzione
+
+Un percorso di riferimento:
+L’artefatto relativo alla visione può essere un documento
+che descrive le motivazioni generali che hanno indotto
+una persona,gruppo, azienda a impegnarsi nello sviluppo dell’applicazione,
+evidenziandone i benefici che provengono da essa.
+L’artefatto relativo agli obiettivi è un documento che illustra gli obiettivi
+che si vogliono raggiungere grazie allo sviluppo dell’applicazione o al suo uso
+o sviluppi futuri. 
+Insieme agli obiettivi è possibile legare un modello di business,
+per esprimere il contesto dove il sistema opera e per definire un
+vocabolario di termini utili alla fase di analisi dei requisiti.
+
+Commento by piaga:
+é possibile scrivere la relazione mantenendo la terza persona?
+Secondo i concetti della vision scrivere "the usage of SCRUM framework for the dev...has perfectly satisfied..." potrebbe non essere corretto perchè lo fa sembrare un parere sulla conclusione del progetto
+rispetto ad una possibile visione sul modo di procedere.
+IMHO consiglierei scrivere qualcosa tipo:
+
+Scrum è un framework per lo sviluppo..bla bla bla (primissimi concetti di teoria)
+Scrum può essere utile nello sviluppo del progetto (intenzioni)
+Queste due frasi le metterei alla fine e non all'inizio...
+prima scriverei molto sulla visione generale del progetto.
+Non so se è giusto ma scriverei qualcosa tipo:
+"(ambiente attuale)Nel mondo dell'informatizzazione e dell'automazione, sempre più professioni scompariranno... 
+(previsione)...è giusto quindi prevedere la necessità di automatizzare anche la mobilità di un drone.
+(benefici del progetto) l'intenzione è quello di minimizzare l'intervento umano sull'autonomia di lavoro del drone"
+
+
+
+
+
+3)GOAL
+Definire gli obiettivi di progetto e in che modo s'intende procedere.
+
+4)REQUISITI
+Scrivere i requisiti (copiare di pari passo ai requisiti del prof !?)
+
+5)ANALISI DEI REQUISITI
+Definire il glossario
+Definire i casi d'uso
+Definire il dominio-modello
+
+Commento by piaga:
+RICHIAMI TEORIA
+Si ricorda che la definizione di un sistema software implica spesso la definizione di una collezione di domini e di dipendenze tra domini. Il termine dominio descrive un mondo relativamente autonomo, reale o astratto,  costituito da un insieme di entità che operano in accordo a precise regole, politiche e vincoli. Le categorie di domini più usate sono:
+Dominio di applicazione: è il sistema visto dall’utente
+Dominio di architettura: sono le strategie globali del progetto
+Dominio di servizio: fornisce servizi generici di supporto al dominio applicativo
+Dominio di implementazione: sono le componenti o piattaforme software pre-esistenti o legacy.
+Un dominio si rappresenta in UML da un package. Un dominio può fare assunzioni sulla esistenza di altri domini, caratterizzati da precise proprietà.
+Visione
+Requisiti
+Analisi
+Piano di collaudo
+Piano di lavoro
+Progetto
+Implementazione
+Collaudo
+Deployment
+Maintenance
+
+
+ANALISI DEL PROBLEMA
+Definire la metodologia con cui si effettua l'analisi del problema
+Illustrare il problema di mantenere un buon livello di astrazione; da che piattaforma si parte, che linguaggio, in che modo si astrae? (fare riferimento alle relazioni)
+Descrivere l'architettura logica
+Descrivere il piano di testing
+
+PIANO DI LAVORO
+Come si vuole affrontare il problema dell'astrazione?
+Quali sono i tempi e costi di lavoro?
+
+PROGETTO IMPLEMENTAZIONE TESTING DEPLOYMENT MAINTENANCE
+Guarda la relazione

@@ -1,6 +1,10 @@
-bin/
+bin/*
+bin/*/*
 .settings/
-bin/classes/env/MineView.class
-bin/classes/env/MineModel.class
-bin/classes/env/MineEnv.class
-bin/classes/caves/MineCave.class
+report/*/*
+report/*
+!report/*.tex
+!report/*.cls
+!report/*.sty
+!report/*.tex
+!report/*.qa
