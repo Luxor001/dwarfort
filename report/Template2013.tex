@@ -183,6 +183,7 @@ I requisiti derivano dalla struttura e dalle regole del sistem
 \section{Modello}
 \labelsec{Modello}
 \subsection{Agenti}
+Il sistema è composto da tre tipi di agenti, ognuno con un differente behaviour e scopo all'interno della società.
 \newpage
 \subsection{Ambiente}
 \begin{figure}[htbp]
@@ -210,20 +211,12 @@ Ogni tipologia di caverna è una specializzazione della classe astratta \textit{
 \lstinputlisting[float=h,caption=Cave.java]{code/Cave.java}
 \lstinputlisting[float=h,caption=MineCave.java]{code/MineCave.java}
 \lstinputlisting[float=h,caption=ControlCave.java]{code/ControlCave.java}
-%\newgeometry{left=2.5cm,
- %       right=3cm,} 
- %       \section{Project}
-%\labelsec{Project}
-%\lstinputlisting[]{rover.qa}
-%\restoregeometry 
-%\newgeometry{left=2.5cm,
- %       right=3cm,} 
- %       \section{Project}
-%\labelsec{Project}
-%\lstinputlisting[]{rover.qa}
-%\restoregeometry 
 %===========================================================================
 %===========================================================================
+\newpage
+
+L'ambiente stesso presenta una serie di eventi stocastici che possono cambiare la behaviour degli agenti all'interno della società: ad esempio, ogni dieci secondi esiste il 33\% di probabilità che un orda di orchi minacci la miniera.\\
+In tal caso, tutti gli agenti reagiranno a tali eventi in base a delle precise direttive: nel suddetto esempio il \textit{forger} inizierà a produrre armature (sempre ammesso che ci siano abbastanza risorse in magazzino), i \textit{miners}scaveranno soltanto ferro e i \textit{carriers} si interesseranno soltanto di prelevarlo dai magazzini locali delle \textit{MineCaves}.
 \newpage
 \section{Requirements}
 \labelsec{Requirements}
@@ -287,62 +280,10 @@ It should be noted that the emitted events are explicity defined in the requimen
 \end{figure}
 \newpage
 %===========================================================================
-\newpage
-\section{Work plan}
-\labelsec{wplan}
-The work plan is an essential phase of the software development process used to organize the different steps of the project\\\\
-Chronologically speaking, once the problem analysis was completed (and the functional requirements of the problem was understood), the team set up a work plan as follow:
-\begin{enumerate}
-\item definition of the system contexts and subsystems
-\item definition of the actors of the system
-\item definition of interactions in the system: events and messages.
-\item definition of the logical interaction with the scene entities.
-\item accurate testing of the built system
-\item deployment of the system
-\end{enumerate}
-We then produced a detailed product backlog to list all the main issues needed to be solved for the work completion: every single issue was followed by an estimate (from 1 to 5) of the aspected cost to realize the functionality, and a score of its priority.
-\begin{table}[]
-\centering
-\label{my-label}
-\begin{tabular}{llll}
-\hline
-\multicolumn{1}{|l|}{\textbf{ID}} & \multicolumn{1}{l|}{\textbf{Item}}                                                        & \multicolumn{1}{l|}{\textbf{Priority}} & \multicolumn{1}{l|}{\textbf{Score}} \\ \hline
-\multicolumn{1}{|l|}{1}           & \multicolumn{1}{l|}{Robot goes forward from sonar1 to sonar2 autonomously.} & \multicolumn{1}{l|}{1}                 & \multicolumn{1}{l|}{2}              
-\\ \hline
-\multicolumn{1}{|l|}{2}           & \multicolumn{1}{l|}{Robot stops itself when a mobileObstacle is detected.} & \multicolumn{1}{l|}{1}                 & \multicolumn{1}{l|}{2}              
-\\ \hline
-\multicolumn{1}{|l|}{3}           & \multicolumn{1}{l|}{Robot avoids fixed obstacles and finds an alternative route to sonar2.} & \multicolumn{1}{l|}{2}                 & \multicolumn{1}{l|}{3}              
-\\ \hline
-\multicolumn{1}{|l|}{4}           & \multicolumn{1}{l|}{Robot moves in accord to user inputs.} & \multicolumn{1}{l|}{3}                 & \multicolumn{1}{l|}{3}              
-\\ \hline
-\multicolumn{1}{|l|}{5}           & \multicolumn{1}{l|}{Robot is able to return autonomously to sonar1 starting position.} & \multicolumn{1}{l|}{3}                 & \multicolumn{1}{l|}{5}              
-\\ \hline
-\multicolumn{1}{|l|}{6}           & \multicolumn{1}{l|}{Robot should stops immediately when an alarm event accours.} & \multicolumn{1}{l|}{3}                 & \multicolumn{1}{l|}{2}              
-\\ \hline
-                                  &                                                                                           &                                        &                                    
-\end{tabular}
-\caption{Product backlog}
-\end{table}\\
-Based on the product backlog above, every member of the team worked a different aspect of the project, enforcing specialization of work.\\
-Obviously, this subdivision was based solely on each person's individual skills and preferences, and only for the deployment phase: during the first stages all the team focused on the same aspects to solve any ambiguity beforehand.
-\newpage
-Finally, every issue and bug we found during the development was tracked and documented (and discussed, too) with the built-in bug tracker tool of our repository hoster, \textit{Github}.
-\begin{center}
-\includegraphics[scale=0.4]{img/issues.jpg}    
-\end{center}
-The usage of such collaborative tool helped us coordinate about the open tasks and issues, and reduce the needs of personal metups.
-\newpage
-%===========================================================================
-
-%===========================================================================
-
-%===========================================================================
-%\newgeometry{left=2.5cm,
- %       right=3cm,} 
- %       \section{Project}
-%\labelsec{Project}
-%\lstinputlisting[]{rover.qa}
-%\restoregeometry 
+\section{Progetto}
+\labelsec{Progetto}
+Il progetto è stato sviluppato tramite \textit{Jason}, un interprete basato versione estesa di Agent Speak.\\
+Jason, come tutti i linguaggi utilizzati per programmare agenti BDI, permette di descrivere Belief, Goals e Plans attraverso regole Prolog-Like, oltre a rendere possibile la definizione di piani pienamente compatibili con codice Java.\\
 \newpage
 \subsection{Structure}
 
