@@ -181,13 +181,17 @@ Come caso di studio questo progetto può avere una certa rilevanza perché integ
 Una miniera composta da diverse unità di scavatori, trasportatori e forgiatori deve riuscire a massimizzare l'estrazione delle risorse presenti in loco collaborando attivamente.\\
 Nello specifico, ogni unità ha un preciso compito che dipende dalla sua mansione e posizione:
 \begin{itemize}
-\item Gli agenti minatori, da qui in avanti chiamati \textit{miners}, dovranno rilevare tutte le vene di materiale presente nella loro cava personale e procedere alla loro estrazione.\\
+\item I minatori, da qui in avanti chiamati \textit{miners}, dovranno rilevare tutte le vene di materiale presente nella loro cava personale e procedere alla loro estrazione.\\
 Tutto il materiale estratto dovrà essere trasportato manualmente dalla vena di materiale al magazzino locale (\textit{storage}) restando entro i propri limiti di trasporto: un minatore non potrà mai infatti trasportare più kg di materiale di quanto la sua forza personale permetta.\\
 La tipologia di materiale da estrarre (che può essere di ORO o FERRO) dipende unicamente dalla commessa comandata del nano forgiatore al momento.\\Infine, ogni \textit{miner} possiede un certo livello di tolleranza alla sete, che aumenta ad ogni operazione di scavo compiuta; arrivato al un livello critico di sete percepita, il minatore si fermerà finché non si sarà dissetato.\\
 Essendo un nano, l'unica modo per dissetarsi è bere una birra.\\
-\item Gli agenti trasportatori, da qui in avanti chiamati \textit{carriers}, dovranno trasportare il materiale stoccato nei magazzini locali delle miniere alla cava principale di controllo.\\Come per i \textit{miners}, la tipologia di minerale da trasportare verrà decisa unicamente dal \textit{forger} in base alle necessità del momento.\\
+\item I trasportatori, da qui in avanti chiamati \textit{carriers}, dovranno muovere il materiale stoccato nei magazzini locali delle miniere alla cava principale di controllo.\\Come per i \textit{miners}, la tipologia di minerale da trasportare verrà decisa unicamente dal \textit{forger} in base alle necessità del momento.\\
 Per questioni logistiche, soltanto un \textit{carrier} alla volta potrà occupare una cave, e la scelta della destinazione dipenderà unicamente da loro (in altre parole, i nani trasportatori dovranno sapere orientarsi nella miniera e organizzarsi).\\
-%inserire birra..
+Qualora un \textit{miner} ne senta il bisogno, l'acquisizione di birra dal \textit{forger} ha la massima priorità: in tal caso infatti il \textit{carrier} abbandonerà ogni suo attuale compito per portare della birra al minatore.\\
+\item Il forgiatore, da qui in avanti chiamato \textit{forger}, ha il compito di indicare ai suoi sottoposti quali sono le risorse necessarie al momento.\\
+A titolo di esempio, il \textit{forger} può avvertire se una orda di orchi sta minacciando la miniera: in tal caso, sposterà tutta la produzione della miniera all' estrazione di FERRO e, non appena 50kg di materiale saranno disponibili, forgerà una armatura.\\
+È anche l'unico lavoratore affidabile della miniera a poter distribuire birre per i suoi sottoposti: ogni richiesta di birra dovrà passare infatti per questa entità.\\
+In condizioni normali, la produzione della miniera sarà sempre concentrata sull'estrazione di ORO.
 \end{itemize}
 \newpage
 \section{Modello}
