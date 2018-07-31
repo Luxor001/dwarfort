@@ -194,6 +194,33 @@ A titolo di esempio, il \textit{forger} può avvertire se una orda di orchi sta 
 In condizioni normali, la produzione della miniera sarà sempre concentrata sull'estrazione di ORO.
 \end{itemize}
 \newpage
+\section{Analisi dei Requisiti}\
+Una breve analisi dei requisiti ci rileva che la miniera sarà l'unico ambiente nella quale gli agenti del sistema andranno ad operare e dalla quale saranno condizionati.\\
+A livello organizzativo, i lavoratori della miniera potranno essere suddivisi in tre tipi di agente diversi: \textit{miners}, \textit{carriers} e \textit{forgers}.\\Il numero di ognuno di questi agenti non è specificato, eccezion fatta fatta per il tipo \textit{forger}: dal testo si evince abbastanza chiaramente, infatti, che si prevede soltanto un forgiatore per sistema.\\\\
+Dal testo si evince inoltre che una serie di requisiti funzionali dovranno essere necessariamente rispettati:
+\begin{itemize}
+\item Autonomia: gli agenti all'interno della miniera dovranno esibire un certo grado di autonomia, percependo le informazioni dall'ambiente o dalla propria base di conoscenza per poter portare a termine i propri obiettivi correnti.\\
+\item Pratical Reasoning: gli agenti dovranno essere in grado di scegliere e eseguire le azioni più appropriate in base al contesto corrente.
+\end{itemize}
+
+\subsection{Glossario}
+Il seguente glossario può essere utile per descrivere come alcuni termini siano stati interpretati dall'analisi dei requisiti e a chiarire ogni ambiguità residua al lettore.\\ 
+\begin{center}
+    \begin{tabular}{ | l |  p{8cm} |}
+    \hline
+    \textbf{Termine} & \textbf{Descrizione} \\ \hline
+    Miniera & Ambiente del sistema nel quale gli agenti sono posizionati e operano.\\ \hline
+    Materiale & Risorsa (di tipo ORO o FERRO) estraibile nelle caverne di estrazione.\\ \hline
+    Storage & Magazzino presente in ogni caverna nel quale il materiale può essere stoccato.\\ \hline
+    Miner & Agente minatore del sistema atto a ricavare materiale dalle vene presenti. \\ \hline
+    Carrier & Agente trasportatore del sistema atto principalmente a muovere materiale dai siti di scavo alla \textit{controlCave}. \\ \hline
+    Forger & Agente forgiatore atto a coordinare gli altri lavoratori e a produrre armature. \\ \hline
+    ControlCave & Caverna di controllo principale nel quale il forger risiede.\\ \hline
+    Artefatto & Oggetto piazzato nell'ambiente dai \textit{carrier} per segnalare una caverna occupata. \\ \hline %FIXME: aggiungere STEP 2
+    Birra & Unico oggetto consumabile con la quale un \textit{miner} può tornare a lavorare dopo aver avvertito sete. \\ \hline
+    \end{tabular}
+\end{center}
+\newpage
 \section{Modello}
 \labelsec{Modello}
 \subsection{Agenti}
@@ -232,30 +259,12 @@ Ogni tipologia di caverna è una specializzazione della classe astratta \textit{
 L'ambiente stesso presenta una serie di eventi stocastici che possono cambiare la behaviour degli agenti all'interno della società: ad esempio, ogni dieci secondi esiste il 33\% di probabilità che un orda di orchi minacci la miniera.\\
 In tal caso, tutti gli agenti reagiranno a tali eventi in base a delle precise direttive: nel suddetto esempio il \textit{forger} inizierà a produrre armature (sempre ammesso che ci siano abbastanza risorse in magazzino), i \textit{miners}scaveranno soltanto ferro e i \textit{carriers} si interesseranno soltanto di prelevarlo dai magazzini locali delle \textit{MineCaves}.
 \newpage
-\section{Requirements}
-\labelsec{Requirements}
-\newpage
 \subsection{Key aspects for Autonomous system}
 %===========================================================================
 %===========================================================================
 \newpage
 \section{Requirement analysis}
 \labelsec{ReqAnalysis}
-\subsection{Glossary}
-The below glossary can be useful to describe how some specific nouns and verbs have been interpreted by the team: this systematic approach can clear any ambiguity of the terms referred in the project.\\ Furthermore, the analysis of nouns used in the requiments can help the production of a domain model based of the domain entities of the system; on the other hand, the analysis of verbs can lead to the identifications of possible actions the system will have to perform.
-\begin{center}
-    \begin{tabular}{ | l |  p{8cm} |}
-    \hline
-    \textbf{Name} & \textbf{Definition} \\ \hline
-    Differential Drive Robot & Device composed of dedicated hardware making it able to move physically and to detect obstacles along his route.\\ \hline
-    Sonar & A device able to detect a physical object in the environment. \\ \hline
-    Obstacle & A physical object being able to block the path of the robot; obstacles can be fixed (like pilar1 and pilar2) or mobile (like mobileObstacle)\\ \hline
-    Command & Order to the robot to perform a specified action. Commands includes \textit{Stop} command and \textit{Start} command. \\ \hline %FIXME: aggiungere STEP 2
-    Console & Interface in which the user can send commands to the Robot. \\ \hline
-    User & Adopter of the built system.\\ \hline
-    Alarm & Event that, if accurred,compleately stops the robot.\\ \hline
-    \end{tabular}
-\end{center}
 \subsection{(Domain)model}
 The definition of a Domain model its used by software developers to express and describe the entities of the know system, in the form of structure, interaction and behaviour:\\\\
 \textit{\textbf{Rover}}
