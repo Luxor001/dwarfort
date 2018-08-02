@@ -203,7 +203,9 @@ Dal testo si evince inoltre che una serie di requisiti funzionali dovranno esser
 \item Pratical Reasoning: gli agenti dovranno essere in grado di scegliere e eseguire le azioni più appropriate in base al contesto corrente.\\
 \item Socialità: gli agenti dovranno essere in grado di comunicare per scambiarsi messaggi e conoscenza.\\
 Alcuni goals, infatti, saranno raggiungibili soltanto attraverso meccanismi di cooperazione.
-\end{itemize}\newpage
+\end{itemize}
+Ogni agente sarà in grado di effettuare scelte intelligenti in base ai propri \textit{Mental States}, basati cioè sui propri \textit{Epistemic States} (ovvero, sulla conoscenza dell'ambiente in cui l'agente è immerso) che sui propri \textit{Motivational States} (cioè sull'insieme di obiettivi dell'agente).
+\newpage
 \subsection{Glossario}
 Il seguente glossario può essere utile per descrivere come alcuni termini siano stati interpretati dall'analisi dei requisiti e a chiarire ogni ambiguità residua al lettore.\\ 
 \begin{center}
@@ -224,9 +226,6 @@ Il seguente glossario può essere utile per descrivere come alcuni termini siano
 \newpage
 \section{Modello}
 \labelsec{Modello}
-\subsection{Agenti}
-Il sistema è composto da tre tipi di agenti, ognuno con un differente behaviour e scopo all'interno della società.
-\newpage
 \subsection{Ambiente}
 \begin{figure}[htbp]
   \centering
@@ -249,233 +248,37 @@ La miniera è logicamente e fisicamente suddivisa dai seguenti elementi:
 	
 	\item \textit{Tunnel}: ogni \textit{MineCave} e collegata alla \textit{ControlCave} attraverso una serie di cunicoli chiamati \textit{Tunnel}.\\ Possono esistere più \textit{Tunnel} consecutivi che conducono a una stessa caverna.\\ Gli unici agenti in grado di percorrerli sono i \textit{carrier}, rappresentati in verde.
 \end{itemize}
-Ogni tipologia di caverna è una specializzazione della classe astratta \textit{Cave}, ognuna caratterizzata da una lista di oggetti \textit{Area} e un dizionario degli items contenuti:
+Ogni tipologia di caverna è una specializzazione della classe astratta \textit{Cave}, ognuna caratterizzata da una lista di oggetti \textit{Area} e un dizionario degli items contenuti: grazie a \textit{jason} e al suo nativo supporto a java, la creazione di un modello del sistema viene così notevolmente semplificata.\\
+\begin{figure}
+  \centering
+   \includegraphics[scale = 0.7]{img/diagramCaves.png}
+  \caption{Gerarchia di classi per le caverne della miniera}
+\end{figure}
 \lstinputlisting[float=h,caption=Cave.java]{code/Cave.java}
 \lstinputlisting[float=h,caption=MineCave.java]{code/MineCave.java}
-\lstinputlisting[float=h,caption=ControlCave.java]{code/ControlCave.java}
-%===========================================================================
-%===========================================================================
-\newpage
-
-L'ambiente stesso presenta una serie di eventi stocastici che possono cambiare la behaviour degli agenti all'interno della società: ad esempio, ogni dieci secondi esiste il 33\% di probabilità che un orda di orchi minacci la miniera.\\
+\vspace{21cm}
+\lstinputlisting[caption=ControlCave.java]{code/ControlCave.java}
+L'ambiente in cui gli agenti sono situati presenta una serie di eventi stocastici che possono cambiare la loro behaviour all'interno della società: ad esempio, ogni dieci secondi esiste il 33\% di probabilità che un orda di orchi minacci la miniera.\\\\
 In tal caso, tutti gli agenti reagiranno a tali eventi in base a delle precise direttive: nel suddetto esempio il \textit{forger} inizierà a produrre armature (sempre ammesso che ci siano abbastanza risorse in magazzino), i \textit{miners}scaveranno soltanto ferro e i \textit{carriers} si interesseranno soltanto di prelevarlo dai magazzini locali delle \textit{MineCaves}.
-\newpage
-\subsection{Key aspects for Autonomous system}
 %===========================================================================
 %===========================================================================
-\newpage
-\section{Requirement analysis}
-\labelsec{ReqAnalysis}
-\subsection{(Domain)model}
-The definition of a Domain model its used by software developers to express and describe the entities of the know system, in the form of structure, interaction and behaviour:\\\\
-\textit{\textbf{Rover}}
-\begin{itemize}
-\item \textit{Structure:} a reactive and hardware-composed entity by a sonar and a motor.
-\item \textit{Interaction:} can be controlled and interacted entirely with a series of commands and events, coming both from the final user and 										its sensors.
-\item \textit{Behaviour:} consist in travelling trough a path between a point A and a point B.
-During the route, it's capable of react accordingly to a series of events and user input.
-\end{itemize}
-%FIXME: inserire diagramma di stato per tutti i behaviours?
-%FIXME:capire se come nome (sonar subsystem) può andare bene!
-\textit{\textbf{Sonar system}}
-\begin{itemize}
-\item \textit{Structure:} it can be considered a composed entity: the user requiments explicity express the need of 2 indipendent sonars.\\It can be considered a proactive entity.
-\item \textit{Interaction:} the only interaction this entity performs is the emission of informations in the form of events: in fact, no explicit command can be sent to this entity.\\
-It should be noted that the emitted events are explicity defined in the requiments.
-\item \textit{Behaviour:} Each of the sonar composing this subsystem must emit an event whenever a Robot passes in front of it. 
-\end{itemize}
-%FIXME: Tutta la descrizione di console allo stato attuale va bene?
-\textit{\textbf{Console}}
-\begin{itemize}
-\item \textit{Structure:} a proactive component that let the user interact with the system.\\ It's mainly composed of a set of predefined graphical elements.
-\item \textit{Interaction:} the only interaction this component performs is towards the robot.\\Being proactive, the interaction it's obiviously one-way.
-\item \textit{Behaviour:} this entity has the sole purpose to intercept and forward the user commands to the robot.
-\end{itemize}
-%===========================================================================
-%===========================================================================
-\subsection{Logic architecture}
-\begin{figure}[htbp]
-  \centering
-   \includegraphics[scale = 0.6]{img/logica.png}
-  \caption{Logic architecture}
-\end{figure}
 \newpage
 %===========================================================================
 \section{Progetto}
 \labelsec{Progetto}
 Il progetto è stato sviluppato tramite \textit{Jason}, un interprete basato versione estesa di Agent Speak.\\
 Come tutti i linguaggi utilizzati per programmare agenti BDI, \textit{Jason} permette di descrivere Belief, Goals e Plans attraverso regole Prolog-Like, oltre a rendere possibile la definizione di piani pienamente compatibili con codice Java.\\
+Come già anticipato nell'analisi dei requisiti, sarà opportuno che gli agenti del sistema basino la loro capacità di effettuare scelte intelligenti all'interno del sistema grazie alla combinazione di \textit{Epistemic States} e \textit{Motivational States}.\\\\
+Tali caratteristiche sono canonicamente presenti nelle architetture BDI, e possono essere sommariamente descritte come segue:
+\begin{itemize}
+	\item Beliefs: rappresentano la conoscenza che un agente ha acquisito dell'ambiente in cui è immerso. In genere, un belief è descritto da un predicato che può essere di valore vero o falso.\\
+	\item Desires: rappresentano l'insieme degli obiettivi che un oggetto vorrebbe raggiungere. Un desire si può ritenere soddisfatto quando viene aggiunto al set interno di beliefs oppure quando personalmente scartato.\\
+	\item Intentions: rappresentano ciò che l'agente ha deciso di compiere concretamente.
+\end{itemize}
 \newpage
 \subsection{Structure}
 
 \subsection{Interaction}
 \newpage
-%===========================================================================
-\section{Implementation}
-\labelsec{Implementation}
-Thanks to the generation performed by the XText Tool, nearly all the code of this project has been written by the use of \textit{qa} models.\\
-All the source code directly written by this team can be found in the \textit{src} folder of the project; the generated source code files, however, can be found in two separate folders: \textit{src-gen} and \textit{srcMore}.\\
-As a result of careful engineering process of the functional requiments we were able to keep minimal the abstraction gap of the project: only a single java file (of about ~70 lines of source code) is mandatory for the step 2, by containing all the \textit{javaRun} used by the rover.\\\\
-We then proceed by presenting a brief explanation of all methods contained in \textit{it.unibo.custom.path}:
-\begin{itemize}
-\item \textit{register} it's a method called by the QActor rover to track and keep history of every physical movement performed.\\
-The movements tracking is made possible by the use of a \textit{Stack} of custom objects called \textit{Action}, each containing the movement name, its duration and timeout value.\\
-\item \textit{startReverse} permits, as the name suggests, to start a reverse sequence of all the actions tracked by the \textit{register} method: every registered movement will be sent back (in the correct order) to the rover by the use of qactor messages.
-\end{itemize}
-It should be noted that the actual implementation of the reverse mechanism has the peculiarity of recording in a "mirror" way some of the input data movements: for istance, "left" movements are registered as "right" in the data stack and viceversa.
-\newpage
-\subsection{GUI Commands}
-Some of the functional requiments explained in the subsection \hyperref[sec:Functional requiments]{4.3} premise the user direct interaction with the system (for example it's made clear that the reverse sequence it's expressely started, at any moment, by the user if it deems).\\
-Since no indication was given by the functional requiments, we opted for a \\manual insertion of commands from the GUI input box, as shown in the image below:\\
-
-\hspace{-1cm}
- \includegraphics[scale=0.4]{img/gui.jpg} 
-A definition of the actual commands for the system was also necessary, along with the ability to parameterize the inputs.\\
-Therefore, we provide a brief list of the accepted commands of the system, with a synthetic explanation of their required parameters and effects:
-
-\begin{table}[ht]
-\hspace{-1cm}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Command}             & \textbf{Parameters}                                                                                                                                  & \textbf{Effect}                                                                                                                                          \\ \hline
-\textit{connectToUnity(X)}   & \begin{tabular}[c]{@{}l@{}}X: a string rapresenting the IP address \\ of the unity environment to connect to\end{tabular}                            & \begin{tabular}[c]{@{}l@{}}This command links the robot system to \\ its unity representation\end{tabular}                                               \\ \hline
-\textit{setStartDistance(X)} & \begin{tabular}[c]{@{}l@{}}X: an integer value rapresenting the \\ starting distance between the robot\\ initial position and the sonar\end{tabular} & \begin{tabular}[c]{@{}l@{}}This command can be used to accordingly\\ set the initial starting position of the\\ rover (relative to sonar1).\end{tabular} \\ \hline
-\textit{startReverse}        & \multicolumn{1}{c|}{/}                                                                                                                               & \begin{tabular}[c]{@{}l@{}}This command starts the reverse sequence\\ of the robot.\end{tabular}                                                         \\ \hline
-\end{tabular}
-\caption{Enabled commands from the GUI}
-\end{table}
-\newpage
-%===========================================================================
-
-%===========================================================================
-\section{Testing}
-\labelsec{testing}
-Thanks to the unity game engine, virtualization of a real robot has been particularly useful: this way, all the problematics of a real world robot (circuitry, voltage regulation, motors calibration etc.) has been avoided, and so all the tests related to these hardware components.\\
-Moreover, the unity scene let us to replicate instantly the environment the rover has to run across: this ease of use permitted the execution of a high number of stress tests with minimal effort.\\\\
-Then, the behaviour of every single \textit{QActor} has been tested by forging a series of messages (or events, depending on the entity) and studying the consequent reaction.\\
-This kind of tests has been part of our \textit{unit testing} plan described in section \hyperref[sec:Test plan]{5.4}.\\\\
-Ensured that every single entity, taken individually, behave as expected, we then proceed to test the system in a whole; to our surprise, the integration of the different \textit{QActors} of the project lead to many issues and unexpected behaviour (more than the issues found during the previous testing phase), primarly due to calibration, timing and message exchange problems.\\
-However, as stated above, the ease of use of the unity scene let us to perform an high number of integration tests in a reduced time window.\\\\
-Finally, our concern has been to test the system in different network conditions: considering that it's possible for the user to connect to a remote unity scene (situated, for istance, in a different machine) we promptly tested this use case and also with a slow-network condition.
-%===========================================================================
-
-%===========================================================================
-\section{Deployment}
-\labelsec{Deployment}
-The system will be deployed through a generated zip file by the gradle tool, which has the benefit of dealing and resolving all the necessary dependency of the project.\\
-Fortunately, the configuration file for gradle is automatically generated by the XText tool on each iteration, granting an enormous simplification of this phase for each subsequent version; this could be also usefult to reduce the effort needed to train new developers on the development of the software.
-
-%===========================================================================
-
-%===========================================================================
-\section{Maintenance}
-\labelsec{Maintenance}
-The system it's, on overall, greatly expandable and reusable: for example, the obstacles length, position, number and shape may vary with little to none necessary modifications to the source code.\\
-In fact, our code ingegnerization should limit the changes needed for a non-trivial functional requirement to the sole \textit{rovermind} QActor, and leave the other parts of the project intact.
-
-%Our system has been tested and validated so its components can be reused for future problems that involve differential drive robots, leds, distance sensors, WebCams. The custom language QActor is a solid meta-model that can be used to model any other distributed software system; QRobot and Baseddr are solid meta-models useful to model systems that include physical robots. A possible extension of the system is the installation of a real WebCam on the robot to capture photos of the surrounding environmen
-
-%The system, as previously said and described, has been tested in each of its parts and it is functioning; moreover, the single parts can be used to create dierent kind of systems, realizing dierent behaviours. A possible, future extension could concern the adding of a WebCam on the Raspberry.
-
-%The system is easily expandable and reusable. The conﬁguration of the system is extremely simple with the introduction of Prolog rules and Java methods containing the variable system’s parameters. The choices made guarantee also strong ﬂexibility even with new or modiﬁed requirements: for example, adding new sensors do not involve drastic changes to the system
-%===========================================================================
-\newpage
-
-\bibliographystyle{abbrv}
-\bibliography{biblio}
 
 \end{document}
-
-%RELAZIONE (domande e concetti)
-premessa da piaga: chiedo scusa, alla fine di ogni capitolo nei commenti,
-aggiungo dei concetti di teoria per comodità e per orientarci sul cosa scrivere nella relazione
-
-
-1)INTRODUZIONE
-Scopo della relazione
-Introduzione a metodologie usate per sviluppare il progetto
-Scopo dell'elaborato
-
-2)VISIONE (si faccia riferimento soprattutto alla visione del percorso di riferimento)
-Concetti e punti di vista sulle metodologie usate
-Concetto teorico su cui si basa lo sviluppo del sistema software
-Perchè è necessaria l'analisi?
-Quali metodologie e modelli si possono sfruttare?
-Perchè non UML?
-Quale modello si può usare per creare il codice autogenerato?
-Definire gli step del processo di produzione
-
-Un percorso di riferimento:
-L’artefatto relativo alla visione può essere un documento
-che descrive le motivazioni generali che hanno indotto
-una persona,gruppo, azienda a impegnarsi nello sviluppo dell’applicazione,
-evidenziandone i benefici che provengono da essa.
-L’artefatto relativo agli obiettivi è un documento che illustra gli obiettivi
-che si vogliono raggiungere grazie allo sviluppo dell’applicazione o al suo uso
-o sviluppi futuri. 
-Insieme agli obiettivi è possibile legare un modello di business,
-per esprimere il contesto dove il sistema opera e per definire un
-vocabolario di termini utili alla fase di analisi dei requisiti.
-
-Commento by piaga:
-é possibile scrivere la relazione mantenendo la terza persona?
-Secondo i concetti della vision scrivere "the usage of SCRUM framework for the dev...has perfectly satisfied..." potrebbe non essere corretto perchè lo fa sembrare un parere sulla conclusione del progetto
-rispetto ad una possibile visione sul modo di procedere.
-IMHO consiglierei scrivere qualcosa tipo:
-
-Scrum è un framework per lo sviluppo..bla bla bla (primissimi concetti di teoria)
-Scrum può essere utile nello sviluppo del progetto (intenzioni)
-Queste due frasi le metterei alla fine e non all'inizio...
-prima scriverei molto sulla visione generale del progetto.
-Non so se è giusto ma scriverei qualcosa tipo:
-"(ambiente attuale)Nel mondo dell'informatizzazione e dell'automazione, sempre più professioni scompariranno... 
-(previsione)...è giusto quindi prevedere la necessità di automatizzare anche la mobilità di un drone.
-(benefici del progetto) l'intenzione è quello di minimizzare l'intervento umano sull'autonomia di lavoro del drone"
-
-
-
-
-
-3)GOAL
-Definire gli obiettivi di progetto e in che modo s'intende procedere.
-
-4)REQUISITI
-Scrivere i requisiti (copiare di pari passo ai requisiti del prof !?)
-
-5)ANALISI DEI REQUISITI
-Definire il glossario
-Definire i casi d'uso
-Definire il dominio-modello
-
-Commento by piaga:
-RICHIAMI TEORIA
-Si ricorda che la definizione di un sistema software implica spesso la definizione di una collezione di domini e di dipendenze tra domini. Il termine dominio descrive un mondo relativamente autonomo, reale o astratto,  costituito da un insieme di entità che operano in accordo a precise regole, politiche e vincoli. Le categorie di domini più usate sono:
-Dominio di applicazione: è il sistema visto dall’utente
-Dominio di architettura: sono le strategie globali del progetto
-Dominio di servizio: fornisce servizi generici di supporto al dominio applicativo
-Dominio di implementazione: sono le componenti o piattaforme software pre-esistenti o legacy.
-Un dominio si rappresenta in UML da un package. Un dominio può fare assunzioni sulla esistenza di altri domini, caratterizzati da precise proprietà.
-Visione
-Requisiti
-Analisi
-Piano di collaudo
-Piano di lavoro
-Progetto
-Implementazione
-Collaudo
-Deployment
-Maintenance
-
-
-ANALISI DEL PROBLEMA
-Definire la metodologia con cui si effettua l'analisi del problema
-Illustrare il problema di mantenere un buon livello di astrazione; da che piattaforma si parte, che linguaggio, in che modo si astrae? (fare riferimento alle relazioni)
-Descrivere l'architettura logica
-Descrivere il piano di testing
-
-PIANO DI LAVORO
-Come si vuole affrontare il problema dell'astrazione?
-Quali sono i tempi e costi di lavoro?
-
-PROGETTO IMPLEMENTAZIONE TESTING DEPLOYMENT MAINTENANCE
-Guarda la relazione

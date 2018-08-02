@@ -12,9 +12,6 @@ public abstract class Cave {
 	public Cave(Area area) {
 		this.areas.add(area);
 	}
-	public Cave(ArrayList<Area> areas) {
-		this.areas = areas;
-	}
 	public Cave() {
 		
 	}

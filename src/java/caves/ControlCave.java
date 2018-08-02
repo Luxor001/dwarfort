@@ -11,9 +11,6 @@ public class ControlCave extends Cave{
 	public ControlCave(Area area) {
 		super(area);
 	}
-	public ControlCave(ArrayList<Area> areas) {
-		super(areas);
-	}	
 	public ControlCave() {
 		super();
 	}

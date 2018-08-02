@@ -9,6 +9,6 @@ report/*
 !report/*.tex
 !report/*.qa
 !report/code/*
-!report/img/miniera.png
+!report/img/*
 !report/code
 !report/img
