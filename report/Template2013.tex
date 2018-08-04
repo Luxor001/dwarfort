@@ -7,7 +7,7 @@
 \usepackage{url}
 \usepackage{xspace}
 \usepackage{hyperref}
-
+\setcounter{secnumdepth}{3}
 \usepackage[a4paper,hmargin=4.4cm, vmargin=5.2cm]{geometry}
 \makeatletter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
@@ -22,7 +22,6 @@
 \usepackage{inconsolata}
 
 \usepackage{color}
-
 \definecolor{pblue}{rgb}{0.13,0.13,1}
 \definecolor{pgreen}{rgb}{0,0.5,0}
 \definecolor{pred}{rgb}{0.9,0,0}
@@ -51,8 +50,6 @@
    showtabs=false,
    captionpos=b
 }
-
-
 %%%%%%%
  \newif\ifpdf
  \ifx\pdfoutput\undefined
@@ -136,18 +133,12 @@
 \newcommand{\xcityBO}{40136 Bologna, Italy}
 \newcommand{\xcityCE}{47023 Cesena, Italy}
 
-%
-% Comments
-%
-%%% \newcommand{\todo}[1]{\bf{TODO:}\emph{#1}}
-
 
 \begin{document}
 
 \title{Dwarfort\\
  Relazione di progetto per Sistemi Autonomi}
 
-%%% \author{\xauthA,\xauthB and \xauthC}
 \author{\xauthA}
 
 \institute{
@@ -155,16 +146,6 @@
 }
 
 \maketitle
-
-%% \begin{abstract}
-%% \footnotesize
-%%This a Latex template to be used for the reports of Software Engineering.
-%%\keywords{Software engineering, managed software development, reports, ....}
-%%\end{abstract}
-
-
-
-%%% \sloppy
 
 %===========================================================================
 \section{Introduzione}
@@ -266,16 +247,32 @@ In tal caso, tutti gli agenti reagiranno a tali eventi in base a delle precise d
 %===========================================================================
 \section{Progetto}
 \labelsec{Progetto}
-Il progetto è stato sviluppato tramite \textit{Jason}, un interprete basato versione estesa di Agent Speak.\\
+Il progetto è stato sviluppato tramite \textit{Jason}, un interprete basato su una versione estesa di AgentSpeak.\\
 Come tutti i linguaggi utilizzati per programmare agenti BDI, \textit{Jason} permette di descrivere Belief, Goals e Plans attraverso regole Prolog-Like, oltre a rendere possibile la definizione di piani pienamente compatibili con codice Java.\\
 Come già anticipato nell'analisi dei requisiti, sarà opportuno che gli agenti del sistema basino la loro capacità di effettuare scelte intelligenti all'interno del sistema grazie alla combinazione di \textit{Epistemic States} e \textit{Motivational States}.\\\\
-Tali caratteristiche sono canonicamente presenti nelle architetture BDI, e possono essere sommariamente descritte come segue:
+Tali caratteristiche sono canonicamente presenti nelle architetture BDI, e possono essere descritte come segue:
 \begin{itemize}
 	\item Beliefs: rappresentano la conoscenza che un agente ha acquisito dell'ambiente in cui è immerso. In genere, un belief è descritto da un predicato che può essere di valore vero o falso.\\
 	\item Desires: rappresentano l'insieme degli obiettivi che un oggetto vorrebbe raggiungere. Un desire si può ritenere soddisfatto quando viene aggiunto al set interno di beliefs oppure quando personalmente scartato.\\
 	\item Intentions: rappresentano ciò che l'agente ha deciso di compiere concretamente.
 \end{itemize}
 \newpage
+\subsection{Beliefs}
+Ogni agente del sistema possiederà dei personali \textit{Beliefs} che varieranno, ovviamente, per ogni tipologia presente nel sistema(cioè \textit{miner}, \textit{carrier} o \textit{forger}).\\Alcune percezioni verranno aggiunte al proprio insieme di \textit{mental states} solo al seguito di determinati eventi o azioni: la posizione delle vene di materiale all'interno di una miniera, ad esempio, sarà aggiunta ai \textit{mental states} dei miners soltanto una volta completato il proprio plan di "scansione".\\\\
+Si tenga conto che la seguente lista di \textit{beliefs} che viene presentata non è da considerarsi esaustiva: verranno infatti presentati soltanto i più significativi a livello didattico.
+\subsubsection{Miner Beliefs}~
+\lstinputlisting[float=h,caption=Beliefs per l'agente \textit{miner}]{code/beliefs_miner.java}\\
+Come facilmente intuibile, il grado di sete del minatore sarà rappresentato dal belief \textit{thirstness(X)}; di conseguenza, il minatore si fermerà ogni operazione di scavo (o di trasporto) quando il belief \textit{thirsty} diverrà true.\\\\
+La forza personale del minatore avrà un impatto rilevante sulla quantità di materiale trasportato dal punto di scavo allo storage (rispettivamente rappresentati dai beliefs \textit{strength\textunderscore kg} e \textit{carrying}); a questo scopo, il raggiungimento del limite personale di raccolta verrà indicato dal belief \textit{atCapacity}.\\\\
+\textit{forgerNeeds(Resource)} rappresenta la richiesta corrente di materiale fornita dal \textit{ carrier} per conto del \textit{forger}: al seguito di questa belief addition, il \textit{miner} si adopererà per raggiungere la vena di materiale più vicina e iniziare ad estrarlo.\\\\
+Infine, la posizione delle risorse situate nella caverna e del punto di storage sono indicate da \textit{resource(Resource, Location) e storage(Location)}: tali personali credenze verranno aggiunte durante le fasi iniziali di "scansione" della propria caverna.
+\subsubsection{Carrier Beliefs}~
+\lstinputlisting[float=h,caption=Beliefs per l'agente \textit{carrier}]{code/beliefs_carrier.java}\\
+Come per i \textit{miners}, ogni \textit{carrier} possiede dei beliefs in supporto alle operazioni di trasporto, carico e scarico del materiale estratto dalle caverne.\\A livello di codice, le loro modalità di utilizzo si possono considerare sostanzialmente equivalenti a quelle già viste precedentemente sugli agenti scavatori.\\\\
+\textit{storageKg} rappresenta la quantità di materiale presente nella cave locale, e sarà azzerato e aggiornato ad ogni raggiungimento di una nuova caverna.\\\\
+Con \textit{goCollect(Resource)}, invece, si vuole rappresentare la richiesta corrente di materiale emessa dal forger; al seguito di questa belief addition, il carrier si adopererà per trovare una cave libera per adempiere alla commessa.\\\\
+Infine, sono stati aggiunti dei beliefs in supporto agli spostamenti tra caverna e caverna, forniti direttamente (tramite scambio di messaggi) dall'agente \textit{forger} della miniera: un esempio è fornito da \textit{cave(Index,Miner,X,Y)}, che contiene le informazioni sull'indice della caverna, il miner assegnato e la sua posizione spaziale.
+\subsubsection{Forger Beliefs}~
 \subsection{Structure}
 
 \subsection{Interaction}
