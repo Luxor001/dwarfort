@@ -271,9 +271,12 @@ Infine, la posizione delle risorse situate nella caverna e del punto di storage 
 Come per i \textit{miners}, ogni \textit{carrier} possiede dei beliefs in supporto alle operazioni di trasporto, carico e scarico del materiale estratto dalle caverne.\\A livello di codice, le loro modalità di utilizzo si possono considerare sostanzialmente equivalenti a quelle già viste precedentemente sugli agenti scavatori.\\\\
 \textit{storageKg} rappresenta la quantità di materiale presente nella cave locale, e sarà azzerato e aggiornato ad ogni raggiungimento di una nuova caverna.\\\\
 Con \textit{goCollect(Resource)}, invece, si vuole rappresentare la richiesta corrente di materiale emessa dal forger; al seguito di questa belief addition, il carrier si adopererà per trovare una cave libera per adempiere alla commessa.\\\\
-Infine, sono stati aggiunti dei beliefs in supporto agli spostamenti tra caverna e caverna, forniti direttamente (tramite scambio di messaggi) dall'agente \textit{forger} della miniera: un esempio è fornito da \textit{cave(Index,Miner,X,Y)}, che contiene le informazioni sull'indice della caverna, il miner assegnato e la sua posizione spaziale.
+Infine, sono stati aggiunti dei beliefs in supporto agli spostamenti tra caverna e caverna, forniti direttamente (tramite scambio di messaggi) dall'agente \textit{forger} della miniera: un esempio è fornito da \textit{cave(Index,Miner,X,Y)}, che contiene le informazioni sull'indice della caverna, il miner assegnato e la sua posizione spaziale.\newpage
 \subsubsection{Forger Beliefs}~
-\subsection{Structure}
+\lstinputlisting[float=h,caption=Beliefs per l'agente \textit{forger}]{code/beliefs_forger.java}\\
+L'agente \textit{forger} predispone tutta una serie di beliefs utili per una gestione di alto livello della miniera.\\\\
+Il bisogno corrente di materiale è esplicitato dal belief \textit{needs(Material)}
+%\subsection{Structure}
 
 \subsection{Interaction}
 \newpage
