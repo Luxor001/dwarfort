@@ -274,8 +274,10 @@ Con \textit{goCollect(Resource)}, invece, si vuole rappresentare la richiesta co
 Infine, sono stati aggiunti dei beliefs in supporto agli spostamenti tra caverna e caverna, forniti direttamente (tramite scambio di messaggi) dall'agente \textit{forger} della miniera: un esempio è fornito da \textit{cave(Index,Miner,X,Y)}, che contiene le informazioni sull'indice della caverna, il miner assegnato e la sua posizione spaziale.\newpage
 \subsubsection{Forger Beliefs}~
 \lstinputlisting[float=h,caption=Beliefs per l'agente \textit{forger}]{code/beliefs_forger.java}\\
-L'agente \textit{forger} predispone tutta una serie di beliefs utili per una gestione di alto livello della miniera.\\\\
-Il bisogno corrente di materiale è esplicitato dal belief \textit{needs(Material)}
+L'agente \textit{forger} possiede tutta una serie di beliefs utili per il suo compito di coordinamento della miniera.\\\\
+Il bisogno corrente di materiale è esplicitato dal belief \textit{needs(Material)}, che verrà comunicato di volta in volta ad ogni \textit{carrier} (e, di conseguenza, ad ogni \textit{miner} per l'estrazione) una volta raggiunta la \textit{controlCave}.\\Si tenga presente che l'insieme di \textit{carriers} conosciuti dal \textit{forger} è rappresentato da \textit{carrier(Name)}.\\\\La quantità di risorse stoccata nel magazzino principale è rappresentata da \textit{storageKg(Resource, Kg)}, che verrà aggiornato ad ogni consegna degli agenti trasportatori.\\\\
+Infine, \textit{orkOrdeIncoming} indica il probabile arrivo di un orda di orchi nella miniera: in tal caso il \textit{forger} comanderà di estrarre solamente FERRO dalle \textit{mineCaves} (cambiando, pertanto, il belief \textit{needs()}) e inizierà a produrre armature per ogni 50kg di materiale.\\
+Ogni armatura prodotta verrà indicata da \textit{items(armor, X)}.
 %\subsection{Structure}
 
 \subsection{Interaction}
