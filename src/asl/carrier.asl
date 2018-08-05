@@ -92,7 +92,7 @@ cavesEntrances(Entrances) :- .findall(cave(I, Miner, X, Y), cave(I, Miner, X, Y)
 +?minerNeedsBeer(Beer)[source(Miner)]<-
 	.print("miner needs a beer");
 	.drop_intention(checkStorageForResource(_));
-	?caveFound(cave(_,Miner, X, Y))
+	?caveFound(cave(_, Miner, X, Y))
 	!goTo(X,Y); //go to the entrance of the cave...
 	deletePersonalPercept(positionReached);
 	.send("forger", askOne, passMeABeerPlz(_), Beer);

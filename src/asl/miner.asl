@@ -31,7 +31,7 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 			
 +!goTo(X, Y) : not positionReached <- 
  	goTo(X, Y); 	
-	.wait(250);
+	.wait(150);
 	!goTo(X, Y).
 +!goTo(X, Y).
 
@@ -43,7 +43,7 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 			 
 // Collect some resource in my feets..
 +!pickup(Resource) : not atCapacity <- 
-	//.random(X); .wait(X*1800 + 200);	
+	.random(X); .wait(X*1800 + 200);	
 	?carrying(Resource, CarryingKg);
 	pickup(Resource, CarryingKg);	
 	!pickup(Resource).
@@ -60,7 +60,6 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 	.drop_intention(collect(_));
 	!collect(Resource).
 	
-//+!collect(Resource): thirstiness(N) & N<=5<-
 +!collect(Resource): not thirsty & caveScanned<-
 	?resource(Resource, X, Y);
 	!goTo(X, Y);

@@ -1,11 +1,11 @@
-needs(gold, 150).
+needs(gold).
 items(armor, 0).
 
 !init.
 !repaint.
 
 +!init <- .wait(10);
-	 ?needs(Resource, _);
+	 ?needs(Resource);
 	.print(Resource);
 	.findall(P,carrier(P),Carriers);	
 	.send(Carriers, tell, goCollect(Resource)).
@@ -14,16 +14,16 @@ items(armor, 0).
 
 +carrierBack(Name) <-
 	checkStorage;
-	?needs(Resource, _);
+	?needs(Resource);
 	.send(Name, untell, goCollect(_));.send(Name, tell, goCollect(Resource)).
 
 +orkOrdeIncoming <-	
 	.print("ork orde coming!"); 
-	-+needs(steel, 150).
+	-+needs(steel).
 -orkOrdeIncoming <-
 
 	.print("ork stopped!");  
--+needs(gold, 150).
+-+needs(gold).
 
 +!repaint <-
 	paint_me;

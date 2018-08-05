@@ -278,9 +278,44 @@ L'agente \textit{forger} possiede tutta una serie di beliefs utili per il suo co
 Il bisogno corrente di materiale è esplicitato dal belief \textit{needs(Material)}, che verrà comunicato di volta in volta ad ogni \textit{carrier} (e, di conseguenza, ad ogni \textit{miner} per l'estrazione) una volta raggiunta la \textit{controlCave}.\\Si tenga presente che l'insieme di \textit{carriers} conosciuti dal \textit{forger} è rappresentato da \textit{carrier(Name)}.\\\\La quantità di risorse stoccata nel magazzino principale è rappresentata da \textit{storageKg(Resource, Kg)}, che verrà aggiornato ad ogni consegna degli agenti trasportatori.\\\\
 Infine, \textit{orkOrdeIncoming} indica il probabile arrivo di un orda di orchi nella miniera: in tal caso il \textit{forger} comanderà di estrarre solamente FERRO dalle \textit{mineCaves} (cambiando, pertanto, il belief \textit{needs()}) e inizierà a produrre armature per ogni 50kg di materiale.\\
 Ogni armatura prodotta verrà indicata da \textit{items(armor, X)}.
-%\subsection{Structure}
-
-\subsection{Interaction}
 \newpage
-
+\subsection{Comportamento}
+Il comportamento di ogni agente è definito da una serie di piani che vengono applicati in base alle necessità riscontrate.\\
+In questa sezione verranno presentati soltanto i piani più rilevanti di ogni tipologia di agente implementato nel sistema.
+\subsubsection{Miner plans}~\\\\
+Una volta ricevuto l'ordine di estrazione di materiale, il \textit{miner} eseguirà una serie di operazioni che possono essere riassunte come segue:
+\begin{enumerate}
+	\item Viene reperito dalla propria \textit{belief base} il più vicino punto di scavo per il materiale richiesto.\\
+	Dopodiché, lo si raggiunge fisicamente tramite il plan \textit{goTo(X, Y).}\\
+	\item Si procede ad estrarlo tramite il plan \textit{pickup(Resource)}.\\
+	\item Si ottiene il posizionamento dello storage locale e lo si raggiunge fisicamente (sempre tramite il plan \textit{goTo(X,Y))}.\\ 
+	Una volta raggiunto, si rilascia il materiale trasportato tramite il plan \textit{dropBag}.\\
+	\item Infine, il \textit{miner} aggiorna la propria percezione della sete.
+\end{enumerate}
+\lstinputlisting[float=h,caption=Azione di scavo per l'agente \textit{miner}]{code/comp_miner.java}
+\subsubsection{Carrier plans}~\\\\
+Come già anticipato, i compiti dei \textit{carriers} non si limitano al semplice trasporto di materiale da caverna a \textit{controlCave}: essi ricoprono infatti un ruolo di vero e proprio supporto per tutte le esigenze riscontrate in miniera.\\\\Un esempio di tali esigenze può essere la richiesta di birra da parte di un \textit{miner}; dato che la produzione all'interno della miniera deve sempre rimanere ai massimi livelli, il soddisfacimento della sete di un lavoratore ricopre sempre la massima priorità rispetto agli altri compiti (mentre è assetato, infatti, un minatore si asterrà dal lavorare).\\\\
+Il plan di ottenimento di una birra può essere così riassunto:
+\begin{enumerate}
+	\item Tramite un operazione di \textit{drop\textunderscore intention()}, viene abbandonata qualsiasi intenzione in corso di svolgimento.\\
+	\item Si procede a reperire e raggiungere il punto di partenza della caverna (solitamente posto immediatamente fuori dalla \textit{controlCave)} per poter richiedere una birra al \textit{forger} (tramite un messaggio di tipo \textit{askOne}, cioè sincrono).\\
+	\item Dopodiché, si reperisce e raggiunge il punto d'entrata della caverna con il \textit{miner} assetato.\\
+	\item E infine si ritorna al lavoro precedentemente lasciato in sospeso.
+\end{enumerate}
+\lstinputlisting[float=h,caption=Reperimento di birra da parte di un \textit{carrier}]{code/comp_carrier.java}\newpage
+\subsubsection{Forger plans}~\\\\
+I compiti assegnati all'agente \textit{forger} sono perlopiù di gestione della miniera e dei suoi sottoposti.\\
+Un esempio tipico si può riscontrare quando i \textit{carriers} tornano dalla loro operazione di carico/scarico materiale delle caverne di scavo: ogni \textit{carrier} dovrà infatti ricevere prontamente nuove comande da eseguire per massimizzare la produttività.\\\\
+Pertanto, ogniqualvolta che un \textit{carrier} ritorna nella \textit{controlCave} (a meno che non sia per ottenere una birra da consegnare ai \textit{miners}) , il \textit{forger} dovrà:
+\begin{enumerate}
+	\item Aggiornare le sue percezioni sulla quantità totale di materiale stoccato nel magazzino.\\
+	\item Interrogarsi su quale sia la risorsa di cui la comunità necessita al momento.\\
+	\item E infine comandare al \textit{carrier} appena arrivato di andarne a reperire uno stock.
+\end{enumerate}
+\lstinputlisting[float=h,caption=Arrivo di un \textit{carrier} dal \textit{forger}]{code/comp_forger.java}\newpage
+\section{Conclusioni}
+Questo progetto rappresenta un valido caso di studio per la mesa in pratica di alcuni aspetti di autonomia visti durante il corso di Sistemi Autonomi presieduto dal prof. Omicini.\\
+Innanzitutto, l'utilizzo di jason come interprete per lo sviluppo del progetto ha consentito di sfruttare appieno la flessibilità e il supporto di un linguaggio comune come Java: la creazione di un modello coerente con gli obiettivi del corso è stata così notevolmente semplificata.\\
+In alcuni circoscritti casi sono state definite delle internal actions personalizzate in grado di agire efficacemente sul model dell'applicazione; tuttavia, è necessario sottolineare che la loro implementazione è stata evitata nella maggior parte dei casi grazie a un attento utilizzo di rules e plans minimali.\\
+Infine, la decisione di diversificare gli agenti in tre diverse tipologie si è rilevata vincente per riuscire a simulare un MAS di una certa complessità; ciò ha permesso di studiare vari gradi di autonomia e di interazione tra gli agenti del sistema.
 \end{document}
