@@ -19,8 +19,6 @@ import java.util.Random;
 import jason.util.Pair;
 
 public class MineModel extends GridWorldModel{
-    // constants used by the view component (HouseView) to draw environment
-    // "objects"
     public static final int GOLD = 16;
     public static final int STEEL = 32;
     public static final int STORAGE = 64;
@@ -339,6 +337,7 @@ public class MineModel extends GridWorldModel{
     	Location agentLocation = this.getAgentLocationByName(agent);
     	return this.agentOverObject(agentLocation, cave, object); 	
     }
+    
     public boolean agentOverObject(Location agentLocation, MineCave agentCave, int object) {
     	Optional<Pair<Location, Integer>> itemInPlace = agentCave.items.stream().filter(item -> item.getFirst().distance(agentLocation) == 0).findFirst();
     	if(itemInPlace.isPresent() && itemInPlace.get().getSecond() == object)
@@ -352,6 +351,7 @@ public class MineModel extends GridWorldModel{
     	int y = rnd.nextInt((area.br.y) - (area.tl.y)) + area.tl.y;
     	return new Location(x,y);
     }
+    
     private Cave getCaveInLocation(Location location) {
     	Optional<MineCave> mineCaveFound = mineCaves.stream().filter(mineCave -> mineCave.areas.stream().anyMatch(area -> area.contains(location))).findFirst();
     	if(mineCaveFound.isPresent())
@@ -360,11 +360,13 @@ public class MineModel extends GridWorldModel{
     		return controlCave;
 		return null;    	
     }
+    
     public int collect(String agent, int resourceType) {
     	if(this.agentOverObject(agent, resourceType)) 
             return new Random().nextInt(MineModel.MAX_MINING_CAPABILITY + 1);    	
     	return 0;
     }
+    
     public int pickupFromStorage(String agent, int resourceType, double amountDesired) {
     	Cave cave = getCaveInLocation(getAgentLocationByName(agent));
     	int kgInStorage = cave.storage.get(resourceType);
@@ -374,6 +376,7 @@ public class MineModel extends GridWorldModel{
     	}
     	return 0;
     }
+    
     public int getStorageAmount(String agent, int resourceType) {
     	Cave cave = getCaveInLocation(getAgentLocationByName(agent));
     	if(cave == null) {
@@ -382,11 +385,13 @@ public class MineModel extends GridWorldModel{
     	}
     	return cave.storage.get(resourceType);
     }
+    
     public void dropResource(String agent, int resourceType, double kgCarrying) {
     	Cave cave = agent.contains("carrier") ? controlCave : getCaveInLocation(getAgentLocationByName(agent));
     	int kgInStorage = cave.storage.get(resourceType);
     	cave.storage.put(resourceType, (int) (kgInStorage + kgCarrying));
     }
+    
     public void deployArtefactOnMyPosition(String agent, int indexCaveGoingTo) {
 		Location agentLocation = getAgentLocationByName(agent);
 		CarrierArtefact artefact = new CarrierArtefact(agent,  indexCaveGoingTo);
@@ -394,12 +399,24 @@ public class MineModel extends GridWorldModel{
 			artefactsOnMap.put(agentLocation, new ArrayList<>());    		
 		artefactsOnMap.get(agentLocation).add(artefact);
     }
+    
     public void removeArtefactOnMyPosition(String agent, int indexCaveGoingTo) {
     	Location agentLocation = this.getAgentLocationByName(agent);
     	ArrayList<CarrierArtefact> artefactsOnMyLocation = artefactsOnMap.get(agentLocation);    	
     	if(artefactsOnMyLocation != null) 
     		artefactsOnMyLocation.removeIf(artefact -> artefact.caveGoingTo == indexCaveGoingTo);
     }
+    
+    public boolean scanForArtefact(String agent, int caveIndex) {
+    	Location agentLocation = this.getAgentLocationByName(agent);
+		if(this.artefactsOnMap.containsKey(agentLocation)) {
+			ArrayList<CarrierArtefact> artefacts = this.artefactsOnMap.get(agentLocation);
+			if(artefacts.stream().filter(artefact -> artefact.caveGoingTo == caveIndex).count() != 0)
+				return true;
+		}
+		return false;
+    }
+    
     public void buildArmor() {
     	int kgInStorage = this.controlCave.storage.get(STEEL);
     	this.controlCave.storage.put(STEEL, kgInStorage-50);

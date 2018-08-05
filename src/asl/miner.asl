@@ -24,8 +24,7 @@ atCapacity :- carrying(_, Kg) & strength_kg(S) & S <= Kg.
 +!cycleArea(N): not areaComplete <-
      cycleArea(N);
 	.wait(50);
-!cycleArea(N).
-		
+!cycleArea(N).		
 +!cycleArea(N)	: areaComplete <-
  deletePersonalPercept(goleft); deletePersonalPercept(goright); deletePersonalPercept(wall).
 			

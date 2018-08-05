@@ -23,10 +23,20 @@ import jason.environment.grid.Location;
 
 public class MineEnv extends Environment{
 	
-    MineModel model; // the model of the grid
-	public static final Literal ordiniArrivati = Literal.parseLiteral("ordiniArrivati");
-	public static final Literal scanArea = Literal.parseLiteral("scanArea");
-	public static final Literal gotocorner = Literal.parseLiteral("gotocorner");
+    MineModel model;
+	public static final String goTo = "goTo";
+	public static final String deletePersonalPercept = "deletePersonalPercept";
+	public static final String scanForArtefact = "scanForArtefact";
+	public static final String deployArtefact = "deployArtefact";
+	public static final String removeArtefact = "removeArtefact";
+	public static final String pickup = "pickup";
+	public static final String pickupFromStorage = "pickupFromStorage";
+	public static final String dropResource = "dropResource";
+	public static final String checkStorage = "checkStorage";
+	public static final String clearPercepts = "clearPercepts";
+	public static final String buildArmor = "buildArmor";
+	public static final String paint_me = "paint_me";
+	public static final String cycleArea = "cycleArea";
 
     @Override
     public void init(final String[] args) {
@@ -73,7 +83,74 @@ public class MineEnv extends Environment{
     
     @Override
     public boolean executeAction(final String agent, final Structure action) {
-    	if(action.getFunctor().equals("cycleArea")) {
+    	String functor=action.getFunctor();
+    	
+    	if(functor.equals(goTo)) {
+    		int X = Integer.parseInt(action.getTerm(0).toString());
+    		int Y = Integer.parseInt(action.getTerm(1).toString());
+    		boolean reached = this.model.moveTowards(agent, new Location(X, Y));
+    		if(reached) 
+    			this.addPercept(agent, Literal.parseLiteral("positionReached"));    
+    		return true;
+    	}
+    	if(functor.equals(deletePersonalPercept)) {
+    		removePercept(agent, Literal.parseLiteral(action.getTerm(0).toString()));
+    		return true;
+    	}
+    	if(functor.equals(scanForArtefact)) {
+    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
+    		if(!this.model.scanForArtefact(agent, caveIndex))
+        		this.addPercept(agent, Literal.parseLiteral(String.format("caveFound(cave(%s,%s,%s,%s))",action.getTerm(0), action.getTerm(1),action.getTerm(2),action.getTerm(3))));
+    		return true;
+    	}
+    	if(functor.equals(deployArtefact)) {
+    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
+    		this.model.deployArtefactOnMyPosition(agent, caveIndex);
+    		return true;
+    	}
+    	if(functor.equals(removeArtefact)) {
+    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
+    		this.model.removeArtefactOnMyPosition(agent, caveIndex);
+    		return true;
+    	}
+    	if(functor.equals(pickup) || functor.equals(pickupFromStorage) || functor.equals(dropResource)) {
+    		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
+    		NumberTerm kgCarrying = (NumberTerm)action.getTerm(1);
+    		double carryingKg = 0;
+			try {
+				if(functor.equals(pickup))
+					carryingKg = this.model.collect(agent, resourceType) + kgCarrying.solve();
+				if(functor.equals(pickupFromStorage))
+					carryingKg = this.model.pickupFromStorage(agent, resourceType, ((NumberTerm)action.getTerm(2)).solve());
+				if(functor.equals(dropResource)) 
+		    		this.model.dropResource(agent, resourceType, kgCarrying.solve());				
+			} catch (Exception e) {}
+
+			
+	    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying(Resource, Kg)"));
+			addPercept(agent, Literal.parseLiteral("carrying("+action.getTerm(0).toString()+"," + carryingKg + ")"));
+    		return true;
+    	}
+    	if(functor.equals(checkStorage)) {
+    		addPercept(agent, Literal.parseLiteral("storageKg(gold,"+ this.model.getStorageAmount(agent, MineModel.GOLD) + ")"));
+    		addPercept(agent, Literal.parseLiteral("storageKg(steel,"+this.model.getStorageAmount(agent, MineModel.STEEL) + ")"));
+    		return true;
+    	}
+    	if(functor.equals(clearPercepts)) {
+    		clearPercepts(agent);
+    		initializePercepts();
+    		return true;
+    	}
+    	if(functor.equals(buildArmor)) {
+    		this.model.buildArmor();
+    		return true;
+    	}
+    	if(functor.equals(paint_me)) {
+    		this.model.setAgPos(MineModel.agentIdByName.get(agent), this.model.getAgentLocationByName(agent));
+    		return true;
+    	}
+
+    	if(functor.equals(cycleArea)) {
     		int areaIndex = Integer.parseInt(action.getTerm(0).toString());
     		MineCave caveIAmIn = this.model.getCaveAssignedToAgent(agent);
     		Location agentLocation =this.model.getAgentLocationByName(agent);  
@@ -135,77 +212,6 @@ public class MineEnv extends Environment{
   		
   			System.out.flush();
     		
-    		return true;
-    	}
-    	if(action.getFunctor().equals("goTo")) {
-    		int X = Integer.parseInt(action.getTerm(0).toString());
-    		int Y = Integer.parseInt(action.getTerm(1).toString());
-    		boolean reached = this.model.moveTowards(agent, new Location(X, Y));
-    		if(reached) 
-    			this.addPercept(agent, Literal.parseLiteral("positionReached"));    
-    		return true;
-    	}
-    	if(action.getFunctor().equals("deletePersonalPercept")) {
-    		removePercept(agent, Literal.parseLiteral(action.getTerm(0).toString()));
-    		return true;
-    	}
-    	if(action.getFunctor().equals("scanForArtefact")) {
-    		// TODO refactor nel model!
-    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
-    		Location agentLocation = this.model.getAgentLocationByName(agent);
-    		if(this.model.artefactsOnMap.containsKey(agentLocation)) {
-    			ArrayList<CarrierArtefact> artefacts = this.model.artefactsOnMap.get(agentLocation);
-    			if(artefacts.stream().filter(artefact -> artefact.caveGoingTo == caveIndex).count() != 0)
-    				return true;
-    		}
-    		this.addPercept(agent, Literal.parseLiteral(String.format("caveFound(cave(%s,%s,%s,%s))",action.getTerm(0), action.getTerm(1),action.getTerm(2),action.getTerm(3))));
-    		return true;
-    	}
-    	if(action.getFunctor().equals("deployArtefact")) {
-    		//TODO refactor nel model!
-    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
-    		this.model.deployArtefactOnMyPosition(agent, caveIndex);
-    		return true;
-    	}
-    	if(action.getFunctor().equals("removeArtefact")) {
-    		int caveIndex = Integer.parseInt(action.getTerm(0).toString());
-    		this.model.removeArtefactOnMyPosition(agent, caveIndex);
-    		return true;
-    	}
-    	if(action.getFunctor().equals("pickup") || action.getFunctor().equals("pickupFromStorage") || action.getFunctor().equals("dropResource")) {
-    		int resourceType = action.getTerm(0).toString().equals("gold") ? MineModel.GOLD : MineModel.STEEL;
-    		NumberTerm kgCarrying = (NumberTerm)action.getTerm(1);
-    		double carryingKg = 0;
-			try {
-				if(action.getFunctor().equals("pickup"))
-					carryingKg = this.model.collect(agent, resourceType) + kgCarrying.solve();
-				if(action.getFunctor().equals("pickupFromStorage"))
-					carryingKg = this.model.pickupFromStorage(agent, resourceType, ((NumberTerm)action.getTerm(2)).solve());
-				if(action.getFunctor().equals("dropResource")) 
-		    		this.model.dropResource(agent, resourceType, kgCarrying.solve());				
-			} catch (Exception e) {}
-
-			
-	    	removePerceptsByUnif(agent, Literal.parseLiteral("carrying(Resource, Kg)"));
-			addPercept(agent, Literal.parseLiteral("carrying("+action.getTerm(0).toString()+"," + carryingKg + ")"));
-    		return true;
-    	}
-    	if(action.getFunctor().equals("checkStorage")) {
-    		addPercept(agent, Literal.parseLiteral("storageKg(gold,"+ this.model.getStorageAmount(agent, MineModel.GOLD) + ")"));
-    		addPercept(agent, Literal.parseLiteral("storageKg(steel,"+this.model.getStorageAmount(agent, MineModel.STEEL) + ")"));
-    		return true;
-    	}
-    	if(action.getFunctor().equals("clearPercepts")) {
-    		clearPercepts(agent);
-    		initializePercepts();
-    		return true;
-    	}
-    	if(action.getFunctor().equals("buildArmor")) {
-    		this.model.buildArmor();
-    		return true;
-    	}
-    	if(action.getFunctor().equals("paint_me")) {
-    		this.model.setAgPos(MineModel.agentIdByName.get(agent), this.model.getAgentLocationByName(agent));
     		return true;
     	}
 		return false;
