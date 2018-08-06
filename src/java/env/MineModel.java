@@ -293,7 +293,7 @@ public class MineModel extends GridWorldModel{
     public boolean moveAStep(String agent, StepDirection direction) {
     	Location newLocation = this.getLocationByStep(agent, direction);
         this.setAgPos(getAgentIdByName(agent), newLocation); // actually move the robot in the grid            	
-		return true;    	
+		return true;
     }
     public synchronized void cycleArea(String agent, int area, boolean direction) {
     	Location agentLocation = getAgentLocationByName(agent);
