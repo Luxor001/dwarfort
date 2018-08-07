@@ -164,21 +164,22 @@ Nello specifico, ogni unità ha un preciso compito che dipende dalla sua mansion
 \begin{itemize}
 \item I minatori, da qui in avanti chiamati \textit{miners}, dovranno rilevare tutte le vene di materiale presente nella loro cava personale e procedere alla loro estrazione.\\
 Tutto il materiale estratto dovrà essere trasportato manualmente dalla vena di materiale al magazzino locale (\textit{storage}) restando entro i propri limiti di trasporto: un minatore non potrà mai infatti trasportare più kg di materiale di quanto la sua forza personale permetta.\\
-La tipologia di materiale da estrarre (che può essere di ORO o FERRO) dipende unicamente dalla commessa comandata del nano forgiatore al momento.\\Infine, ogni \textit{miner} possiede un certo livello di tolleranza alla sete, che aumenta ad ogni operazione di scavo compiuta; arrivato al un livello critico di sete percepita, il minatore si fermerà finché non si sarà dissetato.\\
+La tipologia di materiale da estrarre (che può essere di ORO o FERRO) dipende unicamente dalla commessa comandata del nano forgiatore al momento.\\
+Infine, ogni \textit{miner} possiede un certo livello di tolleranza alla sete, che diminuisce ad ogni operazione di scavo compiuta; arrivato al un livello critico di sete percepita, il minatore si fermerà finché non si sarà dissetato.\\
 Essendo un nano, l'unica modo per dissetarsi è bere una birra.\\
-\item I trasportatori, da qui in avanti chiamati \textit{carriers}, dovranno muovere il materiale stoccato nei magazzini locali delle miniere alla cava principale di controllo.\\Come per i \textit{miners}, la tipologia di minerale da trasportare verrà decisa unicamente dal \textit{forger} in base alle necessità del momento.\\
-Per questioni logistiche, soltanto un \textit{carrier} alla volta potrà occupare una cave, e la scelta della destinazione dipenderà unicamente da loro (in altre parole, i nani trasportatori dovranno sapere orientarsi nella miniera e organizzarsi).\\
-Qualora un \textit{miner} ne senta il bisogno, l'acquisizione di birra dal \textit{forger} ha la massima priorità: in tal caso infatti il \textit{carrier} abbandonerà ogni suo attuale compito per portare della birra al minatore.\\
+\item I trasportatori, da qui in avanti chiamati \textit{carriers}, dovranno muovere il materiale stoccato nei magazzini locali delle miniere alla cava principale di controllo.\\Come per i \textit{miners}, la tipologia di minerale da trasportare verrà decisa unicamente dal nano forgiatore in base alle necessità del momento.\\
+Per questioni logistiche, soltanto un \textit{carrier} alla volta potrà occupare una caverna, e la scelta della destinazione dipenderà unicamente da loro (in altre parole, i nani trasportatori dovranno sapere orientarsi nella miniera e organizzarsi).\\
+Qualora un \textit{miner} ne senta il bisogno, l'acquisizione di birra dal nano forgiatore ha la massima priorità: in tal caso infatti il \textit{carrier} abbandonerà ogni suo attuale compito per portare della birra al minatore.\\
 \item Il forgiatore, da qui in avanti chiamato \textit{forger}, ha il compito di indicare ai suoi sottoposti quali sono le risorse necessarie al momento.\\
 A titolo di esempio, il \textit{forger} può avvertire se una orda di orchi sta minacciando la miniera: in tal caso, sposterà tutta la produzione della miniera all' estrazione di FERRO e, non appena 50kg di materiale saranno disponibili, forgerà una armatura.\\
-È anche l'unico lavoratore affidabile della miniera a poter distribuire birre per i suoi sottoposti: ogni richiesta di birra dovrà passare infatti per questa entità.\\
-In condizioni normali, la produzione della miniera sarà sempre concentrata sull'estrazione di ORO.
+È anche l'unico lavoratore della miniera a cui è affidata la distribuzione di birre per i suoi sottoposti: ogni richiesta dovrà passare infatti per questa entità.\\
+In condizioni normali, invece, la produzione della miniera sarà sempre concentrata sull'estrazione di ORO.
 \end{itemize}
 \newpage
 \section{Analisi dei Requisiti}\
-Una breve analisi dei requisiti ci rileva che la miniera sarà l'unico ambiente nella quale gli agenti del sistema andranno ad operare e dalla quale saranno condizionati.\\
+Una breve analisi dei requisiti ci dice che la miniera sarà l'unico ambiente nella quale gli agenti del sistema andranno ad operare e dalla quale saranno condizionati.\\
 A livello organizzativo, i lavoratori della miniera potranno essere suddivisi in tre tipi di agente diversi: \textit{miners}, \textit{carriers} e \textit{forgers}.\\Il numero di ognuno di questi agenti non è specificato, eccezion fatta fatta per il tipo \textit{forger}: dal testo si evince abbastanza chiaramente, infatti, che si prevede soltanto un forgiatore per sistema.\\\\
-Dal testo si evince inoltre che una serie di requisiti funzionali dovranno essere necessariamente rispettati:
+Inoltre, è evidente che una serie di requisiti funzionali dovranno essere necessariamente rispettati:
 \begin{itemize}
 \item Autonomia: gli agenti all'interno della miniera dovranno esibire un certo grado di autonomia, percependo le informazioni dall'ambiente o dalla propria base di conoscenza per poter portare a termine i propri obiettivi correnti.\\
 \item Pratical Reasoning: gli agenti dovranno essere in grado di scegliere e eseguire le azioni più appropriate in base al contesto corrente.\\
@@ -218,8 +219,8 @@ Le sezioni nere del modello aiutano a rappresentare (anche visivamente) la sua s
 La miniera è logicamente e fisicamente suddivisa dai seguenti elementi:
 \begin{itemize}
 	\item n.1 \textit{ControlCave}: posizionata al centro dell'intera miniera, è un punto focale di coordinamento per gli agenti.\\
-	Ogni \textit{carrier}, infatti, ritornerà periodicamente all'interno di questa cave per ottenere dei compiti da svolgere e/o risorse richieste dai miners (ad esempio, birra).\\Al suo interno risiede staticamente l'unico agente \textit{forger} presente, rappresentato in rosso.\\
-	\item n.6 \textit{MineCave}: dimora di ogni \textit{miner} del sistema, è il luogo nel quale le risorse previste del sistema vengono posizionate per essere raccolte.\\ Possono essere di varia forma e, per ipotesi semplificatrice, hanno un unica uscita che porta alla \textit{ControlCave} attraverso una serie di tunnel.\\
+	Ogni \textit{carrier}, infatti, ritornerà periodicamente all'interno di questa cava per ottenere dei compiti da svolgere e/o risorse richieste dai miners (ad esempio, birra).\\Al suo interno risiede staticamente l'unico agente \textit{forger} presente, rappresentato in rosso.\\
+	\item n.6 \textit{MineCave}: dimora di ogni \textit{miner} del sistema, è il luogo nel quale le risorse del sistema vengono posizionate per essere raccolte.\\ Possono essere di varia forma e, per ipotesi semplificatrice, hanno un unica uscita che porta alla \textit{ControlCave} attraverso una serie di tunnel.\\
 	Come già premesso, ogni \textit{MineCave} contiene esclusivamente un \textit{miner} (rappresentato da un pallino di colore blu) e da una serie di punti di interesse, qui elencati:
 	\begin{itemize}
 		\item Una vena di oro (in giallo)
@@ -239,8 +240,8 @@ Ogni tipologia di caverna è una specializzazione della classe astratta \textit{
 \lstinputlisting[float=h,caption=MineCave.java]{code/MineCave.java}
 \vspace{21cm}
 \lstinputlisting[caption=ControlCave.java]{code/ControlCave.java}
-L'ambiente in cui gli agenti sono situati presenta una serie di eventi stocastici che possono cambiare la loro behaviour all'interno della società: ad esempio, ogni dieci secondi esiste il 33\% di probabilità che un orda di orchi minacci la miniera.\\\\
-In tal caso, tutti gli agenti reagiranno a tali eventi in base a delle precise direttive: nel suddetto esempio il \textit{forger} inizierà a produrre armature (sempre ammesso che ci siano abbastanza risorse in magazzino), i \textit{miners}scaveranno soltanto ferro e i \textit{carriers} si interesseranno soltanto di prelevarlo dai magazzini locali delle \textit{MineCaves}.
+L'ambiente in cui gli agenti sono situati presenta una serie di eventi stocastici che possono cambiare la loro \textit{behaviour} all'interno della società: ad esempio, ogni dieci secondi esiste il 33\% di probabilità che un orda di orchi minacci la miniera.\\\\
+In tal caso, tutti gli agenti reagiranno a tali eventi in base a delle precise direttive: nel suddetto esempio il \textit{forger} inizierà a produrre armature (sempre ammesso che ci siano abbastanza risorse in magazzino), i \textit{miners} scaveranno soltanto ferro e i \textit{carriers} si interesseranno soltanto di prelevarlo dai magazzini locali delle \textit{MineCaves}.
 %===========================================================================
 %===========================================================================
 \newpage
@@ -252,9 +253,9 @@ Come tutti i linguaggi utilizzati per programmare agenti BDI, \textit{Jason} per
 Come già anticipato nell'analisi dei requisiti, sarà opportuno che gli agenti del sistema basino la loro capacità di effettuare scelte intelligenti all'interno del sistema grazie alla combinazione di \textit{Epistemic States} e \textit{Motivational States}.\\\\
 Tali caratteristiche sono canonicamente presenti nelle architetture BDI, e possono essere descritte come segue:
 \begin{itemize}
-	\item Beliefs: rappresentano la conoscenza che un agente ha acquisito dell'ambiente in cui è immerso. In genere, un belief è descritto da un predicato che può essere di valore vero o falso.\\
-	\item Desires: rappresentano l'insieme degli obiettivi che un oggetto vorrebbe raggiungere. Un desire si può ritenere soddisfatto quando viene aggiunto al set interno di beliefs oppure quando personalmente scartato.\\
-	\item Intentions: rappresentano ciò che l'agente ha deciso di compiere concretamente.
+	\item \textit{Beliefs}: rappresentano la conoscenza che un agente ha acquisito dell'ambiente in cui è immerso. In genere, un belief è descritto da un predicato che può essere di valore vero o falso.\\
+	\item \textit{Desires}: rappresentano l'insieme degli obiettivi che un oggetto vorrebbe raggiungere.Un \textit{desire} si può ritenere soddisfatto quando viene aggiunto al set interno di \textit{beliefs} oppure quando personalmente scartato.\\
+	\item \textit{Intentions}: rappresentano ciò che l'agente ha deciso di compiere concretamente.
 \end{itemize}
 \newpage
 \subsection{Beliefs}
@@ -272,10 +273,10 @@ Infine, la posizione delle risorse situate nella caverna e del punto di storage 
 Come per i \textit{miners}, ogni \textit{carrier} possiede dei beliefs in supporto alle operazioni di trasporto, carico e scarico del materiale estratto dalle caverne.\\A livello di codice, le loro modalità di utilizzo si possono considerare sostanzialmente equivalenti a quelle già viste precedentemente sugli agenti scavatori.\\\\
 \textit{storageKg} rappresenta la quantità di materiale presente nella cave locale, e sarà azzerato e aggiornato ad ogni raggiungimento di una nuova caverna.\\\\
 Con \textit{goCollect(Resource)}, invece, si vuole rappresentare la richiesta corrente di materiale emessa dal forger; al seguito di questa belief addition, il carrier si adopererà per trovare una cave libera per adempiere alla commessa.\\\\
-Infine, sono stati aggiunti dei beliefs in supporto agli spostamenti tra caverna e caverna, forniti direttamente (tramite scambio di messaggi) dall'agente \textit{forger} della miniera: un esempio è fornito da \textit{cave(Index,Miner,X,Y)}, che contiene le informazioni sull'indice della caverna, il miner assegnato e la sua posizione spaziale.\newpage
+Infine, sono stati aggiunti dei \textit{beliefs} in supporto agli spostamenti tra caverna e caverna, forniti direttamente (tramite scambio di messaggi) dall'agente \textit{forger} della miniera: un esempio è fornito da \textit{cave(Index,Miner,X,Y)}, che contiene le informazioni sull'indice della caverna, il miner assegnato e la sua posizione spaziale.\newpage
 \subsubsection{Forger Beliefs}~
 \lstinputlisting[float=h,caption=Beliefs per l'agente \textit{forger}]{code/beliefs_forger.java}\\
-L'agente \textit{forger} possiede tutta una serie di beliefs utili per il suo compito di coordinamento della miniera.\\\\
+L'agente \textit{forger} possiede tutta una serie di \textit{beliefs} utili per il suo compito di coordinamento della miniera.\\\\
 Il bisogno corrente di materiale è esplicitato dal belief \textit{needs(Material)}, che verrà comunicato di volta in volta ad ogni \textit{carrier} (e, di conseguenza, ad ogni \textit{miner} per l'estrazione) una volta raggiunta la \textit{controlCave}.\\Si tenga presente che l'insieme di \textit{carriers} conosciuti dal \textit{forger} è rappresentato da \textit{carrier(Name)}.\\\\La quantità di risorse stoccata nel magazzino principale è rappresentata da \textit{storageKg(Resource, Kg)}, che verrà aggiornato ad ogni consegna degli agenti trasportatori.\\\\
 Infine, \textit{orkOrdeIncoming} indica il probabile arrivo di un orda di orchi nella miniera: in tal caso il \textit{forger} comanderà di estrarre solamente FERRO dalle \textit{mineCaves} (cambiando, pertanto, il belief \textit{needs()}) e inizierà a produrre armature per ogni 50kg di materiale.\\
 Ogni armatura prodotta verrà indicata da \textit{items(armor, X)}.
@@ -315,8 +316,8 @@ Pertanto, ogniqualvolta che un \textit{carrier} ritorna nella \textit{controlCav
 \end{enumerate}
 \lstinputlisting[float=h,caption=Arrivo di un \textit{carrier} dal \textit{forger}]{code/comp_forger.java}\newpage
 \section{Conclusioni}
-Questo progetto rappresenta un valido caso di studio per la mesa in pratica di alcuni aspetti di autonomia visti durante il corso di Sistemi Autonomi presieduto dal prof. Omicini.\\
+Questo progetto rappresenta un valido caso di studio per la messa in pratica di alcuni aspetti di autonomia visti durante il corso di Sistemi Autonomi presieduto dal prof. Omicini.\\
 Innanzitutto, l'utilizzo di jason come interprete per lo sviluppo del progetto ha consentito di sfruttare appieno la flessibilità e il supporto di un linguaggio comune come Java: la creazione di un modello coerente con gli obiettivi del corso è stata così notevolmente semplificata.\\
-In alcuni circoscritti casi sono state definite delle internal actions personalizzate in grado di agire efficacemente sul model dell'applicazione; tuttavia, è necessario sottolineare che la loro implementazione è stata evitata nella maggior parte dei casi grazie a un attento utilizzo di rules e plans minimali.\\
+In alcuni circoscritti casi sono state definite delle \textit{internal actions} personalizzate in grado di agire efficacemente sul model dell'applicazione; tuttavia, è necessario sottolineare che la loro implementazione è stata evitata nella maggior parte dei casi grazie a un attento utilizzo di rules e plans minimali.\\
 Infine, la decisione di diversificare gli agenti in tre diverse tipologie si è rilevata vincente per riuscire a simulare un MAS di una certa complessità; ciò ha permesso di studiare vari gradi di autonomia e di interazione tra gli agenti del sistema.
 \end{document}
